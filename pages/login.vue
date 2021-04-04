@@ -10,6 +10,7 @@
 import YopUI from '~/components/YopUI'
 export default {
   name: 'Login',
+  layout: 'landing',
   components: {
     'yop-ui': YopUI,
   },

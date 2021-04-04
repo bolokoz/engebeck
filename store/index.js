@@ -23,6 +23,7 @@ export const actions = {
       dispatch('auth/signIn', { authUser, claims })
     } else {
       // TODO faire la déconnexion
+      console.log('onAuthStateChanged, m_store action')
     }
   },
 }

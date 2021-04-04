@@ -87,14 +87,13 @@ export default {
    */
   firebase: {
     config: {
-      apiKey: 'AIzaSyC3qpcRaVJVT63YMfIMgNJKRsmtPmEB6VM',
-      authDomain: 'bento-vince.firebaseapp.com',
-      databaseURL: 'https://bento-vince.firebaseio.com',
-      projectId: 'bento-vince',
-      storageBucket: 'bento-vince.appspot.com',
-      messagingSenderId: '419042376123',
-      appId: '1:419042376123:web:f2a4223fcbff6f078b6c9e',
-      measurementId: 'G-VL64YPQL57',
+      apiKey: "AIzaSyCkiD28s9pykKQelyqWLJoVSEgn22GCass",
+      authDomain: "ybimmobil.firebaseapp.com",
+      databaseURL: "https://ybimmobil.firebaseio.com",
+      projectId: "ybimmobil",
+      storageBucket: "ybimmobil.appspot.com",
+      messagingSenderId: "86454094851",
+      appId: "1:86454094851:web:49fd58d05a54908c92d236"
     },
     services: {
       auth: {
