@@ -1,23 +1,30 @@
 <template>
   <v-app>
     <v-app-bar fixed flat hide-on-scroll color="transparent">
+      <v-img
+    class="mt-2"
+    :src="require('~/assets/TETRAHEDRON.png')"
+    max-height="60"
+    max-width="60"
+    contain
+  ></v-img>
       <v-toolbar-title class="font-weight-black headline white--text">
-        Obra Total
+        EngeBECK
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn outlined color="white" to="login">Login</v-btn>
-      <v-btn v-if="!isLoggedIn" color="secondary" nuxt to="/login">
+      <v-btn outlined color="white"  v-if="!isLoggedIn" nuxt to="/login">
             Login
           </v-btn>
           <v-btn v-else color="secondary" @click="logout"> Logout </v-btn>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <section id="hero">
         <v-row no-gutters>
           <v-img
             :min-height="'calc(100vh - ' + $vuetify.application.top + 'px)'"
-            src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1951&q=80"
+            src="https://media.giphy.com/media/fVQNdNH1WytburYjyb/giphy-downsized-large.gif"
+            gradient="to top, rgba(43,177,211,.4),rgba(0,0,0,.7)"
           >
             <v-theme-provider dark>
               <v-container class="fill-height">
@@ -47,7 +54,7 @@
                       ]"
                       class="font-weight-black"
                     >
-                      Obra Total
+                      Enge|BECK
                     </span>
                   </v-col>
 
@@ -70,7 +77,7 @@
         <div class="py-12"></div>
 
         <v-container class="text-center">
-          <h2 class="display-2 font-weight-bold mb-3">O que é?</h2>
+          <h2 class="display-2 font-weight-bold mb-3">O que é a EngeBECK?</h2>
 
           <v-responsive class="mx-auto mb-8" width="56">
             <v-divider class="mb-1"></v-divider>
@@ -82,24 +89,18 @@
             class="mx-auto title font-weight-light mb-8"
             max-width="720"
           >
-            Vuetify is the #1 component library for Vue.js and has been in
-            active development since 2016. The goal of the project is to provide
-            users with everything that is needed to build rich and engaging web
-            applications using the Material Design specification. It
-            accomplishes that with a consistent update cycle, Long-term Support
-            (LTS) for previous versions, responsive community engagement, a vast
-            ecosystem of resources and a dedication to quality components.
+            Empresa de engenharia do ramo residencial focada em construir lares modernos e eficientes através de projetos que levam economia tanto para construtor como proprietário. 
           </v-responsive>
 
-          <v-avatar class="elevation-12 mb-12" size="128">
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-          </v-avatar>
+          <div class="d-flex justify-center mb-12" size="254">
+            <v-img max-width="250" contain :src="require('~/assets/logo_transparent.png')" ></v-img>
+          </div>
 
           <div></div>
 
-          <v-btn color="grey" href="https://vuetifyjs.com" outlined large>
+          <v-btn color="grey" outlined large @click="$vuetify.goTo('#portfolio')">
             <span class="grey--text text--darken-1 font-weight-bold">
-              Vuetify Documentation
+              Ver obras realizadas
             </span>
           </v-btn>
         </v-container>
@@ -107,11 +108,15 @@
         <div class="py-12"></div>
       </section>
 
-      <section id="features" class="grey lighten-3">
+      <section id="portfolio">
         <div class="py-12"></div>
 
-        <v-container class="text-center">
-          <h2 class="display-2 font-weight-bold mb-3">Facilidades</h2>
+        <v-container>
+          <h2
+            class="display-2 font-weight-bold mb-3 text-uppercase text-center"
+          >
+            Portfolio
+          </h2>
 
           <v-responsive class="mx-auto mb-12" width="56">
             <v-divider class="mb-1"></v-divider>
@@ -121,35 +126,56 @@
 
           <v-row>
             <v-col
-              v-for="({ icon, title, text }, i) in features"
+              v-for="({ src, text, title, link }, i) in portfolio"
               :key="i"
               cols="12"
               md="4"
+              :to="link"
             >
-              <v-card class="py-12 px-4" color="grey lighten-5" flat>
-                <v-theme-provider dark>
+
+            <v-card class="py-12 px-4" color="grey darken-1" flat>
+                <v-theme-provider>
                   <div>
-                    <v-avatar color="primary" size="88">
-                      <v-icon large v-text="icon"></v-icon>
-                    </v-avatar>
+              <v-img
+                :src="src"
+                class="mb-4"
+                height="275"
+                max-width="100%"
+              ></v-img>
                   </div>
                 </v-theme-provider>
 
                 <v-card-title
-                  class="justify-center font-weight-black text-uppercase"
-                  v-text="title"
-                ></v-card-title>
+                  class="justify-center font-weight-black text-uppercase" v-text="title"
+                >
+                </v-card-title>
 
                 <v-card-text class="subtitle-1" v-text="text"> </v-card-text>
+                              <v-btn class="ml-n4 font-weight-black" text nuxt :to="link">
+                Ver mais
+              </v-btn>
               </v-card>
+
             </v-col>
           </v-row>
         </v-container>
 
+        <div class="py-12 d-flex justify-center">
+
+
+
+          <v-btn color="grey" outlined large @click="$vuetify.goTo('#contact')">
+            <span class="grey--text text--darken-1 font-weight-bold">
+              ver  contato
+            </span>
+          </v-btn>
+
+        </div>
+
         <div class="py-12"></div>
       </section>
 
-      <section id="stats">
+      <!-- <section id="stats">
         <v-parallax
           :height="$vuetify.breakpoint.smAndDown ? 700 : 500"
           src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
@@ -177,54 +203,7 @@
             </v-row>
           </v-container>
         </v-parallax>
-      </section>
-
-      <section id="blog">
-        <div class="py-12"></div>
-
-        <v-container>
-          <h2
-            class="display-2 font-weight-bold mb-3 text-uppercase text-center"
-          >
-            Experimente
-          </h2>
-
-          <v-responsive class="mx-auto mb-12" width="56">
-            <v-divider class="mb-1"></v-divider>
-
-            <v-divider></v-divider>
-          </v-responsive>
-
-          <v-row>
-            <v-col
-              v-for="({ src, text, title }, i) in articles"
-              :key="i"
-              cols="12"
-              md="4"
-            >
-              <v-img
-                :src="src"
-                class="mb-4"
-                height="275"
-                max-width="100%"
-              ></v-img>
-
-              <h3
-                class="font-weight-black mb-4 text-uppercase"
-                v-text="title"
-              ></h3>
-
-              <div class="title font-weight-light mb-5" v-text="text"></div>
-
-              <v-btn class="ml-n4 font-weight-black" text>
-                Continue Reading
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-
-        <div class="py-12"></div>
-      </section>
+      </section> -->
 
       <v-sheet id="contact" color="#333333" dark tag="section" tile>
         <div class="py-12"></div>
@@ -233,7 +212,7 @@
           <h2
             class="display-2 font-weight-bold mb-3 text-uppercase text-center"
           >
-            Contact Me
+            Contato
           </h2>
 
           <v-responsive class="mx-auto mb-12" width="56">
@@ -243,42 +222,73 @@
           </v-responsive>
 
           <v-theme-provider light>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field flat label="Name*" solo></v-text-field>
-              </v-col>
+            <v-card
+    class="mx-auto"
+  >
+    <v-list two-line shaped>
 
-              <v-col cols="12">
-                <v-text-field flat label="Email*" solo></v-text-field>
-              </v-col>
+            <v-list-item-group
+        v-model="selectedItem"
+        color="primary"
+      >
 
-              <v-col cols="12">
-                <v-text-field flat label="Subject*" solo></v-text-field>
-              </v-col>
+      <v-list-item href="//api.whatsapp.com/send?phone=5567999767835&text=Olá, achei seu número pelo engebeck.com.br">
+                <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-phone
+          </v-icon>
+        </v-list-item-icon>
 
-              <v-col cols="12">
-                <v-textarea flat label="Message*" solo></v-textarea>
-              </v-col>
+        <v-list-item-content>
+          <v-list-item-title>(67) 9 9976-7835</v-list-item-title>
+          <v-list-item-subtitle>WhatsApp</v-list-item-subtitle>
+        </v-list-item-content>
 
-              <v-col class="mx-auto" cols="auto">
-                <v-btn color="accent" x-large>
-                  Submit
-                </v-btn>
-              </v-col>
-            </v-row>
+      </v-list-item>
+
+      <v-divider inset></v-divider>
+
+      <v-list-item href="mailto:yurifbeck@gmail.com">
+        <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-email
+          </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>yurifbeck@gmail.com</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider inset></v-divider>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon color="indigo">
+            mdi-map-marker
+          </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title></v-list-item-title>
+          <v-list-item-subtitle>Campo Grande - MS</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+            </v-list-item-group>
+    </v-list>
+  </v-card>
           </v-theme-provider>
         </v-container>
 
         <div class="py-12"></div>
       </v-sheet>
-    </v-content>
+    </v-main>
 
     <v-footer class="justify-center" color="#292929" height="100">
       <div
         class="title font-weight-light grey--text text--lighten-1 text-center"
       >
-        &copy; {{ new Date().getFullYear() }} — Vuetify, LLC — Made with 💜 by
-        John Leider
+        {{ new Date().getFullYear() }} — EngeBECK
       </div>
     </v-footer>
   </v-app>
@@ -295,6 +305,35 @@ export default {
     Logo,
     VuetifyLogo,
   },
+  data() {
+    return {
+      features: [
+        {
+          icon: 'mdi-phone',
+          title: 'blabla',
+          text: 'hahahasdofiashdf oashfd aushdf ah'
+        },
+        {
+          icon: 'mdi-phone',
+          title: 'blabla',
+          text: 'hahahasdofiashdf oashfd aushdf ah'
+        },
+        {
+          icon: 'mdi-phone',
+          title: 'blabla',
+          text: 'hahahasdofiashdf oashfd aushdf ah'
+        },
+        
+      ],
+      stats: [
+        [4,'projetos produzidos'], [4, 'obras executadas'], [9, 'reformas acompanhadas']
+      ],
+      portfolio: [
+        {src: 'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg', title:'Residência - Alphaville 4', text: 'Sobrado alto padrão com 5 quartos. Garagem para 3 carros grandes (tomada para carro elétrico). Sala de TV rebaixada toda acolchoada. Cozinha/gourmet com ilha central com pia e churrasqueira suspensa. Sistema de captação de água pluvial. Geração energia fotovoltaica. Bacia sanitária suspensa. Banheira de imersão. Entre outros', link: 'projetos/alphaville4_1011'}
+      ]
+        
+    }
+  },  
   computed: {
     ...mapGetters({
       isLoggedIn: 'auth/isLoggedIn',

@@ -17,8 +17,8 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '%s - Spaceship',
-    title: 'Spaceship',
+    titleTemplate: '%s - EngeBECK',
+    title: 'EngeBECK',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -109,8 +109,12 @@ export default {
 
   pwa: {
     // disable the modules you don't need
-    // meta: false,
-    // icon: false,
+    icon: {
+      purpose: 'maskable' 
+    },
+    meta: {
+      theme_color: '#0041ac'
+    },
     // if you omit a module key form configuration sensible defaults will be applied
     // manifest: false,
 

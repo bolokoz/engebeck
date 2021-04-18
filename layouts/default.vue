@@ -55,9 +55,10 @@
 
 <script lang="ts">
 import { mapGetters } from 'vuex'
+import Vue from 'vue'
 
-export default {
-  middleware: 'securePage',
+export default Vue.extend({
+   middleware: 'securePage',
   data() {
     return {
       clipped: false,
@@ -92,5 +93,6 @@ export default {
       })
     }
   },
-}
+})
+
 </script>
