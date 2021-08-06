@@ -14,10 +14,11 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-console': 0,
-    "prettier/prettier": [
-      "error",
+    'prettier/prettier': [
+      'error',
       {
-        "endOfLine": "auto"
+        "endOfLine": "auto",
+        "singleQuote": true
       },
     ],
   },

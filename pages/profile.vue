@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h1>PROFILE</h1>
+    <h1>PROFILE</h1>
     <p>Compras {{ authUser }} 🎈</p>
     <ul>
       <li v-for="message in messages" :key="message.id">
@@ -12,7 +12,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-
 
 export default Vue.extend({
   middleware: 'securePage',
@@ -42,6 +41,5 @@ export default Vue.extend({
         })
       }) */
   },
-
 })
 </script>
