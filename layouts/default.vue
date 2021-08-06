@@ -1,22 +1,28 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" fixed app>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+      color="light-green lighten-5"
+    >
       <v-list nuxt to="/profile">
-        <v-list-item>
+        <!-- <v-list-item>
           <v-list-item-avatar>
             <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
-        </v-list-item>
+        </v-list-item> -->
 
-        <v-list-item link>
+        <v-list-item link nuxt to="/profile">
           <v-list-item-content>
             <v-list-item-title class="text-h6">
               {{ authUser.displayName }}
             </v-list-item-title>
             <v-list-item-subtitle>{{ authUser.email }}</v-list-item-subtitle>
           </v-list-item-content>
+
           <v-list-item-action>
-            <v-icon>mdi-edit</v-icon>
+            <v-icon>mdi-pencil</v-icon>
           </v-list-item-action>
         </v-list-item>
       </v-list>
@@ -43,9 +49,9 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar fixed app>
+    <v-app-bar fixed app color="light-blue lighten-4">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title v-text="title" class="font-weight-light" />
       <v-spacer />
     </v-app-bar>
     <v-main>
@@ -79,15 +85,15 @@ export default Vue.extend({
         {
           icon: 'mdi-chart-bubble',
           title: 'Compras',
-          to: '/app/compras',
+          to: '/compras',
         },
         {
           icon: 'mdi-chart-bubble',
           title: 'Obras',
-          to: '/app/obras',
+          to: '/obras',
         },
       ],
-      title: 'EngeBeck - ' + this.$route.name?.toUpperCase(),
+      title: 'EngeBeck',
     }
   },
 

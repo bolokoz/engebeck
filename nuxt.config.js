@@ -3,10 +3,10 @@ import colors from 'vuetify/es5/util/colors'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-        router: {
-          base: '/dist/',
-        },
-      }
+      router: {
+        base: '/dist/',
+      },
+    }
     : {}
 
 export default {
@@ -62,7 +62,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
