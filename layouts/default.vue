@@ -35,7 +35,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <template v-slot:append>
+      <template #append>
         <div class="pa-2">
           <v-btn block @click="logout()"> Logout </v-btn>
         </div>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 import Vue from 'vue'
 
 export default Vue.extend({

@@ -86,13 +86,13 @@ export default {
    */
   firebase: {
     config: {
-      apiKey: "AIzaSyCkiD28s9pykKQelyqWLJoVSEgn22GCass",
-      authDomain: "ybimmobil.firebaseapp.com",
-      databaseURL: "https://ybimmobil.firebaseio.com",
-      projectId: "ybimmobil",
-      storageBucket: "ybimmobil.appspot.com",
-      messagingSenderId: "86454094851",
-      appId: "1:86454094851:web:49fd58d05a54908c92d236"
+      apiKey: 'AIzaSyCkiD28s9pykKQelyqWLJoVSEgn22GCass',
+      authDomain: 'ybimmobil.firebaseapp.com',
+      databaseURL: 'https://ybimmobil.firebaseio.com',
+      projectId: 'ybimmobil',
+      storageBucket: 'ybimmobil.appspot.com',
+      messagingSenderId: '86454094851',
+      appId: '1:86454094851:web:49fd58d05a54908c92d236',
     },
     services: {
       auth: {
@@ -109,10 +109,10 @@ export default {
   pwa: {
     // disable the modules you don't need
     icon: {
-      purpose: 'maskable' 
+      purpose: 'maskable',
     },
     meta: {
-      theme_color: '#0041ac'
+      theme_color: '#0041ac',
     },
     // if you omit a module key form configuration sensible defaults will be applied
     // manifest: false,

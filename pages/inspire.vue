@@ -28,7 +28,7 @@
                       :class="[
                         $vuetify.breakpoint.smAndDown
                           ? 'display-1'
-                          : 'display-2'
+                          : 'display-2',
                       ]"
                     >
                     </span>
@@ -39,7 +39,7 @@
                       :class="[
                         $vuetify.breakpoint.smAndDown
                           ? 'display-3'
-                          : 'display-4'
+                          : 'display-4',
                       ]"
                       class="font-weight-black"
                     >
@@ -257,9 +257,7 @@
               </v-col>
 
               <v-col class="mx-auto" cols="auto">
-                <v-btn color="accent" x-large>
-                  Submit
-                </v-btn>
+                <v-btn color="accent" x-large> Submit </v-btn>
               </v-col>
             </v-row>
           </v-theme-provider>
@@ -280,12 +278,10 @@
   </v-app>
 </template>
 
-
 <script lang="ts">
 import Vue from 'vue'
 
 export default Vue.extend({
   layout: 'landing',
-
 })
 </script>

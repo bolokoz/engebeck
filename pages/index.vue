@@ -2,27 +2,25 @@
   <v-app>
     <v-app-bar fixed flat hide-on-scroll color="transparent">
       <v-img
-    class="mt-2"
-    :src="require('~/assets/TETRAHEDRON.png')"
-    max-height="60"
-    max-width="60"
-    contain
-  ></v-img>
+        class="mt-2"
+        :src="require('~/assets/TETRAHEDRON.png')"
+        max-height="60"
+        max-width="60"
+        contain
+      ></v-img>
       <v-toolbar-title class="font-weight-black headline white--text">
         EngeBECK
       </v-toolbar-title>
       <v-spacer></v-spacer>
-          <div v-if="!isLoggedIn">
-      <v-btn outlined color="white"   nuxt to="/login">
-            Login
-          </v-btn>
-
-          </div>
-          <div v-else>
-
-          <v-btn outlined color="white" nuxt to="/app" class="mr-2"> Entrar </v-btn>
-          <v-btn color="secondary" @click="logout"> Logout </v-btn>
-          </div>
+      <div v-if="!isLoggedIn">
+        <v-btn outlined color="white" nuxt to="/login"> Login </v-btn>
+      </div>
+      <div v-else>
+        <v-btn outlined color="white" nuxt to="/app" class="mr-2">
+          Entrar
+        </v-btn>
+        <v-btn color="secondary" @click="logout"> Logout </v-btn>
+      </div>
     </v-app-bar>
 
     <v-main>
@@ -46,7 +44,7 @@
                       :class="[
                         $vuetify.breakpoint.smAndDown
                           ? 'display-1'
-                          : 'display-2'
+                          : 'display-2',
                       ]"
                     >
                     </span>
@@ -57,7 +55,7 @@
                       :class="[
                         $vuetify.breakpoint.smAndDown
                           ? 'display-3'
-                          : 'display-4'
+                          : 'display-4',
                       ]"
                       class="font-weight-black"
                     >
@@ -96,16 +94,27 @@
             class="mx-auto title font-weight-light mb-8"
             max-width="720"
           >
-            Empresa de engenharia do ramo residencial focada em construir lares modernos e eficientes através de projetos que levam economia tanto para construtor como proprietário. 
+            Empresa de engenharia do ramo residencial focada em construir lares
+            modernos e eficientes através de projetos que levam economia tanto
+            para construtor como proprietário.
           </v-responsive>
 
           <div class="d-flex justify-center mb-12" size="254">
-            <v-img max-width="250" contain :src="require('~/assets/logo_transparent.png')" ></v-img>
+            <v-img
+              max-width="250"
+              contain
+              :src="require('~/assets/logo_transparent.png')"
+            ></v-img>
           </div>
 
           <div></div>
 
-          <v-btn color="grey" outlined large @click="$vuetify.goTo('#portfolio')">
+          <v-btn
+            color="grey"
+            outlined
+            large
+            @click="$vuetify.goTo('#portfolio')"
+          >
             <span class="grey--text text--darken-1 font-weight-bold">
               Ver obras realizadas
             </span>
@@ -139,44 +148,39 @@
               md="4"
               :to="link"
             >
-
-            <v-card class="py-12 px-4" color="grey darken-1" flat>
+              <v-card class="py-12 px-4" color="grey darken-1" flat>
                 <v-theme-provider>
                   <div>
-              <v-img
-                :src="src"
-                class="mb-4"
-                height="275"
-                max-width="100%"
-              ></v-img>
+                    <v-img
+                      :src="src"
+                      class="mb-4"
+                      height="275"
+                      max-width="100%"
+                    ></v-img>
                   </div>
                 </v-theme-provider>
 
                 <v-card-title
-                  class="justify-center font-weight-black text-uppercase" v-text="title"
+                  class="justify-center font-weight-black text-uppercase"
+                  v-text="title"
                 >
                 </v-card-title>
 
                 <v-card-text class="subtitle-1" v-text="text"> </v-card-text>
-                              <v-btn class="ml-n4 font-weight-black" text nuxt :to="link">
-                Ver mais
-              </v-btn>
+                <v-btn class="ml-n4 font-weight-black" text nuxt :to="link">
+                  Ver mais
+                </v-btn>
               </v-card>
-
             </v-col>
           </v-row>
         </v-container>
 
         <div class="py-12 d-flex justify-center">
-
-
-
           <v-btn color="grey" outlined large @click="$vuetify.goTo('#contact')">
             <span class="grey--text text--darken-1 font-weight-bold">
-              ver  contato
+              ver contato
             </span>
           </v-btn>
-
         </div>
 
         <div class="py-12"></div>
@@ -229,61 +233,51 @@
           </v-responsive>
 
           <v-theme-provider light>
-            <v-card
-    class="mx-auto"
-  >
-    <v-list two-line shaped>
+            <v-card class="mx-auto">
+              <v-list two-line shaped>
+                <v-list-item-group v-model="selectedItem" color="primary">
+                  <v-list-item
+                    href="//api.whatsapp.com/send?phone=5567999767835&text=Olá, achei seu número pelo engebeck.com.br"
+                  >
+                    <v-list-item-icon>
+                      <v-icon color="indigo"> mdi-phone </v-icon>
+                    </v-list-item-icon>
 
-            <v-list-item-group
-        v-model="selectedItem"
-        color="primary"
-      >
+                    <v-list-item-content>
+                      <v-list-item-title>(67) 9 9976-7835</v-list-item-title>
+                      <v-list-item-subtitle>WhatsApp</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
 
-      <v-list-item href="//api.whatsapp.com/send?phone=5567999767835&text=Olá, achei seu número pelo engebeck.com.br">
-                <v-list-item-icon>
-          <v-icon color="indigo">
-            mdi-phone
-          </v-icon>
-        </v-list-item-icon>
+                  <v-divider inset></v-divider>
 
-        <v-list-item-content>
-          <v-list-item-title>(67) 9 9976-7835</v-list-item-title>
-          <v-list-item-subtitle>WhatsApp</v-list-item-subtitle>
-        </v-list-item-content>
+                  <v-list-item href="mailto:yurifbeck@gmail.com">
+                    <v-list-item-icon>
+                      <v-icon color="indigo"> mdi-email </v-icon>
+                    </v-list-item-icon>
 
-      </v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>yurifbeck@gmail.com</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
 
-      <v-divider inset></v-divider>
+                  <v-divider inset></v-divider>
 
-      <v-list-item href="mailto:yurifbeck@gmail.com">
-        <v-list-item-icon>
-          <v-icon color="indigo">
-            mdi-email
-          </v-icon>
-        </v-list-item-icon>
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon color="indigo"> mdi-map-marker </v-icon>
+                    </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>yurifbeck@gmail.com</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider inset></v-divider>
-
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon color="indigo">
-            mdi-map-marker
-          </v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title></v-list-item-title>
-          <v-list-item-subtitle>Campo Grande - MS</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-            </v-list-item-group>
-    </v-list>
-  </v-card>
+                    <v-list-item-content>
+                      <v-list-item-title></v-list-item-title>
+                      <v-list-item-subtitle
+                        >Campo Grande - MS</v-list-item-subtitle
+                      >
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
           </v-theme-provider>
         </v-container>
 
@@ -307,40 +301,42 @@ import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
 export default {
-  layout: "landing",
-  components: {
-    Logo,
-    VuetifyLogo,
-  },
+  components: {},
+  layout: 'landing',
   data() {
     return {
       features: [
         {
           icon: 'mdi-phone',
           title: 'blabla',
-          text: 'hahahasdofiashdf oashfd aushdf ah'
+          text: 'hahahasdofiashdf oashfd aushdf ah',
         },
         {
           icon: 'mdi-phone',
           title: 'blabla',
-          text: 'hahahasdofiashdf oashfd aushdf ah'
+          text: 'hahahasdofiashdf oashfd aushdf ah',
         },
         {
           icon: 'mdi-phone',
           title: 'blabla',
-          text: 'hahahasdofiashdf oashfd aushdf ah'
+          text: 'hahahasdofiashdf oashfd aushdf ah',
         },
-        
       ],
       stats: [
-        [4,'projetos produzidos'], [4, 'obras executadas'], [9, 'reformas acompanhadas']
+        [4, 'projetos produzidos'],
+        [4, 'obras executadas'],
+        [9, 'reformas acompanhadas'],
       ],
       portfolio: [
-        {src: 'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg', title:'Residência - Alphaville 4', text: 'Sobrado alto padrão com 5 quartos. Garagem para 3 carros grandes (tomada para carro elétrico). Sala de TV rebaixada toda acolchoada. Cozinha/gourmet com ilha central com pia e churrasqueira suspensa. Sistema de captação de água pluvial. Geração energia fotovoltaica. Bacia sanitária suspensa. Banheira de imersão. Entre outros', link: 'projetos/alphaville4_1011'}
-      ]
-        
+        {
+          src: 'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg',
+          title: 'Residência - Alphaville 4',
+          text: 'Sobrado alto padrão com 5 quartos. Garagem para 3 carros grandes (tomada para carro elétrico). Sala de TV rebaixada toda acolchoada. Cozinha/gourmet com ilha central com pia e churrasqueira suspensa. Sistema de captação de água pluvial. Geração energia fotovoltaica. Bacia sanitária suspensa. Banheira de imersão. Entre outros',
+          link: 'projetos/alphaville4_1011',
+        },
+      ],
     }
-  },  
+  },
   computed: {
     ...mapGetters({
       isLoggedIn: 'auth/isLoggedIn',

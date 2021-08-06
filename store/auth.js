@@ -58,7 +58,7 @@ export const actions = {
     this.$fire.auth
       .signOut()
       .then(() => {
-        this.$router.push({path: '/'})
+        this.$router.push({ path: '/' })
         commit('resetStore')
       })
       .catch((err) => {
