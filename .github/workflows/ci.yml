@@ -51,10 +51,13 @@ jobs:
         run: yarn test
 
       - name: Generate app 🎁
-        run: yarn generate:gh-pages
+        run: yarn generate
 
       - name: Deploy app 🚀
-        uses: peaceiris/actions-gh-pages@v3
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
           publish_dir: ./dist
+          projectId: ybimmobil
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_YBIMMOBIL }}'
