@@ -51,7 +51,7 @@
     </v-navigation-drawer>
     <v-app-bar fixed app color="light-blue lighten-4">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" class="font-weight-light" />
+      <v-toolbar-title class="font-weight-light" v-text="title" />
       <v-spacer />
     </v-app-bar>
     <v-main>

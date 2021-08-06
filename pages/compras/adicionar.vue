@@ -68,10 +68,24 @@
       <v-row>
         <v-col>
           <v-textarea
-            label="Observações"
             v-model="obs"
+            label="Observações"
             hint="Observações extra"
           ></v-textarea>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-btn dark color="green light" @click="adicionar">Adicionar</v-btn>
+        </v-col>
+        <v-col>
+          <v-btn dark color="blue light" @click="addAndCheck"
+            >Adicionar e verificar</v-btn
+          >
+        </v-col>
+        <v-col>
+          <v-btn @click="resetar">Resetar</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -101,28 +115,15 @@ export default Vue.extend({
     }
   },
 
-  watch: {
-    search(val) {
-      val && val !== this.select && this.querySelections(val)
-    },
-  },
-
   computed: {
     authUser() {
       return this.$store.state.auth.authUser
     },
   },
 
-  methods: {
-    querySelections(v) {
-      this.loading = true
-      // Simulated ajax query
-      setTimeout(() => {
-        this.items = this.fornecedores.filter((e) => {
-          return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-        })
-        this.loading = false
-      }, 500)
+  watch: {
+    search(val) {
+      val && val !== this.select && this.querySelections(val)
     },
   },
 
@@ -138,6 +139,28 @@ export default Vue.extend({
           this.messages.push(doc)
         })
       }) */
+  },
+
+  methods: {
+    querySelections(v) {
+      this.loading = true
+      // Simulated ajax query
+      setTimeout(() => {
+        this.items = this.fornecedores.filter((e) => {
+          return (e || '').toLowerCase().includes((v || '').toLowerCase())
+        })
+        this.loading = false
+      }, 500)
+    },
+    adicionar() {
+      alert('adicionar')
+    },
+    addAndCheck() {
+      alert('addAndCheck')
+    },
+    reset() {
+      alert('resetar')
+    },
   },
 })
 </script>

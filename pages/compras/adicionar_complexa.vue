@@ -80,6 +80,12 @@ import Vue from 'vue'
 export default Vue.extend({
   middleware: 'securePage',
 
+  data() {
+    return {
+      messages: [],
+    }
+  },
+
   head() {
     return {
       script: [
@@ -90,19 +96,11 @@ export default Vue.extend({
     }
   },
 
-  data() {
-    return {
-      messages: [],
-    }
-  },
-
   computed: {
     authUser() {
       return this.$store.state.auth.authUser
     },
   },
-
-  methods: {},
 
   mounted() {
     /* this.$fire.firestore
@@ -117,5 +115,7 @@ export default Vue.extend({
         })
       }) */
   },
+
+  methods: {},
 })
 </script>
