@@ -327,11 +327,9 @@ export default {
       ],
       portfolio: [
         {
-          src:
-            'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg',
+          src: 'https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg',
           title: 'Residência - Alphaville 4',
-          text:
-            'Sobrado alto padrão com 5 quartos. Garagem para 3 carros grandes (tomada para carro elétrico). Sala de TV rebaixada toda acolchoada. Cozinha/gourmet com ilha central com pia e churrasqueira suspensa. Sistema de captação de água pluvial. Geração energia fotovoltaica. Bacia sanitária suspensa. Banheira de imersão. Entre outros',
+          text: 'Sobrado alto padrão com 5 quartos. Garagem para 3 carros grandes (tomada para carro elétrico). Sala de TV rebaixada toda acolchoada. Cozinha/gourmet com ilha central com pia e churrasqueira suspensa. Sistema de captação de água pluvial. Geração energia fotovoltaica. Bacia sanitária suspensa. Banheira de imersão. Entre outros',
           link: 'projetos/alphaville4_1011',
         },
       ],

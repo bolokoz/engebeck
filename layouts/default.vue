@@ -14,8 +14,10 @@
               {{ authUser.displayName }}
             </v-list-item-title>
             <v-list-item-subtitle>{{ authUser.email }}</v-list-item-subtitle>
-            <v-list-item-subtitle>Clique para editar</v-list-item-subtitle>
           </v-list-item-content>
+          <v-list-item-action>
+            <v-icon>mdi-edit</v-icon>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
       <v-divider></v-divider>

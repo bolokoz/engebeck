@@ -1890,7 +1890,7 @@
     "webpack-node-externals" "^3.0.0"
     "webpackbar" "^4.0.0"
 
-"@nuxtjs/axios@^5.12.2":
+"@nuxtjs/axios@^5.13.6":
   "integrity" "sha512-XS+pOE0xsDODs1zAIbo95A0LKlilvJi8YW0NoXYuq3/jjxGgWDxizZ6Yx0AIIjZOoGsXJOPc0/BcnSEUQ2mFBA=="
   "resolved" "https://registry.npmjs.org/@nuxtjs/axios/-/axios-5.13.6.tgz"
   "version" "5.13.6"
@@ -1963,7 +1963,7 @@
     "serve-static" "^1.14.1"
     "workbox-cdn" "^5.1.4"
 
-"@nuxtjs/vuetify@^1.11.2":
+"@nuxtjs/vuetify@^1.12.1":
   "integrity" "sha512-oNwNhR6LY7l9ETsNyPkmCxgzbOYuAf27m+6E9mjQzHSu8PPI0vJ3xnGLgo87XnTcnWr9nYxqjwRN8xqMuuyoxQ=="
   "resolved" "https://registry.npmjs.org/@nuxtjs/vuetify/-/vuetify-1.12.1.tgz"
   "version" "1.12.1"
@@ -2627,7 +2627,7 @@
   optionalDependencies:
     "prettier" "^1.18.2"
 
-"@vue/test-utils@^1.1.1":
+"@vue/test-utils@^1.2.2":
   "integrity" "sha512-P+yiAsszoy8z1TqXiVUnAZaJj0WGGz5fCxm4bOSI6Cpwy1+PNYwYxDv0ROAA/SUtOPppV+aD8tp/QWwxf8ROJw=="
   "resolved" "https://registry.npmjs.org/@vue/test-utils/-/test-utils-1.2.2.tgz"
   "version" "1.2.2"
@@ -5870,7 +5870,7 @@
     "@firebase/storage" "0.6.2"
     "@firebase/util" "1.2.0"
 
-"firebaseui@^4.7.1":
+"firebaseui@^4.8.1":
   "integrity" "sha512-Qh8kfqGjMIiVJ2X8MUFsmlf43QFcVc8ungD+kw5T8ACuhQ68IAyUHExlItAfumrcLlqEgyo1MjH0O9fZZAMOKw=="
   "resolved" "https://registry.npmjs.org/firebaseui/-/firebaseui-4.8.1.tgz"
   "version" "4.8.1"
