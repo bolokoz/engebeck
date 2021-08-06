@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1>Você precisa logar antes de acessar este página</h1>
     <client-only>
       <yop-ui />
     </client-only>
