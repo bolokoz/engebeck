@@ -27,7 +27,7 @@
             offset-y
             min-width="auto"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="datePagamento"
                 label="Data Pagamento"
@@ -38,8 +38,8 @@
             </template>
             <v-date-picker
               v-model="datePagamento"
-              @input="menuPagamento = false"
               locale="pt-br"
+              @input="menuPagamento = false"
             ></v-date-picker>
           </v-menu>
         </v-col>
@@ -109,7 +109,7 @@
             offset-y
             min-width="auto"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="dateNota"
                 label="Data Nota"
