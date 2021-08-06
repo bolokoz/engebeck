@@ -16,12 +16,32 @@
     <v-divider></v-divider>
 
     <v-container fluid>
+      <h3 class="my-3 font-weight-light">Dados do pagamento</h3>
       <v-row>
-        <v-col justify="center">
-          <v-date-picker
-            v-model="picker"
-            color="light green lighten-3"
-          ></v-date-picker>
+        <v-col>
+          <v-menu
+            v-model="menuPagamento"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="datePagamento"
+                label="Data Pagamento"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="datePagamento"
+              @input="menuPagamento = false"
+              locale="pt-br"
+            ></v-date-picker>
+          </v-menu>
         </v-col>
       </v-row>
 
@@ -37,18 +57,37 @@
 
       <v-row>
         <v-col>
-          <v-autocomplete
-            v-model="fornecedor"
-            :loading="loading"
-            :items="fornecedores"
-            :search-input.sync="search"
+          <v-combobox
+            v-model="pagador"
+            :loading="loadingPagadores"
+            :items="pagadores"
+            :search-input.sync="searchPagadores"
             cache-items
             hide-no-data
             hide-details
-            label="Destino do pagamento?"
-          ></v-autocomplete>
+            label="Quem pagou"
+          ></v-combobox>
         </v-col>
       </v-row>
+
+      <v-row>
+        <v-col>
+          <v-combobox
+            v-model="fornecedor"
+            :loading="loadingFornecedores"
+            :items="fornecedores"
+            :search-input.sync="searchFornecedores"
+            cache-items
+            hide-no-data
+            hide-details
+            dense
+            label="Destino (loja) do pagamento?"
+          ></v-combobox>
+        </v-col>
+      </v-row>
+
+      <v-divider class="my-3" inset></v-divider>
+      <h3 class="my-3 font-weight-light">Dados da nota</h3>
 
       <v-row>
         <v-col>
@@ -59,9 +98,85 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <v-row>
+        <v-col>
+          <v-menu
+            v-model="menuNota"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateNota"
+                label="Data Nota"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="dateNota"
+              @input="menuNota = false"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
+      </v-row>
       <v-row>
         <v-col>
           <v-text-field v-model.number="chave" label="Chave NFE"></v-text-field>
+        </v-col>
+      </v-row>
+
+      <v-divider class="my-3" inset></v-divider>
+
+      <h3 class="my-3 font-weight-light">Dados de controle</h3>
+
+      <v-row>
+        <v-col>
+          <v-combobox
+            v-model="obra"
+            :loading="loadingObras"
+            :items="obras"
+            :search-input.sync="searchObras"
+            cache-items
+            hide-no-data
+            hide-details
+            label="Obra"
+          ></v-combobox>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-combobox
+            v-model="etapa"
+            :loading="loadingEtapas"
+            :items="etapas"
+            :search-input.sync="searchEtapas"
+            cache-items
+            hide-no-data
+            hide-details
+            label="Etapa da obra"
+          ></v-combobox>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-combobox
+            v-model="material"
+            :loading="loadingMateriais"
+            :items="materiais"
+            :search-input.sync="searchMateriais"
+            cache-items
+            hide-no-data
+            hide-details
+            label="Que material?"
+          ></v-combobox>
         </v-col>
       </v-row>
 
@@ -74,6 +189,8 @@
           ></v-textarea>
         </v-col>
       </v-row>
+
+      <v-divider class="my-3" inset></v-divider>
 
       <v-row>
         <v-col>
@@ -103,15 +220,38 @@ export default Vue.extend({
       pagamento: 0,
       fornecedores: ['foo', 'bar', 'fizz', 'buzz'],
       fornecedor: null,
+      obras: ['fxvboo', 'basdfgr', 'fixcvbzz', 'asd'],
+      obra: null,
+      materiais: ['f543oo', '4bar', 'fiz12z', 'buzz'],
+      material: null,
+      etapas: ['foo3', 'bar1', 'fi3zz', 'buzz'],
+      etapa: null,
+      pagadores: ['MRB', 'ENGEBECK'],
+      pagador: null,
       value: null,
       nota: 0,
       chave: 0,
-      loading: false,
-      search: null,
+      loadingEtapas: false,
+      searchEtapas: null,
+      loadingPagadores: false,
+      searchPagadores: null,
+      loadingMateriais: false,
+      searchMateriais: null,
+      loadingObras: false,
+      searchObras: null,
+      loadingFornecedores: false,
+      searchFornecedores: null,
       obs: '',
-      picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      menuNota: false,
+      dateNota: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
+      datePagamento: new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10),
+      menuPagamento: false,
     }
   },
 
@@ -158,7 +298,7 @@ export default Vue.extend({
     addAndCheck() {
       alert('addAndCheck')
     },
-    reset() {
+    resetar() {
       alert('resetar')
     },
   },
