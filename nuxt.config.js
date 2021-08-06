@@ -1,11 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 
-// ajouter seulement `router.base = '/Spaceship/'` si `DEPLOY_ENV` est `GH_PAGES`
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
         router: {
-          base: '/Spaceship/',
+          base: '/dist/',
         },
       }
     : {}

@@ -12,10 +12,17 @@
         EngeBECK
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn outlined color="white"  v-if="!isLoggedIn" nuxt to="/login">
+          <div v-if="!isLoggedIn">
+      <v-btn outlined color="white"   nuxt to="/login">
             Login
           </v-btn>
-          <v-btn v-else color="secondary" @click="logout"> Logout </v-btn>
+
+          </div>
+          <div v-else>
+
+          <v-btn outlined color="white" nuxt to="/app" class="mr-2"> Entrar </v-btn>
+          <v-btn color="secondary" @click="logout"> Logout </v-btn>
+          </div>
     </v-app-bar>
 
     <v-main>

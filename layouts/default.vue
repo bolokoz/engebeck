@@ -1,19 +1,30 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       fixed
       app
     >
-      <v-list>
-        <v-list-item>
-                  <v-list-item-action>
-            <v-icon>mdi-phone</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title> Ola {{ authUser.displayName }}</v-list-item-title>
-          </v-list-item-content>
+        <v-list  nuxt to="/profile">
+        <v-list-item >
+          <v-list-item-avatar>
+            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+          </v-list-item-avatar>
         </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
+              {{authUser.displayName}}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{authUser.email}}</v-list-item-subtitle>
+<v-list-item-subtitle>Clique para editar</v-list-item-subtitle>
+          </v-list-item-content>
+
+        </v-list-item>
+      </v-list>
+              <v-divider></v-divider>
+      <v-list>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -67,16 +78,21 @@ export default Vue.extend({
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Início',
           to: '/',
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
+          title: 'Compras',
+          to: '/app/compras',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Obras',
+          to: '/app/obras',
         },
       ],
-      title: 'CasaDB',
+      title: 'EngeBeck - ' + this.$route.name?.toUpperCase()
     }
   },
 
