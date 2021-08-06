@@ -1,12 +1,8 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
-    >
-        <v-list  nuxt to="/profile">
-        <v-list-item >
+    <v-navigation-drawer v-model="drawer" fixed app>
+      <v-list nuxt to="/profile">
+        <v-list-item>
           <v-list-item-avatar>
             <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
@@ -15,15 +11,14 @@
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h6">
-              {{authUser.displayName}}
+              {{ authUser.displayName }}
             </v-list-item-title>
-            <v-list-item-subtitle>{{authUser.email}}</v-list-item-subtitle>
-<v-list-item-subtitle>Clique para editar</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ authUser.email }}</v-list-item-subtitle>
+            <v-list-item-subtitle>Clique para editar</v-list-item-subtitle>
           </v-list-item-content>
-
         </v-list-item>
       </v-list>
-              <v-divider></v-divider>
+      <v-divider></v-divider>
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -40,11 +35,9 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-            <template v-slot:append>
+      <template v-slot:append>
         <div class="pa-2">
-          <v-btn block @click="logout()">
-            Logout
-          </v-btn>
+          <v-btn block @click="logout()"> Logout </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -69,7 +62,7 @@ import { mapGetters } from 'vuex'
 import Vue from 'vue'
 
 export default Vue.extend({
-   middleware: 'securePage',
+  middleware: 'securePage',
   data() {
     return {
       clipped: false,
@@ -92,10 +85,9 @@ export default Vue.extend({
           to: '/app/obras',
         },
       ],
-      title: 'EngeBeck - ' + this.$route.name?.toUpperCase()
+      title: 'EngeBeck - ' + this.$route.name?.toUpperCase(),
     }
   },
-
 
   computed: {
     authUser(): string {
@@ -107,8 +99,7 @@ export default Vue.extend({
       this.$store.dispatch('auth/signOut').then(() => {
         console.log('logged out 📴')
       })
-    }
+    },
   },
 })
-
 </script>
