@@ -58,6 +58,7 @@
       <v-container>
         <nuxt />
       </v-container>
+      <Snackbar />
     </v-main>
     <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -68,8 +69,10 @@
 <script lang="ts">
 // import { mapGetters } from 'vuex'
 import Vue from 'vue'
+import Snackbar from '~/components/Snackbar.vue'
 
 export default Vue.extend({
+  components: { Snackbar },
   middleware: 'securePage',
   data() {
     return {

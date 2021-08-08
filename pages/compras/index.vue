@@ -4,13 +4,69 @@
       <v-row class="text-center my-3">
         <h1 class="font-weight-light">Compras</h1>
         <v-spacer></v-spacer>
-        <v-btn outlined to="/compras/adicionar">
+        <v-btn outlined to="/compras/adicionar" nuxt>
           <v-icon class="mr-2">mdi-plus</v-icon>
           Adiconar compra
         </v-btn>
       </v-row>
     </v-container>
     <v-divider></v-divider>
+
+    <div class="d-none d-sm-flex">
+      <v-card>
+        <v-card-title>
+          Compras
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Procurar"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="compras"
+          :search="search"
+          :loading="loading"
+          dense
+          no-results-text="Nada encontrado"
+          no-data-text="Banco de dados vazio"
+          loading-text="Carregando dados..."
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+    </div>
+    <div class="d-flex flex-column d-sm-none">
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">Data Pag.</th>
+              <th class="text-left">Loja</th>
+              <th class="text-left">Valor</th>
+              <th class="text-left">Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="compra in compras" :key="compra.id">
+              <td>{{ compra.datePagamento }}</td>
+              <td>{{ compra.fornecedor }}</td>
+              <td>{{ compra.valorPagamento }}</td>
+              <td>
+                <v-btn text small><v-icon>mdi-pencil</v-icon></v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </div>
   </div>
 </template>
 
@@ -22,16 +78,21 @@ export default Vue.extend({
 
   data() {
     return {
-      messages: [],
-    }
-  },
-
-  head() {
-    return {
-      script: [
+      compras: [],
+      search: '',
+      loading: false,
+      headers: [
         {
-          src: 'https://raw.githubusercontent.com/mebjas/html5-qrcode/master/dist/html5-qrcode.min.js',
+          text: 'Data pag.',
+          align: 'start',
+          value: 'datePagamento',
         },
+        { text: 'Valor', value: 'valorPagamento' },
+        { text: 'Pagador', value: 'pagador' },
+        { text: 'Loja', value: 'fornecedor' },
+        { text: 'Obra', value: 'obra' },
+        { text: 'Material', value: 'material' },
+        { text: 'Actions', value: 'actions', sortable: false },
       ],
     }
   },
@@ -43,19 +104,34 @@ export default Vue.extend({
   },
 
   mounted() {
-    /* this.$fire.firestore
-      .collection('users')
-      .doc(this.authUser.id)
-      .collection('products')
+    this.loading = true
+    this.$fire.firestore
+      .collection('compras')
       .get()
       .then((snap) => {
-        this.messages = []
+        this.compras = []
         snap.forEach((doc) => {
-          this.messages.push(doc)
+          this.compras.push({ id: doc.id, ...doc.data() })
         })
-      }) */
+      })
+      .catch(() => {
+        this.$notifier.showMessage({
+          content: error,
+          color: 'error',
+          top: false,
+        })
+      })
+      .finally(() => {
+        this.loading = false
+      })
   },
 
-  methods: {},
+  methods: {
+    editItem(compra) {
+      this.$router.push({
+        path: `/compras/${compra.id}`,
+      })
+    },
+  },
 })
 </script>

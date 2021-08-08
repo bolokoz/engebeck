@@ -3,20 +3,16 @@
     <v-container>
       <v-row no-gutters>
         <v-col cols="12">
-          <h1 class="font-weight-regular">Adicionar compra simples</h1>
+          <h1 class="font-weight-regular">Editar compra</h1>
         </v-col>
 
         <v-col cols="12">
-          <h4 class="font-weight-light">
-            Para quando possui pagamento completo e nota
-          </h4>
+          <h4 class="font-weight-light">Compra id: {{ id }}</h4>
         </v-col>
 
         <v-col cols="12">
           <p class="text--caption font-weight-light">
-            <a href="/compras/adicionar_complexa">
-              Clique aqui para adicionar compra complexa
-            </a>
+            <nuxt-link to="/compras/"> Voltar para compras </nuxt-link>
           </p>
         </v-col>
       </v-row>
@@ -24,7 +20,7 @@
     <v-divider></v-divider>
 
     <v-container>
-      <v-form @submit.prevent="adicionarCompra" ref="form">
+      <v-form @submit.prevent="modificarCompra" ref="form">
         <h3 class="my-3 font-weight-bold">Dados do pagamento</h3>
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -203,23 +199,69 @@
           </v-col>
         </v-row>
 
+        <h3 class="my-3 font-weight-bold">Dados extras</h3>
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <p>Criado por: {{ form.createdBy }}</p>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <p>Criado em: {{ createdAtDate }}</p>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <p>
+              Modificado em:
+              {{ form.modifiedAt }}
+            </p>
+            <p>
+              Modificado por:
+              {{ modifiedByDate }}
+            </p>
+          </v-col>
+        </v-row>
+
         <v-divider class="my-5"></v-divider>
 
         <v-row>
-          <v-col sm="8" offset-sm="1" md="5" lg="6">
+          <v-col>
             <v-row>
               <v-col>
-                <v-btn
-                  dark
-                  color="green light"
-                  outlined
-                  @click="adicionarCompra"
-                  >{{ loading ? 'enviando' : 'ADD' }}</v-btn
-                >
+                <v-btn color="yellow light" @click="modificarCompra">{{
+                  loading ? 'Carregando' : 'Modificar'
+                }}</v-btn>
               </v-col>
 
               <v-col>
-                <v-btn @click="resetar" type="reset">RESET</v-btn>
+                <v-row justify="center">
+                  <v-dialog v-model="dialog" persistent max-width="290">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn color="red" outlined dark v-bind="attrs" v-on="on">
+                        Deletar
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title class="text-h5">
+                        Tem certeza?
+                      </v-card-title>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Voltar
+                        </v-btn>
+                        <v-btn color="red darken-1" text @click="deletar">
+                          Deletar
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-row>
               </v-col>
             </v-row>
           </v-col>
@@ -228,24 +270,27 @@
     </v-container>
   </div>
 </template>
-
 <script>
 import Vue from 'vue'
-
-export default Vue.extend({
+export default {
   middleware: 'securePage',
+  async asyncData({ params }) {
+    const id = params.id
+    return { id }
+  },
 
   data() {
     const defaultForm = Object.freeze({
-      valorPagamento: 1233,
-      fornecedor: 'ELOS',
-      obra: 'Alphaville 4',
-      material: 'Fios para AR',
-      etapa: 'Acabamento',
-      pagador: 'MRB',
-      nota: 442342,
-      chave: '431412312453521234543212',
-      obs: 'asfdasdfaewf',
+      valorPagamento: 0,
+      fornecedor: '',
+      obra: '',
+      material: '',
+      etapa: '',
+
+      pagador: '',
+      nota: 0,
+      chave: '',
+      obs: '',
       dateNota: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
@@ -255,10 +300,11 @@ export default Vue.extend({
         .toISOString()
         .substr(0, 10),
     })
-
     return {
+      loading: false,
       form: Object.assign({}, defaultForm),
       defaultForm,
+      dialog: false,
       fornecedores: ['foo', 'bar', 'fizz', 'buzz'],
       obras: ['fxvboo', 'basdfgr', 'fixcvbzz', 'asd'],
       materiais: ['f543oo', '4bar', 'fiz12z', 'buzz'],
@@ -273,10 +319,10 @@ export default Vue.extend({
       searchMateriais: null,
       loadingObras: false,
       searchObras: null,
+      compra: null,
       loadingFornecedores: false,
       searchFornecedores: null,
       menuNota: false,
-
       menuPagamento: false,
       rules: {
         valor: [(val) => val > 0 || `Valor deve ser positivo`],
@@ -291,38 +337,33 @@ export default Vue.extend({
     }
   },
 
-  computed: {
-    authUser() {
-      return this.$store.state.auth.authUser
-    },
-    formIsValid() {
-      return (
-        this.form.first &&
-        this.form.last &&
-        this.form.favoriteAnimal &&
-        this.form.terms
-      )
-    },
+  async fetch() {
+    const doc = await this.$fire.firestore
+      .collection('compras')
+      .doc(this.id)
+      .get()
+    this.compra = doc.data()
   },
 
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val)
     },
+    compra(val) {
+      this.form = val
+    },
   },
 
-  mounted() {
-    /* this.$fire.firestore
-      .collection('users')
-      .doc(this.authUser.id)
-      .collection('products')
-      .get()
-      .then((snap) => {
-        this.messages = []
-        snap.forEach((doc) => {
-          this.messages.push(doc)
-        })
-      }) */
+  computed: {
+    createdAtDate() {
+      return new Date(this.form.createdAt?.seconds * 1000)
+    },
+    modifiedAtDate() {
+      return new Date(this.form.modifiedAt?.seconds * 1000)
+    },
+    authUser() {
+      return this.$store.state.auth.authUser
+    },
   },
 
   methods: {
@@ -336,28 +377,25 @@ export default Vue.extend({
         this.loading = false
       }, 500)
     },
-    async adicionarCompra() {
+    async modificarCompra() {
       this.loading = true
-      const compra = {
-        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        createdBy: this.authUser,
-        visible: true,
-        ...this.form,
+      const modificacao = {
+        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        modifiedBy: this.authUser,
+        ...this.compra,
       }
+      console.log('modify', this.id, modificacao)
       this.$fire.firestore
         .collection('compras')
-        .add(compra)
+        .doc(this.id)
+        .set(modificacao)
         .then((docRef) => {
-          console.log('Documento written ID: ', docRef.id)
+          console.log('Documento modificado ID: ', docRef.id)
           this.$notifier.showMessage({
-            content: 'Adicionado, resetando formulario',
-            color: 'success',
+            content: 'Compra modificada',
+            color: 'info',
             top: false,
           })
-
-          setTimeout(() => {
-            this.resetar()
-          }, 3000)
         })
         .catch((error) => {
           console.log(error)
@@ -371,15 +409,32 @@ export default Vue.extend({
           this.loading = false
         })
     },
-    resetar() {
-      this.$notifier.showMessage({
-        content: 'Resetando formulario',
-        color: 'primary',
-        top: true,
-      })
-      this.form = Object.assign({}, this.defaultForm)
-      this.$refs.form.reset()
+    async deletar() {
+      this.loading = true
+      this.$fire.firestore
+        .collection('compras')
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Compra apagada',
+            color: 'info',
+            top: false,
+          })
+          this.dialog = false
+          this.$router.push('/compras')
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
   },
-})
+}
 </script>
