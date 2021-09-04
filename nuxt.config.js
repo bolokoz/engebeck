@@ -3,10 +3,10 @@ import colors from 'vuetify/es5/util/colors'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-      router: {
-        base: '/dist/',
-      },
-    }
+        router: {
+          base: '/dist/',
+        },
+      }
     : {}
 
 export default {
@@ -30,9 +30,7 @@ export default {
   css: ['~/assets/main.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [
-    '~/plugins/notifier.js'
-  ],
+  plugins: ['~/plugins/notifier.js'],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,

@@ -1,7 +1,7 @@
 <template>
   <v-snackbar v-model="show" :top="top" outlined :color="color">
     {{ message }}
-    <template v-slot:action="{ attrs }">
+    <template #action="{ attrs }">
       <v-btn text v-bind="attrs" @click="show = false"> Fechar </v-btn>
     </template>
   </v-snackbar>

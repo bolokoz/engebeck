@@ -1,24 +1,12 @@
 <template>
   <div>
     <v-container>
-      <v-row class="text-center my-3">
-        <h1 class="font-weight-light">Compras</h1>
-        <v-spacer></v-spacer>
-        <v-btn outlined to="/compras/adicionar" nuxt>
-          <v-icon class="mr-2">mdi-plus</v-icon>
-          Adiconar compra
-        </v-btn>
-      </v-row>
-    </v-container>
-    <v-divider></v-divider>
-
-    <v-container>
       <v-row>
         <v-col cols="12">
           <div class="d-none d-sm-block">
             <v-card>
               <v-card-title>
-                Compras
+                {{ NomeLista }}
                 <v-spacer></v-spacer>
                 <v-text-field
                   v-model="search"
@@ -29,16 +17,23 @@
                 ></v-text-field>
               </v-card-title>
               <v-data-table
-                :headers="headers"
+                :headers="desktopTableHeaders"
                 :items="items"
                 :search="search"
-                :loading="loading"
                 dense
                 no-results-text="Nada encontrado"
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
               >
                 <template #item.actions="{ item }">
+                  <v-icon
+                    v-if="telefone"
+                    small
+                    class="mr-2"
+                    @click="whatsapp(item)"
+                  >
+                    mdi-phone
+                  </v-icon>
                   <v-icon small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                   </v-icon>
@@ -63,6 +58,9 @@
                       {{ item[td] }}
                     </td>
                     <td>
+                      <v-btn v-if="telefone" text small @click="whatsapp(item)"
+                        ><v-icon>mdi-phone</v-icon></v-btn
+                      >
                       <v-btn text small @click="editItem(item)"
                         ><v-icon>mdi-pencil</v-icon></v-btn
                       >
@@ -79,70 +77,55 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mobileTableHeaders, mobileTableItems } from '~/dados/compras.js'
-
-export default Vue.extend({
-  middleware: 'securePage',
-
-  data() {
-    return {
-      mobileTableHeaders: mobileTableHeaders,
-      mobileTableItems: mobileTableItems,
-      items: [],
-      search: '',
-      loading: false,
-      headers: [
-        {
-          text: 'Data pag.',
-          align: 'start',
-          value: 'datePagamento',
-        },
-        { text: 'Valor', value: 'valorPagamento' },
-        { text: 'Pagador', value: 'pagador' },
-        { text: 'Loja', value: 'fornecedor' },
-        { text: 'Obra', value: 'obra' },
-        { text: 'Material', value: 'material' },
-        { text: 'Actions', value: 'actions', sortable: false },
-      ],
-    }
-  },
-
-  computed: {
-    authUser() {
-      return this.$store.state.auth.authUser
+export default {
+  props: {
+    NomeLista: {
+      type: String,
+      required: true,
+    },
+    items: {
+      type: String,
+      required: true,
+    },
+    mobileTableItems: {
+      type: Array,
+      required: true,
+    },
+    mobileTableHeaders: {
+      type: Array,
+      required: true,
+    },
+    desktopTableItems: {
+      type: Array,
+      required: true,
+    },
+    desktopTableHeaders: {
+      type: Array,
+      required: true,
+    },
+    editPath: {
+      type: String,
+      required: true,
+    },
+    telefone: {
+      type: Boolean,
+      required: false,
     },
   },
-
-  mounted() {
-    this.loading = true
-    this.$fire.firestore
-      .collection('compras')
-      .get()
-      .then((snap) => {
-        this.items = []
-        snap.forEach((doc) => {
-          this.items.push({ id: doc.id, ...doc.data() })
-        })
-      })
-      .catch(() => {
-        this.$notifier.showMessage({
-          content: error,
-          color: 'error',
-          top: false,
-        })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+  data() {
+    return {
+      search: '',
+    }
   },
-
   methods: {
     editItem(item) {
       this.$router.push({
-        path: `/compras/${item.id}`,
+        path: `${editPath}/${item.id}`,
       })
     },
+    whatsapp(item) {
+      window.open(`https://wa.me/55${item.telefone}`)
+    },
   },
-})
+}
 </script>

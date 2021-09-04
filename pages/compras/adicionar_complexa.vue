@@ -16,7 +16,7 @@
     <v-divider></v-divider>
 
     <v-container>
-      <v-form @submit.prevent="adicionarCompra" ref="form">
+      <v-form ref="form" @submit.prevent="adicionarCompraComplexa">
         <h3 class="my-3 font-weight-bold">Dados de controle</h3>
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -110,7 +110,7 @@
               {{ pagamento }}
             </p>
             <v-dialog v-model="pagamentoDialog" persistent max-width="600px">
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn color="primary" dark v-bind="attrs" v-on="on">
                   Adicionar pagamento
                 </v-btn>
@@ -201,7 +201,7 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-dialog v-model="notaDialog" persistent max-width="600px">
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn color="primary" dark v-bind="attrs" v-on="on">
                   Adicionar nota
                 </v-btn>
@@ -221,7 +221,7 @@
                     dense
                     min-width="auto"
                   >
-                    <template #activator="{ on, attrs }">
+                    <template #activator="{}">
                       <v-row>
                         <v-col sm="8" offset-sm="1" md="6" lg="5">
                           <v-text-field
@@ -329,7 +329,7 @@
               </v-col>
 
               <v-col>
-                <v-btn @click="resetar" type="reset">RESET</v-btn>
+                <v-btn type="reset" @click="resetar">RESET</v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -478,7 +478,7 @@ export default Vue.extend({
         notas: this.notas,
         pagamentos: this.pagamentos,
       }
-      this.$fire.firestore
+      await this.$fire.firestore
         .collection('compras')
         .add(compra)
         .then((docRef) => {

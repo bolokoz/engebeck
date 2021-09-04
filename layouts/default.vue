@@ -43,6 +43,91 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <!-- SubGroup -->
+      <v-list-group
+        :value="false"
+        prepend-icon="mdi-account-circle"
+        active-class="green lighten-4"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Compras</v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          active-class="green lighten-4"
+          color="green-lighten-3"
+          v-for="([title, icon, link], i) in compras"
+          :key="i"
+          nuxt
+          :to="link"
+          class="ml-4"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- SubGroup -->
+      <v-list-group
+        :value="false"
+        prepend-icon="mdi-account-circle"
+        active-class="green lighten-4"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Financeiro</v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          active-class="green lighten-4"
+          color="green-lighten-3"
+          v-for="([title, icon, link], i) in financeiro"
+          :key="i"
+          nuxt
+          :to="link"
+          class="ml-4"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- SubGroup -->
+      <v-list-group
+        :value="false"
+        prepend-icon="mdi-account-circle"
+        active-class="green lighten-4"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Obras</v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          active-class="green lighten-4"
+          color="green-lighten-3"
+          v-for="([title, icon, link], i) in obras"
+          :key="i"
+          nuxt
+          :to="link"
+          class="ml-4"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
       <template #append>
         <div class="pa-2">
           <v-btn block @click="logout()"> Logout </v-btn>
@@ -79,6 +164,41 @@ export default Vue.extend({
       clipped: false,
       drawer: false,
       fixed: false,
+      financeiro: [
+        [
+          'Contas e cartões',
+          'mdi-account-multiple-outline',
+          '/financeiro/contas',
+        ],
+        [
+          'Fornecedores',
+          'mdi-account-multiple-outline',
+          '/financeiro/fornecedores',
+        ],
+        [
+          'Gerenciar Pagamentos',
+          'mdi-account-multiple-outline',
+          '/financeiro/gerenciar',
+        ],
+      ],
+      compras: [
+        [
+          'Adicionar compra',
+          'mdi-account-multiple-outline',
+          '/compras/adicionar',
+        ],
+        [
+          'Compras recorrentes',
+          'mdi-account-multiple-outline',
+          '/compras/recorrentes',
+        ],
+        ['Gerenciar ', 'mdi-account-multiple-outline', '/compras/'],
+      ],
+      obras: [
+        ['Gerenciar', 'mdi-account-multiple-outline', '/obras/gerenciar'],
+        ['Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
+      ],
+
       items: [
         {
           icon: 'mdi-apps',
@@ -86,14 +206,14 @@ export default Vue.extend({
           to: '/',
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Compras',
-          to: '/compras',
+          icon: 'mdi-apps',
+          title: 'Calendario',
+          to: '/calendario',
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Obras',
-          to: '/obras',
+          title: 'Relatórios',
+          to: '/relatorio',
         },
       ],
       title: 'EngeBeck',

@@ -1,176 +1,158 @@
 <template>
   <div>
     <Titulo
-      titulo="Editar compra"
-      :subtitulo="`Compra de id: ${id}`"
-      texto_link="Voltar para compras"
-      link="/compras"
+      titulo="Editar fornecedor"
+      :subtitulo="`Fornecedor de id: ${id}`"
+      texto_link="Voltar para fornecedores"
+      link="/financeiro/fornecedores"
     />
     <v-divider></v-divider>
 
     <v-container>
-      <v-form ref="form" @submit.prevent="modificarCompra">
-        <h3 class="my-3 font-weight-bold">Dados do pagamento</h3>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <EscolherData
-              label="Data do pagamento"
-              :value.sync="form.datePagamento"
-            />
-          </v-col>
-        </v-row>
+      <v-form ref="form" @submit.prevent="adicionar">
+        <h3 class="my-3 font-weight-bold">Dados do fornecedor</h3>
+
+        <!-- Nome -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model.number="form.valorPagamento"
-              label="Valor pago"
+              v-model.number="form.nome"
+              label="Nome fornecedor"
               dense
               required
-              prefix="R$"
-              :rules="rules.valor"
             ></v-text-field>
           </v-col>
         </v-row>
+        <!-- Tipo -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <!-- <MeuCombobox
-              label="Pagador"
-              v-model="form.pagador"
-              hint="blublu"
-              list="pagador"
-            /> -->
-            <p v-if="$fetchState.pending">Fetching mountains...</p>
-            <v-combobox
-              v-else
-              v-model="form.pagador"
-              :loading="loadingPagadores"
-              :items="pagadores"
-              :search-input.sync="searchPagadores"
-              cache-items
-              required
-              hide-no-data
-              dense
-              hide-details
-              label="Quem pagou"
-            ></v-combobox>
+            <v-autocomplete
+              v-model="form.tipo"
+              :items="tipos"
+              label="Tipo fornecedor"
+            ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-combobox
-              v-model="form.fornecedor"
-              :loading="loadingFornecedores"
-              :items="fornecedores"
-              dense
-              label="Destino (loja) do pagamento?"
-            ></v-combobox>
-          </v-col>
-        </v-row>
-        <v-divider class="my-5"></v-divider>
-        <h3 class="my-3 font-weight-bold">Dados da nota</h3>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model.number="form.nota"
-              label="Número da nota"
-              required
+              v-model="form.vendedor"
               dense
+              label="Vendedor"
             ></v-text-field>
           </v-col>
         </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-menu
-              v-model="menuNota"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              dense
-              min-width="auto"
-            >
-              <template #activator="{ on, attrs }">
-                <v-text-field
-                  v-model="form.dateNota"
-                  label="Data Nota"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="form.dateNota"
-                @input="menuNota = false"
-              ></v-date-picker>
-            </v-menu>
+            <v-text-field v-model="form.cnpj" dense label="CNPJ"></v-text-field>
           </v-col>
         </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.chave"
+              v-model="form.email"
               dense
-              label="Chave NFE"
+              label="Email"
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-divider class="my-5"></v-divider>
-        <h3 class="my-3 font-weight-bold">Dados de controle</h3>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-combobox
-              v-model="form.obra"
-              :loading="loadingObras"
-              :items="obras"
-              :search-input.sync="searchObras"
-              cache-items
-              hide-no-data
-              hide-details
-              label="Obra"
-            ></v-combobox>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-combobox
-              v-model="form.etapa"
-              :loading="loadingEtapas"
-              :items="etapas"
-              :search-input.sync="searchEtapas"
-              cache-items
-              hide-no-data
+            <v-text-field
+              v-model="form.telefone"
               dense
-              hide-details
-              label="Etapa da obra"
-            ></v-combobox>
+              label="Telfone"
+            ></v-text-field>
           </v-col>
         </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-combobox
-              v-model="form.material"
-              :loading="loadingMateriais"
-              :items="materiais"
-              :search-input.sync="searchMateriais"
-              cache-items
-              hide-no-data
-              hide-details
+            <v-text-field
+              v-model="form.cidade"
               dense
-              label="Que material?"
-            ></v-combobox>
+              label="Cidade"
+            ></v-text-field>
           </v-col>
         </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-textarea
+            <v-text-field
               v-model="form.obs"
-              outlined
-              label="Observações"
-              hint="Observações extra"
               dense
-            ></v-textarea>
+              label="observações"
+            ></v-text-field>
           </v-col>
         </v-row>
+        <!-- Fim -->
+
+        <v-divider class="my-5"></v-divider>
+        <h3 class="my-3 font-weight-bold">Dados bancários</h3>
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.pagamento"
+              dense
+              label="Tipo pagamento"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.banco"
+              dense
+              label="Banco"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.agencia"
+              dense
+              label="Agencia"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.conta"
+              dense
+              label="Conta"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field v-model="form.pix" dense label="Pix"></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
 
         <h3 class="my-3 font-weight-bold">Dados extras</h3>
         <v-row>
@@ -247,6 +229,8 @@
 import Titulo from '~/components/Titulo.vue'
 import EscolherData from '~/components/EscolherData.vue'
 import MeuCombobox from '~/components/MeuCombobox.vue'
+import { exemploForm, tipos } from '~/dados/fornecedores.js'
+
 export default {
   middleware: 'securePage',
   components: {
@@ -261,49 +245,16 @@ export default {
 
   data() {
     const defaultForm = Object.freeze({
-      valorPagamento: 0,
-      fornecedor: '',
-      obra: '',
-      material: '',
-      etapa: '',
-
-      pagador: '',
-      nota: 0,
-      chave: '',
-      obs: '',
-      dateNota: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      datePagamento: new Date(
-        Date.now() - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+      exemploForm,
     })
+
     return {
-      loading: false,
-      form: Object.assign({}, defaultForm),
+      form: Object.assign({}, exemploForm),
       defaultForm,
-      dialog: false,
-      obras: ['fxvboo', 'basdfgr', 'fixcvbzz', 'asd'],
-      materiais: ['f543oo', '4bar', 'fiz12z', 'buzz'],
-      etapas: ['foo3', 'bar1', 'fi3zz', 'buzz'],
-      // pagadores: ['MRB', 'ENGEBECK'],
-      pagadores: [],
-      fornecedores: [],
-      loadingEtapas: false,
-      searchEtapas: null,
-      loadingPagadores: false,
-      searchPagadores: null,
-      loadingMateriais: false,
-      searchMateriais: null,
-      loadingObras: false,
-      searchObras: null,
-      compra: null,
-      compras: [],
-      loadingFornecedores: false,
-      searchFornecedores: null,
-      menuNota: false,
+      tipos: tipos,
+
+      loading: false,
+
       menuPagamento: false,
       rules: {
         valor: [(val) => val > 0 || `Valor deve ser positivo`],
@@ -320,29 +271,21 @@ export default {
 
   async fetch() {
     const doc = await this.$fire.firestore
-      .collection('compras')
+      .collection('fornecedores')
       .doc(this.id)
       .get()
-    this.compra = doc.data()
+    this.item = doc.data()
 
     this.$fire.firestore
-      .collection('compras')
+      .collection('fornecedores')
       .get()
       .then((snap) => {
         snap.forEach((doc) => {
-          this.compras.push(doc.data())
+          this.items.push(doc.data())
           // this.pagadores.push(doc.data().pagador)
         })
       })
   },
-  // mounted() {
-  //   this.fornecedores = this.compras
-  //     .map((compra) => compra.fornecedor)
-  //     .filter((value, index, self) => self.indexOf(value) === index)
-  //   this.pagadores = this.compras
-  //     .map((compra) => compra.pagador)
-  //     .filter((value, index, self) => self.indexOf(value) === index)
-  // },
 
   computed: {
     createdAtDate() {
@@ -354,23 +297,13 @@ export default {
     authUser() {
       return this.$store.state.auth.authUser
     },
-    // fornecedores2() {
-    //   return this.compras
-    //     .map((compra) => compra.fornecedor)
-    //     .filter((value, index, self) => self.indexOf(value) === index)
-    // },
-    // pagadores() {
-    //   return this.compras
-    //     .map((compra) => compra.pagador)
-    //     .filter((value, index, self) => self.indexOf(value) === index)
-    // },
   },
 
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val)
     },
-    compra(val) {
+    item(val) {
       this.form = val
     },
   },
@@ -386,22 +319,22 @@ export default {
         this.loading = false
       }, 500)
     },
-    async modificarCompra() {
+    async modificar() {
       this.loading = true
       const modificacao = {
         modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         modifiedBy: this.authUser,
-        ...this.compra,
+        ...this.item,
       }
       console.log('modify', this.id, modificacao)
       await this.$fire.firestore
-        .collection('compras')
+        .collection('fornecedores')
         .doc(this.id)
         .set(modificacao)
         .then((docRef) => {
           // console.log('Documento modificado ID: ', docRef.id)
           this.$notifier.showMessage({
-            content: 'Compra modificada',
+            content: 'Item modificado',
             color: 'info',
             top: false,
           })
@@ -421,17 +354,17 @@ export default {
     async deletar() {
       this.loading = true
       await this.$fire.firestore
-        .collection('compras')
+        .collection('fornecedores')
         .doc(this.id)
         .delete()
         .then(() => {
           this.$notifier.showMessage({
-            content: 'Compra apagada',
+            content: 'Item apagado',
             color: 'info',
             top: false,
           })
           this.dialog = false
-          this.$router.push('/compras')
+          this.$router.push('/fornecedores')
         })
         .catch((error) => {
           this.$notifier.showMessage({

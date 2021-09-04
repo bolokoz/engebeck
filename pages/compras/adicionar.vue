@@ -24,7 +24,7 @@
     <v-divider></v-divider>
 
     <v-container>
-      <v-form @submit.prevent="adicionarCompra" ref="form">
+      <v-form ref="form" @submit.prevent="adicionarCompra">
         <h3 class="my-3 font-weight-bold">Dados do pagamento</h3>
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -219,7 +219,7 @@
               </v-col>
 
               <v-col>
-                <v-btn @click="resetar" type="reset">RESET</v-btn>
+                <v-btn type="reset" @click="resetar">RESET</v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -311,20 +311,6 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    /* this.$fire.firestore
-      .collection('users')
-      .doc(this.authUser.id)
-      .collection('products')
-      .get()
-      .then((snap) => {
-        this.messages = []
-        snap.forEach((doc) => {
-          this.messages.push(doc)
-        })
-      }) */
-  },
-
   methods: {
     querySelections(v) {
       this.loading = true
@@ -344,7 +330,7 @@ export default Vue.extend({
         visible: true,
         ...this.form,
       }
-      this.$fire.firestore
+      await this.$fire.firestore
         .collection('compras')
         .add(compra)
         .then((docRef) => {
@@ -371,6 +357,7 @@ export default Vue.extend({
           this.loading = false
         })
     },
+
     resetar() {
       this.$notifier.showMessage({
         content: 'Resetando formulario',
