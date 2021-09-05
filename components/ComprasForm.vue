@@ -11,8 +11,8 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.nome"
-              label="Nome da compra"
+              v-model="form.descricao"
+              label="Descrição da compra"
               dense
               required
             ></v-text-field>
@@ -32,22 +32,27 @@
         <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-text-field
-              v-model="form.fornecedor_id"
-              dense
+            <v-autocomplete
+              v-model="form.fornecedor"
+              item-text="nome"
+              return-object
+              :items="fornecedores"
               label="Fornecedor"
-            ></v-text-field>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <!-- Fim -->
         <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-text-field
+            <v-autocomplete
               v-model="form.obra_id"
               dense
+              item-value="id"
+              item-text="nome"
+              :items="obras"
               label="Obra"
-            ></v-text-field>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <!-- Fim -->
@@ -112,14 +117,27 @@
         <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-autocomplete
+              v-model="form.forma"
+              :items="formas"
+              label="Forma de pagamento"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.conta"
+              v-model="form.contaPagadora"
               dense
               label="Conta para débito"
             ></v-text-field>
           </v-col>
         </v-row>
         <!-- Fim -->
+
         <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -143,39 +161,46 @@
           </v-col>
         </v-row>
         <!-- Fim -->
-        <!-- Inicio -->
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-autocomplete
-              v-model="form.forma"
-              :items="formas"
-              label="Forma de pagamento"
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
-        <!-- Fim -->
+
         <!-- Inicio -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.parcelas"
+              v-model.number="form.parcelas"
               dense
+              type="number"
               label="Parcelas"
             ></v-text-field>
           </v-col>
         </v-row>
         <!-- Fim -->
         <!-- Inicio -->
-        <v-row v-for="(parcela, n) in form.parcelas" :key="n">
+        <v-row v-for="(parcela, k) in pagamentos.parcelas" :key="k">
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.parcelas.n.dataPagamento"
+              v-model="parcela.dataPagamento"
               dense
-              :label="`Parcela ${m}`"
+              :label="`Data Parcela ${parcela.n}`"
+            ></v-text-field>
+            <v-text-field
+              v-model="parcela.valor"
+              dense
+              :label="`Valor parcela ${parcela.n}`"
             ></v-text-field>
           </v-col>
         </v-row>
         <!-- Fim -->
+
+        <v-row v-if="form.fornecedor">
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <h3>Dados bancários do fornecedor</h3>
+            <h5>{{ form.fornecedor.nomeBanco }}</h5>
+            <h5>{{ form.fornecedor.banco }}</h5>
+            <h5>{{ form.fornecedor.agencia }}</h5>
+            <h5>{{ form.fornecedor.conta }}</h5>
+            <h5>{{ form.fornecedor.forma }}</h5>
+          </v-col>
+        </v-row>
 
         <!-- Botoes -->
         <v-row>
@@ -237,6 +262,49 @@ export default {
       default: true,
     },
   },
+  async fetch() {
+    this.loading = true
+
+    // pegar fornecedores
+    await this.$fire.firestore
+      .collection('fornecedores')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          this.fornecedores.push({ id: doc.id, ...doc.data() })
+        })
+      })
+      .catch(() => {
+        this.$notifier.showMessage({
+          content: error,
+          color: 'error',
+          top: false,
+        })
+      })
+      .finally(() => {
+        this.loading = false
+      })
+
+    // pegar obras
+    await this.$fire.firestore
+      .collection('obras')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          this.obras.push({ id: doc.id, ...doc.data() })
+        })
+      })
+      .catch(() => {
+        this.$notifier.showMessage({
+          content: error,
+          color: 'error',
+          top: false,
+        })
+      })
+      .finally(() => {
+        this.loading = false
+      })
+  },
 
   data() {
     return {
@@ -245,11 +313,19 @@ export default {
       formas: formas,
       emptyForm: emptyForm,
       loading: false,
+      fornecedores: [],
+      obras: [],
+      selectedFornecedor: {},
     }
   },
   methods: {
     resetar() {
       this.form = Object.assign({}, this.emptyForm)
+    },
+    pegarDados() {
+      for (var k in this.form.fornecedor) {
+        this.form[k] = this.form.fornecedor[k]
+      }
     },
     async adicionar() {
       this.loading = true
@@ -357,8 +433,8 @@ export default {
 
   watch: {
     editItemObject: {
-      //   immediate: true,
-      //   deep: true,
+      immediate: true,
+      deep: true,
       handler(val) {
         this.form = val
       },
@@ -371,6 +447,17 @@ export default {
     },
     editar() {
       return this?.editItemObject !== null ? true : false
+    },
+    pagamentos() {
+      let pagamentos = {
+        conta_id: '',
+        fornecedor_id: '',
+        parcelas: [],
+      }
+      for (var i = 0; i < this?.form.parcelas; ++i) {
+        pagamentos.parcelas.push({ n: i + 1, data: '', valor: '' })
+      }
+      return pagamentos
     },
   },
 }

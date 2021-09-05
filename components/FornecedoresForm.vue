@@ -21,11 +21,13 @@
         <!-- Tipo -->
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <v-autocomplete
+            <v-combobox
               v-model="form.tipo"
               :items="tipos"
               label="Tipo fornecedor"
-            ></v-autocomplete>
+              multiple
+              chips
+            ></v-combobox>
           </v-col>
         </v-row>
         <!-- Fim -->
@@ -220,12 +222,35 @@ export default {
     },
   },
 
+  // async fetch() {
+  //   this.loading = true
+  //   await this.$fire.firestore
+  //     .collection('fornecedores')
+  //     .get()
+  //     .then((snap) => {
+  //       snap.forEach((doc) => {
+  //         this.fornecedores.push({ id: doc.id, ...doc.data() })
+  //       })
+  //     })
+  //     .catch(() => {
+  //       this.$notifier.showMessage({
+  //         content: error,
+  //         color: 'error',
+  //         top: false,
+  //       })
+  //     })
+  //     .finally(() => {
+  //       this.loading = false
+  //     })
+  // },
+
   data() {
     return {
       tipos: tipos,
       emptyForm: emptyForm,
       loading: false,
       form: { ...this.emptyForm },
+      fornecedores: [],
     }
   },
   methods: {

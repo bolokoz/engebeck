@@ -81,7 +81,7 @@ export default Vue.extend({
     },
 
     addItem() {
-      console.log(Object.keys(this.editItemObject))
+      this.editItemObject = { ...emptyForm }
       this.dialog = true
     },
     editItem(item) {

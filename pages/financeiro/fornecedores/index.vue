@@ -5,7 +5,7 @@
       <v-row no-gutters>
         <v-col cols="12">
           <v-dialog v-model="dialog" max-width="600px" persistent>
-            <FuncionariosForm
+            <FornecedoresForm
               :dialog.sync="dialog"
               @refresh="read"
               :editItemObject="editItemObject"
@@ -14,7 +14,8 @@
           <Lista
             NomeLista="Fornecedores"
             :items="items"
-            @editItem="editItem"
+            @addItem="addItem"
+            :editItemObject.sync="editItemObject"
             :dialog.sync="dialog"
             :mobileTableHeaders="mobileTableHeaders"
             :mobileTableItems="mobileTableItems"
