@@ -336,8 +336,12 @@ export default {
   },
 
   watch: {
-    editItemObject(val) {
-      this.form = val
+    editItemObject: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.form = val
+      },
     },
   },
 

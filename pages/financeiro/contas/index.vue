@@ -13,12 +13,13 @@
           </v-dialog>
           <Lista
             :items="items"
+            @addItem="addItem"
             @editItem="editItem"
             :dialog.sync="dialog"
             :mobileTableHeaders="mobileTableHeaders"
             :mobileTableItems="mobileTableItems"
             :desktopTableHeaders="desktopTableHeaders"
-            :telefone="true"
+            :telefone="false"
             editPath="/financeiro/contas"
           />
         </v-col>

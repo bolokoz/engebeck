@@ -6,9 +6,7 @@
           <div class="d-none d-sm-block">
             <v-card>
               <v-card-title>
-                <v-btn color="primary" @click.stop="adicionar">
-                  Adicionar
-                </v-btn>
+                <v-btn color="primary" @click.stop="addItem"> Adicionar </v-btn>
                 <v-spacer></v-spacer>
                 <v-text-field
                   v-model="search"
@@ -69,7 +67,7 @@
                       <v-btn text small @click="expandItem(item)"
                         ><v-icon>mdi-arrow-expand</v-icon></v-btn
                       >
-                      <v-btn text small @click="editItem(item)"
+                      <v-btn text small @click.native="editItem(item)"
                         ><v-icon>mdi-pencil</v-icon></v-btn
                       >
                     </td>
@@ -91,6 +89,10 @@ export default {
       type: Array,
       required: true,
     },
+    editItemObject: {
+      type: Object,
+    },
+
     mobileTableItems: {
       type: Array,
       required: true,
@@ -128,14 +130,14 @@ export default {
       })
     },
     editItem(item) {
-      // console.log(item)
-      this.$emit('editItem', item)
+      this.$emit('update:editItemObject', { ...item })
+      this.$emit('update:dialog', true)
     },
     whatsapp(item) {
       window.open(`https://wa.me/55${item.telefone}`)
     },
-    adicionar() {
-      this.$emit('update:dialog', true)
+    addItem() {
+      this.$emit('addItem')
     },
   },
 }

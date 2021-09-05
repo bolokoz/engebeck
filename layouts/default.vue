@@ -195,7 +195,7 @@ export default Vue.extend({
         ['Gerenciar ', 'mdi-account-multiple-outline', '/compras/'],
       ],
       obras: [
-        ['Gerenciar', 'mdi-account-multiple-outline', '/obras/gerenciar'],
+        ['Gerenciar', 'mdi-account-multiple-outline', '/obras'],
         ['Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
       ],
 

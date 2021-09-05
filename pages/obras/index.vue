@@ -1,19 +1,20 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight-regular">Contas e cartões</h1>
+      <h1 class="font-weight-regular">Obras</h1>
       <v-row no-gutters>
         <v-col cols="12">
           <v-dialog v-model="dialog" max-width="600px" persistent>
-            <ContasForm2
+            <ObrasForm
               :dialog.sync="dialog"
               @refresh="read"
-              :editItemObject="editItemObject"
+              :editItemObject.sync="editItemObject"
             />
           </v-dialog>
           <Lista
             :items="items"
-            @editItem="editItem"
+            @addItem="addItem"
+            :editItemObject.sync="editItemObject"
             :dialog.sync="dialog"
             :mobileTableHeaders="mobileTableHeaders"
             :mobileTableItems="mobileTableItems"
@@ -34,8 +35,6 @@ import {
   mobileTableHeaders,
   mobileTableItems,
   desktopTableHeaders,
-  emptyForm,
-  tipos,
 } from '~/dados/obras.js'
 
 export default Vue.extend({
@@ -82,6 +81,11 @@ export default Vue.extend({
 
     editItem(item) {
       this.editItemObject = { ...item }
+      this.dialog = true
+    },
+
+    addItem() {
+      this.editItemObject = null
       this.dialog = true
     },
   },
