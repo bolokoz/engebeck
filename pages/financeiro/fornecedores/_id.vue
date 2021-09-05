@@ -313,6 +313,7 @@ export default {
           })
         })
         .finally(() => {
+          this.$router.push('/financeiro/fornecedores')
           this.loading = false
         })
     },
@@ -329,7 +330,7 @@ export default {
             top: false,
           })
           this.dialog = false
-          this.$router.push('/fornecedores')
+          this.$router.push('/financeiro/fornecedores')
         })
         .catch((error) => {
           this.$notifier.showMessage({

@@ -87,10 +87,6 @@
 <script>
 export default {
   props: {
-    NomeLista: {
-      type: String,
-      required: true,
-    },
     items: {
       type: Array,
       required: true,
@@ -139,7 +135,7 @@ export default {
       window.open(`https://wa.me/55${item.telefone}`)
     },
     adicionar() {
-      this.$emit('addItem', null)
+      this.$emit('update:dialog', true)
     },
   },
 }

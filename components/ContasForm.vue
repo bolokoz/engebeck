@@ -2,18 +2,18 @@
   <v-dialog v-model="dialog" max-width="600px" persistent>
     <v-card>
       <v-card-title>
-        <span v-if="editar" class="headline">Editar fornecedor</span>
-        <span v-else class="headline">Adicionar fornecedor</span>
+        <span v-if="editar" class="headline">Editar conta</span>
+        <span v-else class="headline">Adicionar conta</span>
       </v-card-title>
       <v-card-text>
-        <h3 class="my-3 font-weight-bold">Dados do fornecedor</h3>
+        <h3 class="my-3 font-weight-bold">Dados da conta</h3>
         <!-- Nome -->
         <v-form ref="form">
           <v-row>
             <v-col sm="8" offset-sm="1" md="6" lg="5">
               <v-text-field
                 v-model.number="form.nome"
-                label="Nome fornecedor"
+                label="Nome da conta"
                 dense
                 required
               ></v-text-field>
@@ -25,88 +25,8 @@
               <v-autocomplete
                 v-model="form.tipo"
                 :items="tipos"
-                label="Tipo fornecedor"
+                label="Tipo da conta"
               ></v-autocomplete>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.vendedor"
-                dense
-                label="Vendedor"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.cnpj"
-                dense
-                label="CNPJ"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.email"
-                dense
-                label="Email"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.telefone"
-                dense
-                label="Telfone"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.cidade"
-                dense
-                label="Cidade"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.obs"
-                dense
-                label="observações"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <!-- Fim -->
-
-          <v-divider class="my-5"></v-divider>
-          <h3 class="my-3 font-weight-bold">Dados bancários</h3>
-          <!-- Inicio -->
-          <v-row>
-            <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field
-                v-model="form.pagamento"
-                dense
-                label="Tipo pagamento"
-              ></v-text-field>
             </v-col>
           </v-row>
           <!-- Fim -->
@@ -121,7 +41,28 @@
             </v-col>
           </v-row>
           <!-- Fim -->
-
+          <!-- Inicio -->
+          <v-row>
+            <v-col sm="8" offset-sm="1" md="6" lg="5">
+              <v-text-field
+                v-model="form.cnpj"
+                dense
+                label="CPF/CNPJ do proprietário"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- Fim -->
+          <!-- Inicio -->
+          <v-row>
+            <v-col sm="8" offset-sm="1" md="6" lg="5">
+              <v-text-field
+                v-model="form.obs"
+                dense
+                label="Observações"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <!-- Fim -->
           <!-- Inicio -->
           <v-row>
             <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -133,7 +74,6 @@
             </v-col>
           </v-row>
           <!-- Fim -->
-
           <!-- Inicio -->
           <v-row>
             <v-col sm="8" offset-sm="1" md="6" lg="5">
@@ -145,14 +85,14 @@
             </v-col>
           </v-row>
           <!-- Fim -->
-
           <!-- Inicio -->
           <v-row>
             <v-col sm="8" offset-sm="1" md="6" lg="5">
-              <v-text-field v-model="form.pix" dense label="Pix"></v-text-field>
+              <v-text-field v-model="form.pix" dense label="pix"></v-text-field>
             </v-col>
           </v-row>
           <!-- Fim -->
+
           <!-- Botoes -->
           <v-row>
             <!-- CONDICAO CRIAR NOVO -->
@@ -203,7 +143,7 @@
 
 
 <script>
-import { emptyForm, tipos } from '~/dados/fornecedores.js'
+import { emptyForm, tipos } from '~/dados/contas.js'
 export default {
   props: {
     dialog: {
@@ -240,7 +180,7 @@ export default {
         ...this.form,
       }
       await this.$fire.firestore
-        .collection('fornecedores')
+        .collection('contas')
         .add(item)
         .then((docRef) => {
           console.log('Documento written ID: ', docRef.id)
@@ -280,7 +220,7 @@ export default {
       }
       //   console.log('modify', this.id, modificacao)
       await this.$fire.firestore
-        .collection('fornecedores')
+        .collection('contas')
         .doc(this.form.id)
         .set(modificacao)
         .then((docRef) => {
@@ -308,7 +248,7 @@ export default {
     async deletar() {
       this.loading = true
       await this.$fire.firestore
-        .collection('fornecedores')
+        .collection('contas')
         .doc(this.form.id)
         .delete()
         .then(() => {

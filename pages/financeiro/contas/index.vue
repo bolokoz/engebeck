@@ -1,16 +1,17 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight-regular">Fornecedores</h1>
+      <h1 class="font-weight-regular">Contas e cartões</h1>
       <v-row no-gutters>
         <v-col cols="12">
-          <FuncionariosForm
-            :dialog.sync="dialog"
-            @refresh="read"
-            :editItemObject="editItemObject"
-          />
+          <v-dialog v-model="dialog" max-width="600px" persistent>
+            <ContasForm2
+              :dialog.sync="dialog"
+              @refresh="read"
+              :editItemObject="editItemObject"
+            />
+          </v-dialog>
           <Lista
-            NomeLista="Fornecedores"
             :items="items"
             @editItem="editItem"
             :dialog.sync="dialog"
@@ -18,7 +19,7 @@
             :mobileTableItems="mobileTableItems"
             :desktopTableHeaders="desktopTableHeaders"
             :telefone="true"
-            editPath="/financeiro/fornecedores"
+            editPath="/financeiro/contas"
           />
         </v-col>
       </v-row>
@@ -35,10 +36,14 @@ import {
   desktopTableHeaders,
   emptyForm,
   tipos,
-} from '~/dados/fornecedores.js'
+} from '~/dados/contas.js'
+import Lista from '~/components/Lista.vue'
 
 export default Vue.extend({
   middleware: 'securePage',
+  components: {
+    Lista,
+  },
   data() {
     const defaultForm = Object.freeze({
       emptyForm,
@@ -64,7 +69,7 @@ export default Vue.extend({
     async read() {
       this.loading = true
       this.$fire.firestore
-        .collection('fornecedores')
+        .collection('contas')
         .get()
         .then((snap) => {
           this.items = []

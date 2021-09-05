@@ -1,16 +1,17 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight-regular">Fornecedores</h1>
+      <h1 class="font-weight-regular">Contas e cartões</h1>
       <v-row no-gutters>
         <v-col cols="12">
-          <FuncionariosForm
-            :dialog.sync="dialog"
-            @refresh="read"
-            :editItemObject="editItemObject"
-          />
+          <v-dialog v-model="dialog" max-width="600px" persistent>
+            <ContasForm2
+              :dialog.sync="dialog"
+              @refresh="read"
+              :editItemObject="editItemObject"
+            />
+          </v-dialog>
           <Lista
-            NomeLista="Fornecedores"
             :items="items"
             @editItem="editItem"
             :dialog.sync="dialog"
@@ -18,7 +19,7 @@
             :mobileTableItems="mobileTableItems"
             :desktopTableHeaders="desktopTableHeaders"
             :telefone="true"
-            editPath="/financeiro/fornecedores"
+            editPath="/obras"
           />
         </v-col>
       </v-row>
@@ -35,22 +36,13 @@ import {
   desktopTableHeaders,
   emptyForm,
   tipos,
-} from '~/dados/fornecedores.js'
-import Lista from '~/components/Lista.vue'
+} from '~/dados/obras.js'
 
 export default Vue.extend({
   middleware: 'securePage',
-  components: {
-    Lista,
-  },
-  data() {
-    const defaultForm = Object.freeze({
-      emptyForm,
-    })
 
+  data() {
     return {
-      defaultForm,
-      tipos: tipos,
       loading: false,
       dialog: false,
       editItemObject: null,
@@ -68,7 +60,7 @@ export default Vue.extend({
     async read() {
       this.loading = true
       this.$fire.firestore
-        .collection('fornecedores')
+        .collection('obras')
         .get()
         .then((snap) => {
           this.items = []
@@ -86,10 +78,6 @@ export default Vue.extend({
         .finally(() => {
           this.loading = false
         })
-    },
-    addItem() {
-      this.editItemObject = null
-      this.dialog = true
     },
 
     editItem(item) {
