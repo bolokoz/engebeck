@@ -1,18 +1,18 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="editar" class="headline">Editar obra</span>
-      <span v-else class="headline">Adicionar obra</span>
+      <span v-if="editar" class="headline">Editar compra</span>
+      <span v-else class="headline">Adicionar compra</span>
     </v-card-title>
     <v-card-text>
-      <h3 class="my-3 font-weight-bold">Dados da obra</h3>
+      <h3 class="my-3 font-weight-bold">Dados da compra</h3>
       <!-- Nome -->
       <v-form ref="form">
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model.number="form.nome"
-              label="Nome da obra"
+              v-model="form.nome"
+              label="Nome da compra"
               dense
               required
             ></v-text-field>
@@ -24,7 +24,7 @@
             <v-autocomplete
               v-model="form.tipo"
               :items="tipos"
-              label="Tipo da obra"
+              label="Tipo da compbra"
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -33,9 +33,9 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.proprietario"
+              v-model="form.fornecedor_id"
               dense
-              label="Proprietário"
+              label="Fornecedor"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -44,9 +44,9 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.ano"
+              v-model="form.obra_id"
               dense
-              label="Ano início"
+              label="Obra"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -55,9 +55,9 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.engenheiro"
+              v-model="form.comprador"
               dense
-              label="Engenheiro geral"
+              label="Quem comprou"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -66,9 +66,9 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.arquiteto"
+              v-model="form.nota"
               dense
-              label="Arquiteto"
+              label="Nota ou recibo"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -77,9 +77,9 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.endereco"
+              v-model="form.pedido"
               dense
-              label="Endereço"
+              label="Pedido"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -88,9 +88,90 @@
         <v-row>
           <v-col sm="8" offset-sm="1" md="6" lg="5">
             <v-text-field
-              v-model="form.m2"
+              v-model="form.etapa"
               dense
-              label="Metros quadrados"
+              label="Etapa"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.subetapa"
+              dense
+              label="SubEtapa"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <h3 class="my-3 font-weight-bold">Dados do pagamento</h3>
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.conta"
+              dense
+              label="Conta para débito"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.valor"
+              dense
+              label="Valor total"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.pagador"
+              dense
+              label="Quem pagou"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-autocomplete
+              v-model="form.forma"
+              :items="formas"
+              label="Forma de pagamento"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row>
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.parcelas"
+              dense
+              label="Parcelas"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Fim -->
+        <!-- Inicio -->
+        <v-row v-for="(parcela, n) in form.parcelas" :key="n">
+          <v-col sm="8" offset-sm="1" md="6" lg="5">
+            <v-text-field
+              v-model="form.parcelas.n.dataPagamento"
+              dense
+              :label="`Parcela ${m}`"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -145,7 +226,7 @@
 
 
 <script>
-import { emptyForm, tipos } from '~/dados/obras.js'
+import { emptyForm, tipos, formas } from '~/dados/compras.js'
 export default {
   props: {
     editItemObject: {
@@ -159,10 +240,11 @@ export default {
 
   data() {
     return {
+      form: { ...this.emptyForm },
       tipos: tipos,
+      formas: formas,
       emptyForm: emptyForm,
       loading: false,
-      form: Object.assign({}, this.emptyForm),
     }
   },
   methods: {
@@ -178,7 +260,7 @@ export default {
         ...this.form,
       }
       await this.$fire.firestore
-        .collection('obras')
+        .collection('compras')
         .add(item)
         .then((docRef) => {
           // console.log('Documento written ID: ', docRef.id)
@@ -218,7 +300,7 @@ export default {
       }
       //   console.log('modify', this.id, modificacao)
       await this.$fire.firestore
-        .collection('obras')
+        .collection('compras')
         .doc(this.form.id)
         .update(modificacao)
         .then((docRef) => {
@@ -246,7 +328,7 @@ export default {
     async deletar() {
       this.loading = true
       await this.$fire.firestore
-        .collection('obras')
+        .collection('compras')
         .doc(this.form.id)
         .delete()
         .then(() => {
@@ -275,8 +357,8 @@ export default {
 
   watch: {
     editItemObject: {
-      // immediate: true,
-      deep: true,
+      //   immediate: true,
+      //   deep: true,
       handler(val) {
         this.form = val
       },

@@ -32,6 +32,7 @@
 <script>
 import Vue from 'vue'
 import {
+  emptyForm,
   mobileTableHeaders,
   mobileTableItems,
   desktopTableHeaders,
@@ -44,7 +45,7 @@ export default Vue.extend({
     return {
       loading: false,
       dialog: false,
-      editItemObject: null,
+      editItemObject: { ...emptyForm },
       items: [],
       mobileTableHeaders: mobileTableHeaders,
       mobileTableItems: mobileTableItems,

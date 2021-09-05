@@ -21,17 +21,6 @@ export let mobileTableItems = [
 ]
 
 export let exemploForm = {
-    nome: 'MRB',
-    tipo: 'Uniresidencial',
-    pagador: 'Mrb',
-    fornecedor: 'Eng. joo',
-    dataPagamento: '',
-    obra: 'Rua 12345',
-    comprador: '312',
-    nota: '',
-    pedido: '',
-    etapa: '',
-    subetapa: '',
     compra_id: '',
     conta_id: '',
     valor: '',
@@ -41,16 +30,6 @@ export let exemploForm = {
 
 }
 export let emptyForm = {
-    nome: '',
-    tipo: '',
-    fornecedor_id: '',
-    dataCompra: '',
-    obra_id: '',
-    comprador: '',
-    nota: '',
-    pedido: '',
-    etapa: '',
-    subetapa: '',
     compra_id: '',
     conta_id: '',
     valor: '',
@@ -59,11 +38,6 @@ export let emptyForm = {
     parcelas: '',
 }
 
-export let tipos = [
-    'Serviço',
-    'Material',
-    'Outros',
-]
 export let formas = [
     'TED',
     'DOC',
