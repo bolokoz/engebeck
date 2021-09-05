@@ -80,13 +80,12 @@ export default Vue.extend({
         })
     },
 
-    editItem(item) {
-      this.editItemObject = { ...item }
-      this.dialog = true
-    },
-
     addItem() {
       console.log(Object.keys(this.editItemObject))
+      this.dialog = true
+    },
+    editItem(item) {
+      this.editItemObject = { ...item }
       this.dialog = true
     },
   },

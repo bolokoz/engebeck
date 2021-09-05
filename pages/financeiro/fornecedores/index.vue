@@ -4,11 +4,13 @@
       <h1 class="font-weight-regular">Fornecedores</h1>
       <v-row no-gutters>
         <v-col cols="12">
-          <FuncionariosForm
-            :dialog.sync="dialog"
-            @refresh="read"
-            :editItemObject="editItemObject"
-          />
+          <v-dialog v-model="dialog" max-width="600px" persistent>
+            <FuncionariosForm
+              :dialog.sync="dialog"
+              @refresh="read"
+              :editItemObject="editItemObject"
+            />
+          </v-dialog>
           <Lista
             NomeLista="Fornecedores"
             :items="items"
@@ -34,22 +36,15 @@ import {
   mobileTableItems,
   desktopTableHeaders,
   emptyForm,
-  tipos,
 } from '~/dados/fornecedores.js'
 
 export default Vue.extend({
   middleware: 'securePage',
   data() {
-    const defaultForm = Object.freeze({
-      emptyForm,
-    })
-
     return {
-      defaultForm,
-      tipos: tipos,
       loading: false,
       dialog: false,
-      editItemObject: null,
+      editItemObject: { ...emptyForm },
       items: [],
       mobileTableHeaders: mobileTableHeaders,
       mobileTableItems: mobileTableItems,

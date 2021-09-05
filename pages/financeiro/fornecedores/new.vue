@@ -32,7 +32,7 @@ import {
   desktopTableHeaders,
 } from '~/dados/fornecedores.js'
 import Lista from '~/components/Lista.vue'
-import FuncionariosForm from '~/components/FuncionariosForm.vue'
+import FuncionariosForm from '~/components/FornecedoresForm.vue'
 export default Vue.extend({
   middleware: 'securePage',
   components: {
