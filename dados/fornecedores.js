@@ -25,23 +25,11 @@ export let desktopTableHeaders = [
     },
     { text: 'Tipo', value: 'tipo' },
     { text: 'Vendedor', value: 'vendedor' },
-    { text: 'CNPJ', value: 'cnpj' },
-    { text: 'Email', value: 'email' },
     { text: 'Telefone', value: 'telefone' },
-    { text: 'Cidade', value: 'cidade' },
-    { text: 'Observações', value: 'obs' },
-    { text: 'pagamento', value: 'pagamento' },
-    { text: 'Banco', value: 'banco' },
-    { text: 'agencia', value: 'agencia' },
-    { text: 'conta', value: 'conta' },
+    { text: 'Pagamento', value: 'pagamento' },
+    { text: 'Actions', value: 'actions', sortable: false },
 ]
 
-
-export let desktopTableItems = [
-    'nome',
-    'tipo',
-    'telefone'
-]
 export let mobileTableHeaders = [
     'Nome',
     'Tipo',
@@ -66,6 +54,21 @@ let exemploForm = {
     banco: 'Banco do Brasil',
     agencia: '123',
     conta: '12345',
+    pix: '',
+}
+export let emptyForm = {
+    nome: '',
+    tipo: '',
+    vendedor: '',
+    cnpj: '',
+    email: '',
+    telefone: '',
+    cidade: '',
+    obs: '',
+    pagamento: '',
+    banco: '',
+    agencia: '',
+    conta: '',
     pix: '',
 }
 

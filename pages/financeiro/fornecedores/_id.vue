@@ -154,29 +154,7 @@
         </v-row>
         <!-- Fim -->
 
-        <h3 class="my-3 font-weight-bold">Dados extras</h3>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <p>Criado por: {{ form.createdBy }}</p>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <p>Criado em: {{ createdAtDate }}</p>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col sm="8" offset-sm="1" md="6" lg="5">
-            <p>
-              Modificado em:
-              {{ modifiedAtDate }}
-            </p>
-            <p>
-              Modificado por:
-              {{ form.modifiedBy }}
-            </p>
-          </v-col>
-        </v-row>
+        <dados-extras :item="item" />
 
         <v-divider class="my-5"></v-divider>
 
@@ -184,7 +162,7 @@
           <v-col>
             <v-row>
               <v-col>
-                <v-btn color="yellow light" @click="modificarCompra">{{
+                <v-btn color="yellow light" @click="modificar">{{
                   loading ? 'Carregando' : 'Modificar'
                 }}</v-btn>
               </v-col>
@@ -227,16 +205,14 @@
 </template>
 <script>
 import Titulo from '~/components/Titulo.vue'
-import EscolherData from '~/components/EscolherData.vue'
-import MeuCombobox from '~/components/MeuCombobox.vue'
-import { exemploForm, tipos } from '~/dados/fornecedores.js'
+import DadosExtras from '~/components/DadosExtras.vue'
+import { emptyForm, exemploForm, tipos } from '~/dados/fornecedores.js'
 
 export default {
   middleware: 'securePage',
   components: {
     Titulo,
-    EscolherData,
-    MeuCombobox,
+    DadosExtras,
   },
   asyncData({ params }) {
     const id = params.id
@@ -245,27 +221,16 @@ export default {
 
   data() {
     const defaultForm = Object.freeze({
-      exemploForm,
+      emptyForm,
     })
 
     return {
-      form: Object.assign({}, exemploForm),
+      form: Object.assign({}, emptyForm),
       defaultForm,
       tipos: tipos,
-
+      dialog: false,
+      item: [],
       loading: false,
-
-      menuPagamento: false,
-      rules: {
-        valor: [(val) => val > 0 || `Valor deve ser positivo`],
-        datePagamento: [
-          (val) => (val || '').length > 0 || `I don't believe you!`,
-        ],
-        pagador: [(val) => (val || '').length > 0 || 'This field is required'],
-        fornecedor: [
-          (val) => (val || '').length > 0 || 'This field is required',
-        ],
-      },
     }
   },
 

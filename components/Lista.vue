@@ -6,7 +6,9 @@
           <div class="d-none d-sm-block">
             <v-card>
               <v-card-title>
-                {{ NomeLista }}
+                <v-btn color="primary" @click.stop="adicionar">
+                  Adicionar
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-text-field
                   v-model="search"
@@ -37,6 +39,9 @@
                   <v-icon small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                   </v-icon>
+                  <v-btn text small @click="expandItem(item)"
+                    ><v-icon>mdi-arrow-expand</v-icon></v-btn
+                  >
                 </template>
               </v-data-table>
             </v-card>
@@ -61,6 +66,9 @@
                       <v-btn v-if="telefone" text small @click="whatsapp(item)"
                         ><v-icon>mdi-phone</v-icon></v-btn
                       >
+                      <v-btn text small @click="expandItem(item)"
+                        ><v-icon>mdi-arrow-expand</v-icon></v-btn
+                      >
                       <v-btn text small @click="editItem(item)"
                         ><v-icon>mdi-pencil</v-icon></v-btn
                       >
@@ -84,7 +92,7 @@ export default {
       required: true,
     },
     items: {
-      type: String,
+      type: Array,
       required: true,
     },
     mobileTableItems: {
@@ -92,10 +100,6 @@ export default {
       required: true,
     },
     mobileTableHeaders: {
-      type: Array,
-      required: true,
-    },
-    desktopTableItems: {
       type: Array,
       required: true,
     },
@@ -110,6 +114,10 @@ export default {
     telefone: {
       type: Boolean,
       required: false,
+      default: true,
+    },
+    dialog: {
+      default: false,
     },
   },
   data() {
@@ -118,13 +126,20 @@ export default {
     }
   },
   methods: {
-    editItem(item) {
+    expandItem(item) {
       this.$router.push({
-        path: `${editPath}/${item.id}`,
+        path: `${this.editPath}/${item.id}`,
       })
+    },
+    editItem(item) {
+      // console.log(item)
+      this.$emit('editItem', item)
     },
     whatsapp(item) {
       window.open(`https://wa.me/55${item.telefone}`)
+    },
+    adicionar() {
+      this.$emit('addItem', null)
     },
   },
 }
