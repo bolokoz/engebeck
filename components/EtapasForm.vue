@@ -106,7 +106,7 @@
 
         <!-- Inicio -->
         <v-row>
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-autocomplete
               v-model="form.forma"
               :items="formas"
@@ -115,18 +115,15 @@
             ></v-autocomplete>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
+            <v-text-field
               v-model="form.contaPagadora"
               outlined
-              return-object
-              item-text="nome"
-              :items="contas"
-              label="Selecionar conta pagadora"
-            ></v-autocomplete>
+              label="Conta para débito"
+            ></v-text-field>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-text-field
               v-model="form.valor"
               outlined
@@ -134,7 +131,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-text-field
               v-model="form.pagador"
               outlined
@@ -142,7 +139,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-text-field
               v-model.number="form.parcelas"
               outlined
@@ -157,6 +154,7 @@
             v-for="(parcela, k) in pagamentos.parcelas"
             :key="k"
             sm="8"
+            offset-sm="1"
             md="6"
             offset-lg="0"
             lg="3"
@@ -176,7 +174,7 @@
         <!-- Fim -->
 
         <v-row v-if="form.fornecedor">
-          <v-col sm="8" md="6" offset-lg="0" lg="3">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="3">
             <h3>Dados bancários do fornecedor</h3>
             <h5>{{ form.fornecedor.nomeBanco }}</h5>
             <h5>{{ form.fornecedor.banco }}</h5>
@@ -288,26 +286,6 @@ export default {
       .finally(() => {
         this.loading = false
       })
-
-    // pegar contas
-    await this.$fire.firestore
-      .collection('contas')
-      .get()
-      .then((snap) => {
-        snap.forEach((doc) => {
-          this.contas.push({ id: doc.id, ...doc.data() })
-        })
-      })
-      .catch(() => {
-        this.$notifier.showMessage({
-          content: error,
-          color: 'error',
-          top: false,
-        })
-      })
-      .finally(() => {
-        this.loading = false
-      })
   },
 
   data() {
@@ -319,7 +297,6 @@ export default {
       loading: false,
       fornecedores: [],
       obras: [],
-      contas: [],
       selectedFornecedor: {},
     }
   },

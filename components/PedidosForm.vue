@@ -1,101 +1,75 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="editar" class="headline">Editar compra</span>
-      <span v-else class="headline">Adicionar compra</span>
+      <span v-if="editar" class="headline">Editar {{ title }}</span>
+      <span v-else class="headline">Adicionar {{ title }}</span>
     </v-card-title>
     <v-card-text>
-      <h3 class="my-3 font-weight-bold">Dados da compra</h3>
+      <h3 class="my-3 font-weight-bold">Dados {{ title }}</h3>
       <!-- Nome -->
       <v-form ref="form">
         <v-row>
           <v-col sm="8" md="6" offset-lg="0" lg="3">
             <v-text-field
               v-model="form.descricao"
-              label="Descrição da compra"
+              label="Descrição do pedido"
               outlined
               required
             ></v-text-field>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
-              v-model="form.tipo"
-              :items="tipos"
-              outlined
-              label="Tipo da compra"
-            ></v-autocomplete>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
+            <v-combobox
               v-model="form.fornecedor"
               item-text="nome"
               return-object
               outlined
               :items="fornecedores"
               label="Fornecedor"
-            ></v-autocomplete>
+            ></v-combobox>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
+            <v-text-field
+              v-model="form.numero"
+              outlined
+              label="Numero do pedido"
+            ></v-text-field>
+          </v-col>
+
+          <v-col sm="8" md="6" offset-lg="0" lg="2">
+            <v-combobox
               v-model="form.obra_id"
               outlined
               item-value="id"
               item-text="nome"
               :items="obras"
               label="Obra"
-            ></v-autocomplete>
+            ></v-combobox>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
-              v-model="form.comprador"
-              outlined
-              label="Quem comprou"
-            ></v-text-field>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="3">
-            <v-text-field
-              v-model="form.nota"
-              outlined
-              label="Notas/chaves/recibos"
-            ></v-text-field>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-file-input
-              small-chips
-              multiple
-              outlined
-              label="Notas"
-            ></v-file-input>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
-              v-model="form.pedido"
-              outlined
-              label="Pedido"
-            ></v-text-field>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
+            <v-combobox
               v-model="form.etapa"
+              :items="etapas"
+              item-text="nome"
+              item-value="nome"
+              small-chips
               outlined
               label="Etapa"
-            ></v-text-field>
+            ></v-combobox>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
+            <v-combobox
               v-model="form.subetapa"
+              :items="etapas"
+              item-text="nome"
+              item-value="nome"
+              small-chips
               outlined
               label="SubEtapa"
-            ></v-text-field>
+            ></v-combobox>
           </v-col>
         </v-row>
         <!-- Fim -->
@@ -106,7 +80,7 @@
 
         <!-- Inicio -->
         <v-row>
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-autocomplete
               v-model="form.forma"
               :items="formas"
@@ -115,18 +89,7 @@
             ></v-autocomplete>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
-              v-model="form.contaPagadora"
-              outlined
-              return-object
-              item-text="nome"
-              :items="contas"
-              label="Selecionar conta pagadora"
-            ></v-autocomplete>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-text-field
               v-model="form.valor"
               outlined
@@ -134,15 +97,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
-              v-model="form.pagador"
-              outlined
-              label="Quem pagou"
-            ></v-text-field>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
             <v-text-field
               v-model.number="form.parcelas"
               outlined
@@ -152,31 +107,8 @@
           </v-col>
         </v-row>
 
-        <v-row>
-          <v-col
-            v-for="(parcela, k) in pagamentos.parcelas"
-            :key="k"
-            sm="8"
-            md="6"
-            offset-lg="0"
-            lg="3"
-          >
-            <v-text-field
-              v-model="parcela.dataPagamento"
-              outlined
-              :label="`Data Parcela ${parcela.n}`"
-            ></v-text-field>
-            <v-text-field
-              v-model="parcela.valor"
-              outlined
-              :label="`Valor parcela ${parcela.n}`"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <!-- Fim -->
-
         <v-row v-if="form.fornecedor">
-          <v-col sm="8" md="6" offset-lg="0" lg="3">
+          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="3">
             <h3>Dados bancários do fornecedor</h3>
             <h5>{{ form.fornecedor.nomeBanco }}</h5>
             <h5>{{ form.fornecedor.banco }}</h5>
@@ -235,7 +167,7 @@
 
 
 <script>
-import { emptyForm, tipos, formas } from '~/dados/compras.js'
+import { emptyForm, tipos, formas } from '~/dados/pedidos.js'
 export default {
   props: {
     editItemObject: {
@@ -289,13 +221,13 @@ export default {
         this.loading = false
       })
 
-    // pegar contas
+    // pegar etapas
     await this.$fire.firestore
-      .collection('contas')
+      .collection('etapas')
       .get()
       .then((snap) => {
         snap.forEach((doc) => {
-          this.contas.push({ id: doc.id, ...doc.data() })
+          this.etapas.push({ id: doc.id, ...doc.data() })
         })
       })
       .catch(() => {
@@ -312,14 +244,16 @@ export default {
 
   data() {
     return {
+      title: 'Pedido/Orçamento',
+      titlePlural: 'Pedidos/Orçamentos',
       form: { ...this.emptyForm },
       tipos: tipos,
       formas: formas,
       emptyForm: emptyForm,
       loading: false,
       fornecedores: [],
+      etapas: [],
       obras: [],
-      contas: [],
       selectedFornecedor: {},
     }
   },
@@ -341,7 +275,7 @@ export default {
         ...this.form,
       }
       await this.$fire.firestore
-        .collection('compras')
+        .collection('pedidos')
         .add(item)
         .then((docRef) => {
           // console.log('Documento written ID: ', docRef.id)
@@ -381,7 +315,7 @@ export default {
       }
       //   console.log('modify', this.id, modificacao)
       await this.$fire.firestore
-        .collection('compras')
+        .collection('pedidos')
         .doc(this.form.id)
         .update(modificacao)
         .then((docRef) => {
@@ -409,7 +343,7 @@ export default {
     async deletar() {
       this.loading = true
       await this.$fire.firestore
-        .collection('compras')
+        .collection('pedidos')
         .doc(this.form.id)
         .delete()
         .then(() => {
@@ -451,18 +385,10 @@ export default {
       return this.$store.state.auth.authUser
     },
     editar() {
-      return this?.editItemObject !== null ? true : false
-    },
-    pagamentos() {
-      let pagamentos = {
-        conta_id: '',
-        fornecedor_id: '',
-        parcelas: [],
-      }
-      for (var i = 0; i < this?.form.parcelas; ++i) {
-        pagamentos.parcelas.push({ n: i + 1, data: '', valor: '' })
-      }
-      return pagamentos
+      return Object.entries(this.emptyForm).toString() ===
+        Object.entries(this.editItemObject).toString()
+        ? false
+        : true
     },
   },
 }

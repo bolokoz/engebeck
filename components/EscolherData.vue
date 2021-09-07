@@ -13,6 +13,7 @@
         v-model="local"
         :label="label"
         readonly
+        outlined
         v-bind="attrs"
         v-on="on"
       ></v-text-field>

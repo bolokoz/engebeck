@@ -182,21 +182,21 @@ export default Vue.extend({
         ],
       ],
       compras: [
-        [
-          'Adicionar compra',
-          'mdi-account-multiple-outline',
-          '/compras/adicionar',
-        ],
+        ['Compras gerais', 'mdi-account-multiple-outline', '/compras'],
         [
           'Compras recorrentes',
           'mdi-account-multiple-outline',
           '/compras/recorrentes',
         ],
-        ['Gerenciar ', 'mdi-account-multiple-outline', '/compras/'],
+        [
+          'Pedidos/Orçamentos',
+          'mdi-account-multiple-outline',
+          '/compras/pedidos',
+        ],
       ],
       obras: [
-        ['Gerenciar', 'mdi-account-multiple-outline', '/obras'],
-        ['Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
+        ['Gerenciar Obras', 'mdi-account-multiple-outline', '/obras'],
+        ['Gerenciar Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
       ],
 
       items: [

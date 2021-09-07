@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight-regular">Compras</h1>
+      <h1 class="font-weight-regular">Pedidos/Orçamentos</h1>
       <v-row no-gutters>
         <v-col cols="12">
           <v-dialog v-model="dialog" persistent>
-            <ComprasForm
+            <PedidosForm
               :dialog.sync="dialog"
               @refresh="read"
               :editItemObject.sync="editItemObject"
@@ -19,8 +19,8 @@
             :mobileTableHeaders="mobileTableHeaders"
             :mobileTableItems="mobileTableItems"
             :desktopTableHeaders="desktopTableHeaders"
-            :telefone="true"
-            editPath="/compras"
+            :telefone="false"
+            editPath="/compras/pedidos"
           />
         </v-col>
       </v-row>
@@ -36,7 +36,7 @@ import {
   mobileTableItems,
   desktopTableHeaders,
   emptyForm,
-} from '~/dados/compras.js'
+} from '~/dados/pedidos.js'
 
 export default Vue.extend({
   middleware: 'securePage',
@@ -60,7 +60,7 @@ export default Vue.extend({
     async read() {
       this.loading = true
       this.$fire.firestore
-        .collection('compras')
+        .collection('pedidos')
         .get()
         .then((snap) => {
           this.items = []
@@ -90,6 +90,7 @@ export default Vue.extend({
     },
   },
   mounted() {
+    this.editItemObject = { ...emptyForm }
     this.read()
   },
 })
