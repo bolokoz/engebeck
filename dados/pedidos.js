@@ -36,7 +36,7 @@ export let emptyForm = {
     date: '',
     obra: '',
     numero: '',
-    etapa: '',
+    etapa: [],
     subetapa: '',
     valor: '',
     forma: '',

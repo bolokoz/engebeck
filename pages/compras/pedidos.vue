@@ -9,11 +9,13 @@
               :dialog.sync="dialog"
               @refresh="read"
               :editItemObject.sync="editItemObject"
+              :formIsEdit="formIsEdit"
             />
           </v-dialog>
           <Lista
             :items="items"
             @addItem="addItem"
+            @editItem="editItem"
             :editItemObject.sync="editItemObject"
             :dialog.sync="dialog"
             :mobileTableHeaders="mobileTableHeaders"
@@ -44,6 +46,7 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
+      formIsEdit: false,
       dialog: false,
       editItemObject: { ...emptyForm },
       items: [],
@@ -81,16 +84,17 @@ export default Vue.extend({
     },
 
     addItem() {
+      this.formIsEdit = false
       this.editItemObject = { ...emptyForm }
       this.dialog = true
     },
     editItem(item) {
       this.editItemObject = { ...item }
+      this.formIsEdit = true
       this.dialog = true
     },
   },
   mounted() {
-    this.editItemObject = { ...emptyForm }
     this.read()
   },
 })

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="editar" class="headline">Editar compra</span>
+      <span v-if="formIsEdit" class="headline">Editar compra</span>
       <span v-else class="headline">Adicionar compra</span>
     </v-card-title>
     <v-card-text>
@@ -83,11 +83,12 @@
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
+            <v-combobox
               v-model="form.etapa"
               outlined
+              :items="etapas"
               label="Etapa"
-            ></v-text-field>
+            ></v-combobox>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
@@ -144,7 +145,7 @@
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
             <v-text-field
-              v-model.number="form.parcelas"
+              v-model.number="nParcelas"
               outlined
               type="number"
               label="Parcelas"
@@ -152,7 +153,7 @@
           </v-col>
         </v-row>
 
-        <v-row>
+        <!-- <v-row>
           <v-col
             v-for="(parcela, k) in pagamentos.parcelas"
             :key="k"
@@ -172,7 +173,9 @@
               :label="`Valor parcela ${parcela.n}`"
             ></v-text-field>
           </v-col>
-        </v-row>
+        </v-row> -->
+
+        <Parcelas :nParcelas="+nParcelas" :parcelas="form.parcelas" />
         <!-- Fim -->
 
         <v-row v-if="form.fornecedor">
@@ -189,7 +192,7 @@
         <!-- Botoes -->
         <v-row>
           <!-- CONDICAO CRIAR NOVO -->
-          <div v-if="!editar">
+          <div v-if="!formIsEdit">
             <v-row>
               <v-col>
                 <v-btn dark color="green light" outlined @click="adicionar">{{
@@ -235,8 +238,10 @@
 
 
 <script>
-import { emptyForm, tipos, formas } from '~/dados/compras.js'
+import { emptyForm, tipos, formas, etapas } from '~/dados/compras.js'
+import Parcelas from './Parcelas.vue'
 export default {
+  components: { Parcelas },
   props: {
     editItemObject: {
       type: Object,
@@ -244,6 +249,9 @@ export default {
     isDialog: {
       type: Boolean,
       default: true,
+    },
+    formIsEdit: {
+      type: Boolean,
     },
   },
   async fetch() {
@@ -317,6 +325,9 @@ export default {
       formas: formas,
       emptyForm: emptyForm,
       loading: false,
+      etapas: etapas,
+      nParcelas: 1,
+      pagamentos: [],
       fornecedores: [],
       obras: [],
       contas: [],

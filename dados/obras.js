@@ -47,3 +47,5 @@ export let tipos = [
     'Comercial',
     'Mista',
 ]
+
+export let etapas = ['Serviços iniciais', 'Fundação', 'Estrutura', 'Paredes e fechamentos', 'Coberturas', 'Esquadrias', 'Eletrica', 'Hidraulica', 'Loucas e metais', 'Forros', 'Revestimentos', 'Pisos', 'Pinturas', 'Entrega']

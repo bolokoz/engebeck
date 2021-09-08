@@ -132,6 +132,7 @@ export default {
     editItem(item) {
       this.$emit('update:editItemObject', { ...item })
       this.$emit('update:dialog', true)
+      this.$emit('editItem', item)
     },
     whatsapp(item) {
       window.open(`https://wa.me/55${item.telefone}`)

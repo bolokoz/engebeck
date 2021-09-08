@@ -60,7 +60,7 @@ export let emptyForm = {
     valor: '',
     pagador: '',
     forma: '',
-    parcelas: 1,
+    parcelas: [],
 }
 
 export let tipos = [
@@ -76,3 +76,5 @@ export let formas = [
     'Cartão',
     'Cheque',
 ]
+
+export let etapas = ['Serviços iniciais', 'Fundação', 'Estrutura', 'Paredes e fechamentos', 'Coberturas', 'Esquadrias', 'Eletrica', 'Hidraulica', 'Loucas e metais', 'Forros', 'Revestimentos', 'Pisos', 'Pinturas', 'Entrega']

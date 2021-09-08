@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="editar" class="headline">Editar {{ title }}</span>
+      <span v-if="formIsEdit" class="headline">Editar {{ title }}</span>
       <span v-else class="headline">Adicionar {{ title }}</span>
     </v-card-title>
     <v-card-text>
@@ -55,6 +55,7 @@
               item-text="nome"
               item-value="nome"
               small-chips
+              multiple
               outlined
               label="Etapa"
             ></v-combobox>
@@ -80,7 +81,7 @@
 
         <!-- Inicio -->
         <v-row>
-          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-md="0" lg="2">
             <v-autocomplete
               v-model="form.forma"
               :items="formas"
@@ -89,7 +90,7 @@
             ></v-autocomplete>
           </v-col>
 
-          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-md="0" lg="2">
             <v-text-field
               v-model="form.valor"
               outlined
@@ -97,7 +98,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col sm="8" offset-sm="1" md="6" offset-lg="0" lg="2">
+          <v-col sm="8" offset-sm="1" md="6" offset-md="0" lg="2">
             <v-text-field
               v-model.number="form.parcelas"
               outlined
@@ -121,7 +122,7 @@
         <!-- Botoes -->
         <v-row>
           <!-- CONDICAO CRIAR NOVO -->
-          <div v-if="!editar">
+          <div v-if="!formIsEdit">
             <v-row>
               <v-col>
                 <v-btn dark color="green light" outlined @click="adicionar">{{
@@ -176,6 +177,9 @@ export default {
     isDialog: {
       type: Boolean,
       default: true,
+    },
+    formIsEdit: {
+      type: Boolean,
     },
   },
   async fetch() {
@@ -383,12 +387,6 @@ export default {
   computed: {
     authUser() {
       return this.$store.state.auth.authUser
-    },
-    editar() {
-      return Object.entries(this.emptyForm).toString() ===
-        Object.entries(this.editItemObject).toString()
-        ? false
-        : true
     },
   },
 }
