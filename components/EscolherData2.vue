@@ -5,32 +5,26 @@
     :nudge-right="40"
     transition="scale-transition"
     offset-y
-    dense
     min-width="auto"
   >
-    <template #activator="{ on, attrs }">
+    <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        :value="value"
+        v-model="date"
         :label="label"
+        prepend-icon="mdi-calendar"
         readonly
-        outlined
         v-bind="attrs"
         v-on="on"
       ></v-text-field>
     </template>
-    <v-date-picker
-      :value="value"
-      v-on:update="$emit"
-      locale="pt-br"
-      @input="menu = false"
-    ></v-date-picker>
+    <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
   </v-menu>
 </template>
 
 <script>
 export default {
   props: {
-    value: {
+    date: {
       type: String,
       required: true,
     },
@@ -44,15 +38,6 @@ export default {
       menu: false,
     }
   },
-  computed: {
-    local: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('update:value', value)
-      },
-    },
-  },
+  computed: {},
 }
 </script>

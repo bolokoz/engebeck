@@ -38,25 +38,6 @@
             ></v-autocomplete>
           </v-col>
 
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-autocomplete
-              v-model="form.obra_id"
-              outlined
-              item-value="id"
-              item-text="nome"
-              :items="obras"
-              label="Obra"
-            ></v-autocomplete>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
-              v-model="form.comprador"
-              outlined
-              label="Quem comprou"
-            ></v-text-field>
-          </v-col>
-
           <v-col sm="8" md="6" offset-lg="0" lg="3">
             <v-text-field
               v-model="form.nota"
@@ -81,7 +62,21 @@
               label="Pedido"
             ></v-text-field>
           </v-col>
+        </v-row>
 
+        <v-divider></v-divider>
+        <h3 class="my-3 font-weight-bold">Dados de controle</h3>
+        <v-row>
+          <v-col sm="8" md="6" offset-lg="0" lg="2">
+            <v-autocomplete
+              v-model="form.obra_id"
+              outlined
+              item-value="id"
+              item-text="nome"
+              :items="obras"
+              label="Obra"
+            ></v-autocomplete>
+          </v-col>
           <v-col sm="8" md="6" offset-lg="0" lg="2">
             <v-combobox
               v-model="form.etapa"
@@ -129,14 +124,6 @@
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
             <v-text-field
-              v-model="form.valor"
-              outlined
-              label="Valor total"
-            ></v-text-field>
-          </v-col>
-
-          <v-col sm="8" md="6" offset-lg="0" lg="2">
-            <v-text-field
               v-model="form.pagador"
               outlined
               label="Quem pagou"
@@ -145,12 +132,47 @@
 
           <v-col sm="8" md="6" offset-lg="0" lg="2">
             <v-text-field
+              v-model="form.valor"
+              outlined
+              label="Valor total"
+            ></v-text-field>
+          </v-col>
+
+          <v-col sm="8" md="6" offset-lg="0" lg="2">
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="form.data"
+                  label="Data pagamento"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                outlined
+                v-model="form.data"
+                @input="menu = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+
+          <!-- <v-col sm="8" md="6" offset-lg="0" lg="2">
+            <v-text-field
               v-model.number="nParcelas"
               outlined
               type="number"
               label="Parcelas"
             ></v-text-field>
-          </v-col>
+          </v-col> -->
         </v-row>
 
         <!-- <v-row>
@@ -175,7 +197,18 @@
           </v-col>
         </v-row> -->
 
-        <Parcelas :nParcelas="+nParcelas" :parcelas="form.parcelas" />
+        <v-btn @click="addParcela" text small color="primary"
+          >Adicionar parcela</v-btn
+        >
+        <div v-if="form.parcelas.length > 0">
+          <v-btn @click="removeParcela" text small color="warning"
+            >Remover parcela</v-btn
+          >
+
+          Saldo a pagar: {{ saldo }}
+          <Parcelas :parcelas="this.form.parcelas" />
+        </div>
+
         <!-- Fim -->
 
         <v-row v-if="form.fornecedor">
@@ -326,8 +359,8 @@ export default {
       emptyForm: emptyForm,
       loading: false,
       etapas: etapas,
-      nParcelas: 1,
-      pagamentos: [],
+      nParcelas: 0,
+      menu: false,
       fornecedores: [],
       obras: [],
       contas: [],
@@ -445,6 +478,15 @@ export default {
           this.$emit('update:dialog', false)
         })
     },
+    addParcela() {
+      this.nParcelas++
+      let pagamento = { n: this.nParcelas, data: '', valor: '', menu: false }
+      this.form.parcelas.push(pagamento)
+    },
+    removeParcela() {
+      this.nParcelas--
+      this.form.parcelas.pop()
+    },
   },
 
   watch: {
@@ -464,16 +506,13 @@ export default {
     editar() {
       return this?.editItemObject !== null ? true : false
     },
-    pagamentos() {
-      let pagamentos = {
-        conta_id: '',
-        fornecedor_id: '',
-        parcelas: [],
-      }
-      for (var i = 0; i < this?.form.parcelas; ++i) {
-        pagamentos.parcelas.push({ n: i + 1, data: '', valor: '' })
-      }
-      return pagamentos
+    saldo() {
+      let saldo = this.form.valor
+      let pago = 0
+      this.form.parcelas.forEach((d) => {
+        pago += d.valor
+      })
+      return saldo - pago
     },
   },
 }

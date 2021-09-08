@@ -1,11 +1,11 @@
 export let desktopTableHeaders = [
     {
-        text: 'Nome.',
+        text: 'Descrição',
         align: 'start',
-        value: 'nome',
+        value: 'descricao',
     },
-    { text: 'Tipo', value: 'tipo' },
-    { text: 'pagador', value: 'pagador' },
+    { text: 'Obra', value: 'obra' },
+    { text: 'Valor', value: 'valor' },
     { text: 'Actions', value: 'actions', sortable: false },
 ]
 
@@ -37,9 +37,10 @@ export let exemploForm = {
     agencia: '',
     conta: '',
     valor: '',
+    data: '',
     pagador: '',
     forma: '',
-    parcelas: 1,
+    parcelas: [],
 
 }
 export let emptyForm = {
