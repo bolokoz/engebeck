@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="editar" class="headline">Editar conta</span>
+      <span v-if="formIsEdit" class="headline">Editar conta</span>
       <span v-else class="headline">Adicionar conta</span>
     </v-card-title>
     <v-card-text>
@@ -95,7 +95,7 @@
         <!-- Botoes -->
         <v-row>
           <!-- CONDICAO CRIAR NOVO -->
-          <div v-if="!editar">
+          <div v-if="!formIsEdit">
             <v-row>
               <v-col>
                 <v-btn dark color="green light" outlined @click="adicionar">{{
@@ -146,6 +146,9 @@ export default {
   props: {
     editItemObject: {
       default: null,
+    },
+    formIsEdit: {
+      type: Boolean,
     },
   },
 

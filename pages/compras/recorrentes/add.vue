@@ -1,27 +1,20 @@
 <template>
   <div>
     <Titulo
-      titulo="Edit compra"
-      :subtitulo="`Conta de id: ${id}`"
+      titulo="Adicionar compra"
       texto_link="Voltar para compras"
-      link="/compras"
+      link="/compras/recorrentes"
     />
 
     <ComprasFormOnly
-      :form="item"
+      :form="form"
       :obras="obras"
       :contas="contas"
       :etapsa="etapas"
       :fornecedores="fornecedores"
     />
 
-    <BotoesForm
-      :isEdit="true"
-      @deletar="deletar"
-      @alterar="alterar"
-      @adicionar="adicionar"
-      :loading="loading"
-    />
+    <BotoesForm :isEdit="false" @adicionar="adicionar" :loading="loading" />
 
     <v-divider class="my-5"></v-divider>
   </div>
@@ -35,9 +28,7 @@ export default {
     ComprasForm3,
   },
 
-  async asyncData({ params, app }) {
-    const id = params.id
-
+  async asyncData({ app }) {
     let obras = []
     await app.$fire.firestore
       .collection('obras')
@@ -76,17 +67,13 @@ export default {
         })
       })
 
-    const doc = await app.$fire.firestore.collection('compras').doc(id).get()
-
-    let item = doc.data()
-
-    return { id, item, obras, contas, fornecedores, etapas }
+    return { obras, contas, fornecedores, etapas }
   },
 
   data() {
     return {
       loading: false,
-      emptyForm: {
+      form: {
         descricao: '',
         tipo: '',
         fornecedor_id: '',
@@ -104,9 +91,9 @@ export default {
         valor: '',
         pagador: '',
         forma: '',
+        obs: '',
         parcelas: [],
       },
-      item: {},
     }
   },
 
@@ -149,66 +136,6 @@ export default {
           this.$router.push({
             path: '/compras/recorrentes',
           })
-        })
-    },
-    async alterar() {
-      this.loading = true
-      const modificacao = {
-        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        modifiedBy: this.authUser,
-        ...this.form,
-      }
-      //   console.log('modify', this.id, modificacao)
-      await this.$fire.firestore
-        .collection('compras')
-        .doc(this.form.id)
-        .update(modificacao)
-        .then((docRef) => {
-          // console.log('Documento modificado ID: ', docRef.id)
-          this.$notifier.showMessage({
-            content: 'Item modificado ',
-            color: 'info',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$emit('refresh')
-          this.$emit('update:dialog', false)
-        })
-    },
-    async deletar() {
-      this.loading = true
-      await this.$fire.firestore
-        .collection('compras')
-        .doc(this.form.id)
-        .delete()
-        .then(() => {
-          this.$notifier.showMessage({
-            content: 'Item apagado',
-            color: 'warning',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$emit('refresh')
-          this.$emit('update:dialog', false)
         })
     },
   },

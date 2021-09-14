@@ -46,5 +46,6 @@ export let emptyForm = {
 export let tipos = [
     'Conta corrente',
     'Cartão crédito',
+    'Cartão débito',
     'Boleto',
 ]

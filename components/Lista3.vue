@@ -17,10 +17,9 @@
                 ></v-text-field>
               </v-card-title>
               <v-data-table
-                :headers="desktopTableHeaders"
+                :headers="desktopHeaders"
                 :items="items"
                 :search="search"
-                dense
                 no-results-text="Nada encontrado"
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
@@ -52,7 +51,7 @@
               <template #default>
                 <thead>
                   <tr>
-                    <th v-for="(th, k) in mobileTableHeaders" :key="k">
+                    <th v-for="(th, k) in mobileHeaders" :key="k">
                       {{ th }}
                     </th>
                     <th class="text-left">Editar</th>
@@ -60,16 +59,16 @@
                 </thead>
                 <tbody>
                   <tr v-for="item in items" :key="item.id">
-                    <td v-for="(td, k) in mobileTableItems" :key="k">
+                    <td v-for="(td, k) in mobileHeaders" :key="k">
                       {{ item[td] }}
                     </td>
                     <td>
                       <v-btn v-if="telefone" text small @click="whatsapp(item)"
                         ><v-icon>mdi-phone</v-icon></v-btn
                       >
-                      <v-btn text small @click="expandItem(item)"
+                      <!-- <v-btn text small @click="expandItem(item)"
                         ><v-icon>mdi-arrow-expand</v-icon></v-btn
-                      >
+                      > -->
                       <v-btn text small @click.native="editItem(item)"
                         ><v-icon>mdi-pencil</v-icon></v-btn
                       >
@@ -95,20 +94,15 @@ export default {
     editItemObject: {
       type: Object,
     },
-
-    mobileTableItems: {
+    mobileHeaders: {
       type: Array,
       required: true,
     },
-    mobileTableHeaders: {
+    desktopHeaders: {
       type: Array,
       required: true,
     },
-    desktopTableHeaders: {
-      type: Array,
-      required: true,
-    },
-    editPath: {
+    path: {
       type: String,
       required: true,
     },
@@ -126,16 +120,12 @@ export default {
       search: '',
     }
   },
+
   methods: {
-    expandItem(item) {
-      this.$router.push({
-        path: `${this.editPath}/${item.id}`,
-      })
-    },
     editItem(item) {
-      this.$emit('update:editItemObject', { ...item })
-      this.$emit('update:dialog', true)
-      this.$emit('editItem', item)
+      this.$router.push({
+        path: `${this.path}/${item.id}`,
+      })
     },
     whatsapp(item) {
       window.open(`https://wa.me/55${item.telefone}`)
@@ -144,7 +134,9 @@ export default {
       window.location.href = `mailto:${item.email}`
     },
     addItem() {
-      this.$emit('addItem')
+      this.$router.push({
+        path: `${this.path}/add`,
+      })
     },
   },
 }

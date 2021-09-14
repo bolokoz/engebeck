@@ -1,10 +1,10 @@
 <template>
   <Pagina
-    :titulo="'Contas'"
-    db="contas"
+    :titulo="'Compras recorrentes'"
+    db="compras"
     :desktopHeaders="desktopHeaders"
     :mobileHeaders="mobileHeaders"
-    path="/financeiro/contas"
+    editPath="/compras/recorrentes"
   />
 </template>
 
@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       desktopHeaders: [
-        { text: 'Nome', value: 'nome' },
+        { text: 'Descrição', value: 'descricao' },
         { text: 'Valor', value: 'valor' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
       ],

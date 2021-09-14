@@ -35,7 +35,13 @@
               outlined
               :items="fornecedores"
               label="Fornecedor"
-            ></v-autocomplete>
+            >
+              <template v-slot:no-data>
+                <v-list-item>
+                  <v-btn to="/financeiro/fornecedores">Criar fornecedor </v-btn>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
           </v-col>
 
           <v-col sm="8" md="6" offset-lg="0" lg="3">

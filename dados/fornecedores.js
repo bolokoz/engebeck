@@ -23,21 +23,16 @@ export let desktopTableHeaders = [
         align: 'start',
         value: 'nome',
     },
-    { text: 'Tipo', value: 'tipo' },
-    { text: 'Vendedor', value: 'vendedor' },
-    { text: 'Telefone', value: 'telefone' },
     { text: 'Pagamento', value: 'pagamento' },
     { text: 'Actions', value: 'actions', sortable: false },
 ]
 
 export let mobileTableHeaders = [
     'Nome',
-    'Tipo',
     'Telefone'
 ]
 export let mobileTableItems = [
     'nome',
-    'tipo',
     'telefone'
 ]
 

@@ -1,42 +1,68 @@
 <template>
   <div>
     <Titulo
-      titulo="Editar conta"
-      :subtitulo="`Conta de id: ${id}`"
-      texto_link="Voltar para contas"
-      link="/financeiro/contas"
+      titulo="Editar fornecedor"
+      :subtitulo="`id: ${id}`"
+      texto_link="Voltar"
+      link="/financeiro/fornecedores"
     />
-    <v-divider></v-divider>
 
-    <ContasForm2 @refresh="goBack" :editItemObject="editItemObject" />
+    <div v-if="form">
+      <FonecedoresFormOnly :form="form" />
 
-    <v-divider class="my-5"></v-divider>
-    <!-- <DadosExtras :item="editItemObject" /> -->
+      <BotoesForm
+        :isEdit="true"
+        @deletar="deletar"
+        @alterar="alterar"
+        :loading="loading"
+      />
+    </div>
+
+    <div v-else>
+      <h3>Documento não encontrado</h3>
+    </div>
   </div>
 </template>
 <script>
+const db = 'fornecedores'
 export default {
   middleware: 'securePage',
+  transition: 'fade',
 
-  asyncData({ params }) {
+  async asyncData({ params, app }) {
     const id = params.id
-    return { id }
+    let form
+    const docRef = app.$fire.firestore.collection(db).doc(id)
+
+    await docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          form = doc.data()
+        } else {
+          app.$notifier.showMessage({
+            content: 'Documento não existe',
+            color: 'error',
+            top: false,
+          })
+        }
+      })
+      .catch((error) => {
+        app.$notifier.showMessage({
+          content: error,
+          color: 'error',
+          top: false,
+        })
+      })
+
+    return { id, form }
   },
 
   data() {
     return {
-      dialog: true,
-      editItemObject: null,
       loading: false,
+      item: {},
     }
-  },
-
-  async fetch() {
-    const doc = await this.$fire.firestore
-      .collection('contas')
-      .doc(this.id)
-      .get()
-    this.editItemObject = doc.data()
   },
 
   computed: {
@@ -46,8 +72,62 @@ export default {
   },
 
   methods: {
-    goBack() {
-      this.$router.push('/financeiro/contas')
+    async alterar() {
+      this.loading = true
+      const modificacao = {
+        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        modifiedBy: this.authUser,
+        ...this.form,
+      }
+      //   console.log('modify', this.id, modificacao)
+      await this.$fire.firestore
+        .collection(db)
+        .doc(this.id)
+        .update(modificacao)
+        .then((docRef) => {
+          // console.log('Documento modificado ID: ', docRef.id)
+          this.$notifier.showMessage({
+            content: 'Item modificado ',
+            color: 'info',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    async deletar() {
+      this.loading = true
+      await this.$fire.firestore
+        .collection(db)
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Item apagado',
+            color: 'warning',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push('/financeiro/fornecedores')
+        })
     },
   },
 }

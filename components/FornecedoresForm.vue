@@ -337,11 +337,6 @@ export default {
         .doc(this.form.id)
         .delete()
         .then(() => {
-          this.$notifier.showMessage({
-            content: 'Item apagado',
-            color: 'warning',
-            top: false,
-          })
           //   this.dialog = false
           //   this.$router.push('/compras')
         })
@@ -353,6 +348,11 @@ export default {
           })
         })
         .finally(() => {
+          this.$notifier.showMessage({
+            content: 'Item apagado',
+            color: 'warning',
+            top: false,
+          })
           this.loading = false
           this.$emit('refresh')
           this.$emit('update:dialog', false)
@@ -375,6 +375,10 @@ export default {
     editar() {
       return this?.editItemObject !== null ? true : false
     },
+  },
+
+  mounted() {
+    this.form = { ...this.editItemObject }
   },
 }
 </script>
