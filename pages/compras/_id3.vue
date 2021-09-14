@@ -1,68 +1,42 @@
 <template>
   <div>
     <Titulo
-      titulo="Editar compra"
-      :subtitulo="`Id: ${id}`"
+      titulo="Edit compra"
+      :subtitulo="`Conta de id: ${id}`"
       texto_link="Voltar para compras"
       link="/compras"
     />
 
-    <div v-if="form">
-      <ComprasFormOnly
-        :form="form"
-        :obras="obras"
-        :fornecedores="fornecedores"
-        :contas="contas"
-        :etapas="etapas"
-        :files="files"
-      />
+    <ComprasFormOnly
+      :form="item"
+      :obras="obras"
+      :contas="contas"
+      :etapsa="etapas"
+      :fornecedores="fornecedores"
+    />
 
-      <DadosExtras :form="form" />
+    <BotoesForm
+      :isEdit="true"
+      @deletar="deletar"
+      @alterar="alterar"
+      @adicionar="adicionar"
+      :loading="loading"
+    />
 
-      <BotoesForm
-        :isEdit="true"
-        @deletar="deletar"
-        @alterar="alterar"
-        :loading="loading"
-      />
-    </div>
-
-    <div v-else>
-      <h3>Documento não encontrado</h3>
-    </div>
+    <v-divider class="my-5"></v-divider>
   </div>
 </template>
 <script>
-const db = 'compras'
+import ComprasForm3 from '~/components/ContasForm3.vue'
 export default {
   middleware: 'securePage',
   transition: 'fade',
+  components: {
+    ComprasForm3,
+  },
 
   async asyncData({ params, app }) {
     const id = params.id
-    let form
-    const docRef = app.$fire.firestore.collection(db).doc(id)
-
-    await docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          form = doc.data()
-        } else {
-          app.$notifier.showMessage({
-            content: 'Documento não existe',
-            color: 'error',
-            top: false,
-          })
-        }
-      })
-      .catch((error) => {
-        app.$notifier.showMessage({
-          content: error,
-          color: 'error',
-          top: false,
-        })
-      })
 
     let obras = []
     await app.$fire.firestore
@@ -102,21 +76,36 @@ export default {
         })
       })
 
-    let formFiles = []
-    form?.files.forEach((file) => {
-      let url = app.$fire.storage
-        .ref(`/notas/${id}/`)
-        .child(file)
-        .getDownloadURL()
-      formFiles.push(url)
-    })
+    const doc = await app.$fire.firestore.collection('compras').doc(id).get()
 
-    return { id, form, formFiles, obras, fornecedores, etapas, contas }
+    let item = doc.data()
+
+    return { id, item, obras, contas, fornecedores, etapas }
   },
 
   data() {
     return {
       loading: false,
+      emptyForm: {
+        descricao: '',
+        tipo: '',
+        fornecedor_id: '',
+        dataCompra: '',
+        obra_id: '',
+        comprador: '',
+        nota: '',
+        pedido: '',
+        etapa: '',
+        subetapa: '',
+        compra_id: '',
+        banco: '',
+        agencia: '',
+        conta: '',
+        valor: '',
+        pagador: '',
+        forma: '',
+        parcelas: [],
+      },
       item: {},
     }
   },
@@ -128,6 +117,40 @@ export default {
   },
 
   methods: {
+    async adicionar() {
+      this.loading = true
+      const item = {
+        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        createdBy: this.authUser,
+        visible: true,
+        ...this.form,
+      }
+      await this.$fire.firestore
+        .collection('compras')
+        .add(item)
+        .then((docRef) => {
+          console.log('Documento written ID: ', docRef.id)
+          this.$notifier.showMessage({
+            content: 'Adicionado,',
+            color: 'success',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push({
+            path: '/compras/recorrentes',
+          })
+        })
+    },
     async alterar() {
       this.loading = true
       const modificacao = {
@@ -137,16 +160,11 @@ export default {
       }
       //   console.log('modify', this.id, modificacao)
       await this.$fire.firestore
-        .collection(db)
-        .doc(this.id)
+        .collection('compras')
+        .doc(this.form.id)
         .update(modificacao)
         .then((docRef) => {
-          if (this.files) {
-            files.forEach((d) => {
-              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
-              console.log(d)
-            })
-          }
+          // console.log('Documento modificado ID: ', docRef.id)
           this.$notifier.showMessage({
             content: 'Item modificado ',
             color: 'info',
@@ -163,13 +181,15 @@ export default {
         })
         .finally(() => {
           this.loading = false
+          this.$emit('refresh')
+          this.$emit('update:dialog', false)
         })
     },
     async deletar() {
       this.loading = true
       await this.$fire.firestore
-        .collection(db)
-        .doc(this.id)
+        .collection('compras')
+        .doc(this.form.id)
         .delete()
         .then(() => {
           this.$notifier.showMessage({
@@ -187,7 +207,8 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$router.push('/compras')
+          this.$emit('refresh')
+          this.$emit('update:dialog', false)
         })
     },
   },

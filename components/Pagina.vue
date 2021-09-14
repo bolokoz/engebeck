@@ -8,6 +8,7 @@
         @editItem="editItem"
         :mobileHeaders="mobileHeaders"
         :desktopHeaders="desktopHeaders"
+        sort-by="data"
         :telefone="false"
         :path="path"
       />
@@ -20,10 +21,6 @@
 export default {
   middleware: 'securePage',
   props: {
-    titulo: {
-      type: String,
-      required: true,
-    },
     db: {
       type: String,
       required: true,
@@ -48,20 +45,6 @@ export default {
     }
   },
   methods: {
-    editItem(item) {
-      this.$router.push({
-        path: `${this.editPath}/${item.id}`,
-      })
-    },
-    whatsapp(item) {
-      window.open(`https://wa.me/55${item.telefone}`)
-    },
-    email(item) {
-      window.location.href = `mailto:${item.email}`
-    },
-    addItem() {
-      this.$emit('addItem')
-    },
     async read() {
       this.loading = true
       this.$fire.firestore

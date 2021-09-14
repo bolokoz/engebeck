@@ -1,23 +1,33 @@
 <template>
-  <Pagina
-    :titulo="'Compras'"
-    db="compras"
-    :desktopHeaders="desktopHeaders"
-    :mobileHeaders="mobileHeaders"
-    editPath="/compras"
-  />
+  <div>
+    <v-container>
+      <h1 class="font-weight-regular">Compras</h1>
+
+      <Lista3
+        :items="items"
+        :mobileHeaders="mobileHeaders"
+        :desktopHeaders="desktopHeaders"
+        sort-by="data"
+        :telefone="false"
+        path="/compras"
+      />
+    </v-container>
+  </div>
 </template>
 
 <script>
-const { default: Pagina } = require('~/components/Pagina.vue')
+const db = 'compras'
 
 export default {
-  components: { Pagina },
   data() {
     return {
+      items: [],
+      loading: false,
       desktopHeaders: [
         { text: 'Descrição', value: 'descricao' },
+        { text: 'Fornecedor', value: 'fornecedor.nome' },
         { text: 'Valor', value: 'valor' },
+        { text: 'Data', value: 'data' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
       ],
       mobileHeaders: [
@@ -26,6 +36,33 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
       ],
     }
+  },
+  methods: {
+    async read() {
+      this.loading = true
+      this.$fire.firestore
+        .collection(db)
+        .get()
+        .then((snap) => {
+          this.items = []
+          snap.forEach((doc) => {
+            this.items.push({ id: doc.id, ...doc.data() })
+          })
+        })
+        .catch(() => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+  },
+  mounted() {
+    this.read()
   },
 }
 </script>

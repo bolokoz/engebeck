@@ -3,16 +3,15 @@
     <Titulo
       titulo="Adicionar compra"
       texto_link="Voltar para compras"
-      link="/compras"
+      link="/compras/recorrentes"
     />
 
     <ComprasFormOnly
       :form="form"
       :obras="obras"
-      :fornecedores="fornecedores"
       :contas="contas"
-      :etapas="etapas"
-      :files="files"
+      :etapsa="etapas"
+      :fornecedores="fornecedores"
     />
 
     <BotoesForm :isEdit="false" @adicionar="adicionar" :loading="loading" />
@@ -21,11 +20,13 @@
   </div>
 </template>
 <script>
-const db = 'compras'
-
+import ComprasForm3 from '~/components/ContasForm3.vue'
 export default {
   middleware: 'securePage',
   transition: 'fade',
+  components: {
+    ComprasForm3,
+  },
 
   async asyncData({ app }) {
     let obras = []
@@ -62,18 +63,37 @@ export default {
       .get()
       .then((snap) => {
         snap.forEach((doc) => {
-          etapas.push({ ...doc.data() })
+          etapas.push({ id: doc.id, ...doc.data() })
         })
       })
 
-    return { obras, fornecedores, etapas, contas }
+    return { obras, contas, fornecedores, etapas }
   },
 
   data() {
     return {
       loading: false,
-      form: {},
-      files: [],
+      form: {
+        descricao: '',
+        tipo: '',
+        fornecedor_id: '',
+        dataCompra: '',
+        obra_id: '',
+        comprador: '',
+        nota: '',
+        pedido: '',
+        etapa: '',
+        subetapa: '',
+        compra_id: '',
+        banco: '',
+        agencia: '',
+        conta: '',
+        valor: '',
+        pagador: '',
+        forma: '',
+        obs: '',
+        parcelas: [],
+      },
     }
   },
 
@@ -93,17 +113,10 @@ export default {
         ...this.form,
       }
       await this.$fire.firestore
-        .collection(db)
+        .collection('compras')
         .add(item)
         .then((docRef) => {
           console.log('Documento written ID: ', docRef.id)
-
-          if (this.files) {
-            files.forEach((d) => {
-              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
-              console.log(d)
-            })
-          }
           this.$notifier.showMessage({
             content: 'Adicionado,',
             color: 'success',
@@ -121,7 +134,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.$router.push({
-            path: '/compras',
+            path: '/compras/recorrentes',
           })
         })
     },

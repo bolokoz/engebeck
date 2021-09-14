@@ -24,24 +24,30 @@
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
               >
+                <template v-slot:item.valor="{ item }">
+                  R$ {{ item.valor }}
+                </template>
+                <template v-slot:item.nota="{ item }">
+                  <v-simple-checkbox
+                    v-model="item.nota"
+                    disabled
+                  ></v-simple-checkbox>
+                </template>
                 <template #item.actions="{ item }">
-                  <v-icon
+                  <!-- <v-icon
                     v-if="telefone"
                     small
                     class="mr-2"
                     @click="whatsapp(item)"
                   >
                     mdi-phone
-                  </v-icon>
-                  <v-icon small class="mr-2" @click="email(item)">
+                  </v-icon> -->
+                  <!-- <v-icon small class="mr-2" @click="email(item)">
                     mdi-mail
-                  </v-icon>
+                  </v-icon> -->
                   <v-icon small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                   </v-icon>
-                  <v-btn text small @click="expandItem(item)"
-                    ><v-icon>mdi-arrow-expand</v-icon></v-btn
-                  >
                 </template>
               </v-data-table>
             </v-card>
@@ -66,9 +72,6 @@
                       <v-btn v-if="telefone" text small @click="whatsapp(item)"
                         ><v-icon>mdi-phone</v-icon></v-btn
                       >
-                      <!-- <v-btn text small @click="expandItem(item)"
-                        ><v-icon>mdi-arrow-expand</v-icon></v-btn
-                      > -->
                       <v-btn text small @click.native="editItem(item)"
                         ><v-icon>mdi-pencil</v-icon></v-btn
                       >

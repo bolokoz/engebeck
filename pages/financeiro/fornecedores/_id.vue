@@ -1,14 +1,14 @@
 <template>
   <div>
     <Titulo
-      titulo="Editar Conta"
-      :subtitulo="`Conta de id: ${id}`"
-      texto_link="Voltar para contas"
-      link="/financeiro/contas"
+      titulo="Editar Fornecedor"
+      :subtitulo="`Id: ${id}`"
+      texto_link="Voltar para fornecedores"
+      link="/financeiro/fornecedores"
     />
 
     <div v-if="form">
-      <ContasFormOnly :form="form" />
+      <FornecedoresFormOnly :form="form" />
 
       <BotoesForm
         :isEdit="true"
@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-const db = 'contas'
+const db = 'fornecedores'
 export default {
   middleware: 'securePage',
   transition: 'fade',
@@ -126,7 +126,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$router.push('/financeiro/contas')
+          this.$router.push('/financeiro/fornecedores')
         })
     },
   },

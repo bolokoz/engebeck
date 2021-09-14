@@ -48,8 +48,10 @@
         <v-file-input
           small-chips
           multiple
+          show-size
           outlined
-          label="Notas"
+          label="PDF ou imagem de Notas"
+          v-model="files"
         ></v-file-input>
       </v-col>
 
@@ -59,6 +61,12 @@
           outlined
           label="Pedido"
         ></v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <UploadFiles :id="id"> Carregar notas </UploadFiles>
       </v-col>
     </v-row>
 
@@ -85,6 +93,8 @@
         <v-combobox
           v-model="form.etapa"
           outlined
+          item-text="nome"
+          item-value="nome"
           :items="etapas"
           label="Etapa"
         ></v-combobox>
@@ -136,7 +146,8 @@
 
       <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-text-field
-          v-model="form.valor"
+          v-model.number="form.valor"
+          prefix="R$"
           outlined
           label="Valor total"
         ></v-text-field>
@@ -181,7 +192,7 @@
     <v-btn @click="addParcela" text small color="primary"
       >Adicionar parcela</v-btn
     >
-    <div v-if="form.parcelas.length > 0">
+    <div v-if="parcelado">
       <v-btn @click="removeParcela" text small color="warning"
         >Remover parcela</v-btn
       >
@@ -212,7 +223,34 @@ export default {
   components: { Parcelas },
   props: {
     form: {
-      type: Object,
+      required: true,
+      default: {
+        descricao: '',
+        tipo: '',
+        fornecedor_id: '',
+        dataCompra: '',
+        obra_id: '',
+        comprador: '',
+        nota: '',
+        pedido: '',
+        etapa: '',
+        subetapa: '',
+        compra_id: '',
+        banco: '',
+        agencia: '',
+        conta: '',
+        valor: '',
+        pagador: '',
+        forma: '',
+        parcelas: [],
+      },
+    },
+    files: {
+      required: true,
+      type: Array,
+      default: () => {
+        ;[]
+      },
     },
     fornecedores: {
       type: Array,
@@ -231,7 +269,7 @@ export default {
   data() {
     return {
       tipos: ['Material', 'Serviço', 'Outros'],
-      formas: ['TED', 'DOC', 'BOLETO'],
+      formas: ['TED', 'DOC', 'PIX', 'Boleto', 'Cartão', 'Cheque'],
       menu: false,
       menu2: false,
     }
@@ -250,12 +288,15 @@ export default {
 
   computed: {
     saldo() {
-      let saldo = this.form.valor
+      let saldo = +this.form?.valor
       let pago = 0
-      this.form.parcelas.forEach((d) => {
-        pago += d.valor
+      this.form.parcelas?.forEach((d) => {
+        pago += d?.valor
       })
       return saldo - pago
+    },
+    parcelado() {
+      return this.form.parcelas?.length > 0 ? true : false
     },
   },
 }

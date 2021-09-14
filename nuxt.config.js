@@ -103,6 +103,7 @@ export default {
         ssr: false,
       },
       firestore: true,
+      storage: true
     },
   },
 

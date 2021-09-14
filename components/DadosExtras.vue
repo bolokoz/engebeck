@@ -3,7 +3,7 @@
     <h3 class="my-3 font-weight-bold">Dados extras</h3>
     <v-row>
       <v-col sm="8" offset-sm="1" md="6" lg="5">
-        <p>Criado por: {{ item.createdBy }}</p>
+        <p>Criado por: {{ form.createdBy }}</p>
       </v-col>
     </v-row>
     <v-row>
@@ -29,7 +29,7 @@
 <script>
 export default {
   props: {
-    item: {
+    form: {
       type: Object,
       required: true,
     },
@@ -37,16 +37,16 @@ export default {
 
   computed: {
     createdAtDate() {
-      return new Date(this.item.createdAt?.seconds * 1000)
+      return new Date(this.form.createdAt?.seconds * 1000)
     },
     modifiedAtDate() {
-      return this.item.modifiedAt
-        ? new Date(this.item.modifiedAt.seconds * 1000)
+      return this.form.modifiedAt
+        ? new Date(this.form.modifiedAt.seconds * 1000)
         : 'Não modificado ainda'
     },
     modifiedByChecked() {
-      if (typeof this.item.modifiedBy !== undefined) {
-        return this.item.modifiedBy
+      if (typeof this.form.modifiedBy !== undefined) {
+        return this.form.modifiedBy
       } else {
         return false
       }

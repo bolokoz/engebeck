@@ -1,6 +1,6 @@
 {
   "name": "engebeck",
-  "version": "3.0.1",
+  "version": "3.1.1",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -24,7 +24,8 @@
     "firebaseui": "^4.8.1",
     "html5-qrcode": "^2.0.11",
     "is_js": "^0.9.0",
-    "nuxt": "^2.14.6"
+    "nuxt": "^2.14.6",
+    "vue-upload-component": "^2.8.22"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.6",
