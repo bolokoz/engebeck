@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-expansion-panels inset>
-        <v-expansion-panel v-for="(pagamento, i) in localPagamentos" :key="i">
+        <v-expansion-panel v-for="(pagamento, i) in pagamentos" :key="i">
           <v-expansion-panel-header class="font-weight-bold"
             >Pagamento {{ i + 1 }}</v-expansion-panel-header
           >
@@ -58,7 +58,6 @@
 export default {
   props: {
     pagamentos: {
-      default: [],
       type: Array,
     },
     contas: {
@@ -82,25 +81,22 @@ export default {
         conta: 0,
         metodo: '',
       })
+      this.$emit('update:pagamentos', this.localPagamentos)
     },
     removerPagamento(i) {
       this.localPagamentos.pop(i)
+      this.$emit('update:pagamentos', this.localPagamentos)
     },
   },
 
-  computed: {},
+  computed: {
+    // localPagamentos() {
+    //   return this.pagamentos
+    // },
+  },
 
   mounted() {
-    if (this.pagamentos.length > 1) {
-      for (let index = 0; index < this.pagamentos.length; index++) {
-        this.localPagamentos.push({
-          data: '',
-          valor: 0,
-          conta: 0,
-          metodo: '',
-        })
-      }
-    }
+    this.localPagamentos = this.pagamentos
   },
 }
 </script>

@@ -115,7 +115,7 @@
 
     <h3 class="my-3 font-weight-bold">Pagamentos</h3>
 
-    <Pagamentos :pagamentos="[{ a: 2 }, { b: 3 }]" :contas="contas" />
+    <Pagamentos :pagamentos="form.pagamentos" :contas="contas" />
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
@@ -165,6 +165,7 @@ export default {
         valor: '',
         pagador: '',
         forma: '',
+        pagamentos: [],
         parcelas: [],
       },
     },
