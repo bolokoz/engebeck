@@ -16,10 +16,14 @@
         <v-btn outlined color="white" nuxt to="/login"> Login </v-btn>
       </div>
       <div v-else>
-        <v-btn outlined color="white" nuxt to="/app" class="mr-2">
-          Entrar
-        </v-btn>
-        <v-btn color="secondary" @click="logout"> Logout </v-btn>
+        <v-row
+          ><v-col>
+            <v-btn outlined color="white" nuxt to="/app" class="mr-2">
+              Entrar
+            </v-btn>
+            <v-btn color="secondary" @click="logout"> Logout </v-btn>
+          </v-col></v-row
+        >
       </div>
     </v-app-bar>
 

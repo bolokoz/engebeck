@@ -7,15 +7,12 @@
     />
 
     <ComprasFormOnly3
-      :form="form"
       :obras="obras"
       :fornecedores="fornecedores"
       :contas="contas"
       :etapas="etapas"
       :files="files"
     />
-
-    <BotoesForm :isEdit="false" @adicionar="adicionar" :loading="loading" />
 
     <v-divider class="my-5"></v-divider>
   </div>

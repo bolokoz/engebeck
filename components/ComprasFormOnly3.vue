@@ -37,13 +37,14 @@
         </v-autocomplete>
       </v-col>
 
-      <!-- <v-col cols="12" md="6" offset-lg="0" lg="3">
+      <v-col cols="12" md="6" offset-lg="0" lg="3">
         <v-text-field
-          v-model="form.nota"
+          v-model.number="form.valorTotal"
+          prefix="R$"
           outlined
-          label="Notas/chaves/recibos"
+          label="Valor total final"
         ></v-text-field>
-      </v-col> -->
+      </v-col>
 
       <!-- <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-file-input
@@ -56,13 +57,13 @@
         ></v-file-input>
       </v-col> -->
 
-      <!-- <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-text-field
-          v-model="form.pedido"
+          v-model="form.obs"
           outlined
-          label="Pedido"
+          label="Observações"
         ></v-text-field>
-      </v-col> -->
+      </v-col>
     </v-row>
 
     <!-- <v-row>
@@ -114,8 +115,24 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Pagamentos</h3>
+    <div v-if="saldo == 0 && form.valorTotal != 0">
+      <span class="green--text">
+        <v-icon color="green">mdi-check</v-icon>
+        Pagamento completo</span
+      >
+    </div>
+    <div v-else>
+      <h5 class="primary--text">Total pago: R$ {{ totalPago }}</h5>
+      <h5 class="warning--text">Saldo a pagar: R$ {{ saldo }}</h5>
+    </div>
 
-    <Pagamentos :pagamentos="form.pagamentos" :contas="contas" />
+    <Pagamentos
+      :pagamentos="form.pagamentos"
+      :fornecedor="form.fornecedor"
+      :contas="contas"
+      @addPagamento="addPagamento"
+      @removerPagamento="removerPagamento(i)"
+    />
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
@@ -126,55 +143,19 @@
 
     <!-- Fim -->
 
-    <v-row v-if="form.fornecedor">
-      <v-col cols="12" md="6" offset-lg="0" lg="3">
-        <h3>Dados bancários do fornecedor</h3>
-        <h5>{{ form.fornecedor.nomeBanco }}</h5>
-        <h5>{{ form.fornecedor.banco }}</h5>
-        <h5>{{ form.fornecedor.agencia }}</h5>
-        <h5>{{ form.fornecedor.conta }}</h5>
-        <h5>{{ form.fornecedor.forma }}</h5>
-      </v-col>
-    </v-row>
+    <v-divider></v-divider>
+
+    <BotoesForm :isEdit="isEdit" @adicionar="adicionar" :loading="loading" />
   </v-form>
 </template>
 
 
 <script>
-import Parcelas from './Parcelas.vue'
 export default {
-  components: { Parcelas },
   props: {
-    form: {
-      required: true,
-      default: {
-        descricao: '',
-        tipo: '',
-        fornecedor_id: '',
-        dataCompra: '',
-        obra_id: '',
-        comprador: '',
-        nota: '',
-        pedido: '',
-        etapa: '',
-        subetapa: '',
-        compra_id: '',
-        banco: '',
-        agencia: '',
-        conta: '',
-        valor: '',
-        pagador: '',
-        forma: '',
-        pagamentos: [],
-        parcelas: [],
-      },
-    },
-    files: {
-      required: true,
-      type: Array,
-      default: () => {
-        ;[]
-      },
+    isEdit: {
+      default: false,
+      type: Boolean,
     },
     fornecedores: {
       type: Array,
@@ -196,12 +177,97 @@ export default {
       formas: ['TED', 'DOC', 'PIX', 'Boleto', 'Cartão', 'Cheque'],
       menu: false,
       menu2: false,
+      form: {
+        descricao: '',
+        tipo: '',
+        obs: '',
+        fornecedor: {},
+        dataCompra: '',
+        obra_id: {},
+        comprador: '',
+        nota: '',
+        pedido: '',
+        etapa: '',
+        subetapa: '',
+        compra_id: '',
+        banco: '',
+        agencia: '',
+        conta: '',
+        valorTotal: 0,
+        pagador: '',
+        forma: '',
+        pagamentos: [],
+      },
+      files: [],
+      loading: false,
     }
   },
 
   computed: {
-    parcelado() {
-      return this.form.parcelas?.length > 0 ? true : false
+    totalPago() {
+      let totalPago = 0
+      for (let index = 0; index < this.form.pagamentos.length; index++) {
+        totalPago += this.form.pagamentos[index].valor
+      }
+      return totalPago
+    },
+    saldo() {
+      return this.form.valorTotal - this.totalPago
+    },
+  },
+
+  methods: {
+    addPagamento() {
+      this.form.pagamentos.push({
+        data: '',
+        valor: 0,
+        conta: 0,
+        metodo: '',
+      })
+    },
+    removerPagamento(i) {
+      this.form.pagamentos.pop(i)
+    },
+    async adicionar() {
+      this.loading = true
+      const item = {
+        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        createdBy: this.authUser,
+        visible: true,
+        ...this.form,
+      }
+      await this.$fire.firestore
+        .collection(db)
+        .add(item)
+        .then((docRef) => {
+          console.log('Documento written ID: ', docRef.id)
+
+          if (this.files) {
+            files.forEach((d) => {
+              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
+              console.log(d)
+            })
+          }
+          this.$notifier.showMessage({
+            content: 'Adicionado,',
+            color: 'success',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push({
+            path: '/compras',
+          })
+        })
     },
   },
 }
