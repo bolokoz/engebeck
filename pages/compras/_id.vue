@@ -17,7 +17,7 @@
         :files="files"
       />
 
-      <DadosExtras :form="form" />
+      <!-- <DadosExtras :form="form" /> -->
 
       <BotoesForm
         :isEdit="true"
@@ -103,13 +103,15 @@ export default {
       })
 
     let formFiles = []
-    form?.files.forEach((file) => {
-      let url = app.$fire.storage
-        .ref(`/notas/${id}/`)
-        .child(file)
-        .getDownloadURL()
-      formFiles.push(url)
-    })
+    if (form.files) {
+      form?.files.forEach((file) => {
+        let url = app.$fire.storage
+          .ref(`/notas/${id}/`)
+          .child(file)
+          .getDownloadURL()
+        formFiles.push(url)
+      })
+    }
 
     return { id, form, formFiles, obras, fornecedores, etapas, contas }
   },

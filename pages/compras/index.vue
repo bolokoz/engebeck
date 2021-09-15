@@ -28,6 +28,7 @@ export default {
         { text: 'Fornecedor', value: 'fornecedor.nome' },
         { text: 'Valor', value: 'valor' },
         { text: 'Data', value: 'data' },
+        { text: 'Nota', value: 'nota' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
       ],
       mobileHeaders: [

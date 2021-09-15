@@ -29,7 +29,7 @@
                 </template>
                 <template v-slot:item.nota="{ item }">
                   <v-simple-checkbox
-                    v-model="item.nota"
+                    v-model="item.nota ? true : false"
                     disabled
                   ></v-simple-checkbox>
                 </template>

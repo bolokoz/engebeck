@@ -6,7 +6,7 @@
       link="/compras"
     />
 
-    <ComprasFormOnly
+    <ComprasFormOnly3
       :form="form"
       :obras="obras"
       :fornecedores="fornecedores"

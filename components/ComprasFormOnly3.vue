@@ -1,5 +1,6 @@
 <template>
   <v-form ref="form">
+    <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row dense>
       <v-col cols="12" sm="8" md="6" offset-lg="0" lg="3">
         <v-text-field
@@ -36,15 +37,15 @@
         </v-autocomplete>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="3">
+      <!-- <v-col cols="12" md="6" offset-lg="0" lg="3">
         <v-text-field
           v-model="form.nota"
           outlined
           label="Notas/chaves/recibos"
         ></v-text-field>
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <!-- <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-file-input
           small-chips
           multiple
@@ -53,22 +54,22 @@
           label="PDF ou imagem de Notas"
           v-model="files"
         ></v-file-input>
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <!-- <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-text-field
           v-model="form.pedido"
           outlined
           label="Pedido"
         ></v-text-field>
-      </v-col>
+      </v-col> -->
     </v-row>
 
-    <v-row>
+    <!-- <v-row>
       <v-col>
         <UploadFiles :id="id"> Carregar notas </UploadFiles>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <v-divider></v-divider>
     <h3 class="my-3 font-weight-bold">Dados de controle</h3>
@@ -112,84 +113,16 @@
 
     <v-divider></v-divider>
 
-    <h3 class="my-3 font-weight-bold">Dados do pagamento</h3>
+    <h3 class="my-3 font-weight-bold">Pagamentos</h3>
 
+    <Pagamentos :pagamentos="[{ a: 2 }, { b: 3 }]" :contas="contas" />
+    <v-divider></v-divider>
+
+    <h3 class="my-3 font-weight-bold">Notas</h3>
+
+    <Notas :notas="[{ a: 2 }, { b: 3 }]" :contas="contas" />
     <!-- Inicio -->
-    <v-row>
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-autocomplete
-          v-model="form.forma"
-          :items="formas"
-          outlined
-          label="Forma de pagamento"
-        ></v-autocomplete>
-      </v-col>
-
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-autocomplete
-          v-model="form.contaPagadora"
-          outlined
-          return-object
-          item-text="nome"
-          :items="contas"
-          label="Selecionar conta pagadora"
-        ></v-autocomplete>
-      </v-col>
-
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-text-field
-          v-model="form.pagador"
-          outlined
-          label="Quem pagou"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-text-field
-          v-model.number="form.valor"
-          prefix="R$"
-          outlined
-          label="Valor total"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-text-field
-          v-model="form.obs"
-          outlined
-          label="Observações"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-menu
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="form.data"
-              label="Data pagamento"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            outlined
-            v-model="form.data"
-            @input="menu = false"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-    </v-row>
-
-    <Parcelas :parcelas="this.form.parcelas" />
+    <v-row> </v-row>
 
     <!-- Fim -->
 
