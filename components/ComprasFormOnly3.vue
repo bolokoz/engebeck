@@ -151,6 +151,7 @@
 
 
 <script>
+const db = 'compras'
 export default {
   props: {
     isEdit: {
@@ -225,6 +226,7 @@ export default {
         metodo: '',
         myFile: null,
         fileURL: null,
+        metadata: '',
       })
     },
     removerPagamento(i) {
@@ -232,6 +234,7 @@ export default {
     },
     async adicionar() {
       this.loading = true
+
       const item = {
         createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         createdBy: this.authUser,
@@ -244,10 +247,9 @@ export default {
         .then((docRef) => {
           console.log('Documento written ID: ', docRef.id)
 
-          if (this.files) {
-            files.forEach((d) => {
-              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
-              console.log(d)
+          if (this.form.pagamentos.length > 0) {
+            this.form.pagamentos.forEach((pagamento) => {
+              this.salvarImagem(pagamento.myFile, pagamento.metadata, docRef.id)
             })
           }
           this.$notifier.showMessage({
@@ -271,6 +273,11 @@ export default {
           })
         })
     },
+    salvarImagem(myFile, metadata, compraId) {
+      const storageRef = this.$fire.storage.ref('notas')
+      storageRef.child(compraId).put(myFile, metadata)
+    },
+    deletarImagem(imagemURL) {},
   },
 }
 </script>

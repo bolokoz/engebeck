@@ -76,7 +76,6 @@
                   <v-spacer></v-spacer>
                   <v-col>
                     <v-btn
-                      x-small
                       color="red"
                       @click="$emit('removerPagamento', i)"
                       outlined
@@ -142,11 +141,11 @@ export default {
           pagamento.fileURL = URL.createObjectURL(image)
           const imgData = new FormData()
           imgData.append('nota', pagamento.myFile)
-          const filePath = `notas/${Date.now()}-${image.name}`
-          const metadata = { contentType: pagamento.myFile.type }
+          pagamento.metadata = { contentType: pagamento.myFile.type }
         } else {
           pagamento.myFile = null
           pagamento.fileURL = null
+          pagamento.metadata = ''
         }
       } catch (e) {
         this.$notifier.showMessage({
@@ -181,8 +180,6 @@ export default {
     // },
   },
 
-  mounted() {
-    // this.localPagamentos = this.pagamentos
-  },
+  mounted() {},
 }
 </script>
