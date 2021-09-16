@@ -57,10 +57,10 @@
                 <v-row class="flex-nowrap">
                   <v-col>
                     <v-file-input
-                      v-model="pagamento.myFile"
                       outlined
+                      show-size
                       placeholder="Carregar arquivo"
-                      @change="fileInput"
+                      @change="selectImage($event, pagamento)"
                       :disabled="processing"
                     >
                       <template v-slot:append-outer>
@@ -84,16 +84,16 @@
                     >
                   </v-col>
                 </v-row>
-                <v-col cols="12" align="center">
-                  <v-img
-                    :src="pagamento.fileUrl"
-                    contain
-                    v-if="pagamento.fileUrl"
-                    max-height="500"
-                  ></v-img>
-                </v-col>
               </v-col>
             </v-row>
+            <v-col cols="12" align="center">
+              <v-img
+                :src="pagamento.fileURL"
+                contain
+                max-height="500"
+                v-if="pagamento.fileURL"
+              ></v-img>
+            </v-col>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -126,32 +126,46 @@ export default {
     return {
       menu: false,
       processing: false,
+      myFile: null,
+      picture: null,
+      imageData: null,
+      fileURL: null,
       metodo: ['PIX', 'TED', 'DOC', 'BOLETO', 'DINHEIRO', 'CARTAO'],
     }
   },
   methods: {
-    async fileInput(file) {
+    selectImage(image, pagamento) {
+      try {
+        if (image && image.name) {
+          this.processing = true
+          pagamento.myFile = image
+          pagamento.fileURL = URL.createObjectURL(image)
+          const imgData = new FormData()
+          imgData.append('nota', pagamento.myFile)
+          const filePath = `notas/${Date.now()}-${image.name}`
+          const metadata = { contentType: pagamento.myFile.type }
+        } else {
+          pagamento.myFile = null
+          pagamento.fileURL = null
+        }
+      } catch (e) {
+        this.$notifier.showMessage({
+          content: e,
+          color: 'error',
+          top: false,
+        })
+      } finally {
+        this.processing = false
+      }
+    },
+    async fileInput(event, pagamento) {
       try {
         if (file && file.name) {
-          this.processing = true
-
-          const fr = new FileReader()
-          fr.readAsDataURL(file)
-          fr.addEventListener('load', () => {
-            // this is to load image on the UI
-            // .. not related to file upload :)
-            this.fileURL = fr.result
-          })
-          const imgData = new FormData()
-          imgData.append('image', this.myFile)
-          const filePath = `mypath/${Date.now()}-${file.name}`
-          const metadata = { contentType: this.myFile.type }
-
-          await this.$fire.storage
-            .ref('notas')
-            .child(filePath)
-            .put(this.myFile, metadata)
-          console.log('filePath: ', filePath)
+          // await this.$fire.storage
+          //   .ref('notas')
+          //   .child(filePath)
+          //   .put(this.myFile, metadata)
+          // console.log('filePath: ', filePath)
         }
       } catch (e) {
         console.error(e)

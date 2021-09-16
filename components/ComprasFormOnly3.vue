@@ -131,7 +131,7 @@
       :fornecedor="form.fornecedor"
       :contas="contas"
       @addPagamento="addPagamento"
-      @removerPagamento="removerPagamento(i)"
+      @removerPagamento="removerPagamento(index)"
     />
     <v-divider></v-divider>
 
@@ -223,10 +223,12 @@ export default {
         valor: 0,
         conta: 0,
         metodo: '',
+        myFile: null,
+        fileURL: null,
       })
     },
     removerPagamento(i) {
-      this.form.pagamentos.pop(i)
+      this.form.pagamentos.splice(i, 1)
     },
     async adicionar() {
       this.loading = true
