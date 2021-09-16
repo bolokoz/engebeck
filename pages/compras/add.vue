@@ -18,8 +18,6 @@
   </div>
 </template>
 <script>
-const db = 'compras'
-
 export default {
   middleware: 'securePage',
   transition: 'fade',
@@ -69,59 +67,11 @@ export default {
   data() {
     return {
       loading: false,
-      form: {},
-      files: [],
     }
   },
 
-  computed: {
-    authUser() {
-      return this.$store.state.auth.authUser
-    },
-  },
+  computed: {},
 
-  methods: {
-    async adicionar() {
-      this.loading = true
-      const item = {
-        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        createdBy: this.authUser,
-        visible: true,
-        ...this.form,
-      }
-      await this.$fire.firestore
-        .collection(db)
-        .add(item)
-        .then((docRef) => {
-          console.log('Documento written ID: ', docRef.id)
-
-          if (this.files) {
-            files.forEach((d) => {
-              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
-              console.log(d)
-            })
-          }
-          this.$notifier.showMessage({
-            content: 'Adicionado,',
-            color: 'success',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$router.push({
-            path: '/compras',
-          })
-        })
-    },
-  },
+  methods: {},
 }
 </script>

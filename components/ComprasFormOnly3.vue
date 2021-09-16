@@ -74,8 +74,8 @@
 
     <v-divider></v-divider>
     <h3 class="my-3 font-weight-bold">Dados de controle</h3>
-    <v-row>
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+    <v-row dense>
+      <v-col cols="12" md="6" offset-lg="0" lg="4">
         <v-autocomplete
           v-model="form.obra_id"
           outlined
@@ -91,7 +91,7 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" md="6" offset-lg="0" lg="4">
         <v-combobox
           v-model="form.etapa"
           outlined
@@ -102,7 +102,7 @@
         ></v-combobox>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" md="6" offset-lg="0" lg="4">
         <v-text-field
           v-model="form.subetapa"
           outlined
