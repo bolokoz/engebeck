@@ -29,7 +29,7 @@
           :items="fornecedores"
           label="Fornecedor"
         >
-          <template v-slot:no-data>
+          <template #no-data>
             <v-list-item>
               <v-btn to="/financeiro/fornecedores">Criar fornecedor </v-btn>
             </v-list-item>
@@ -67,7 +67,7 @@
           :items="obras"
           label="Obra"
         >
-          <template v-slot:no-data>
+          <template #no-data>
             <v-list-item>
               <v-btn to="/obras">Criar Obra </v-btn>
             </v-list-item>
@@ -142,15 +142,14 @@
     <v-divider class="my-3"></v-divider>
 
     <BotoesForm
-      :isEdit="isEdit"
+      :is-edit="isEdit"
+      :loading="loading"
       @adicionar="adicionar"
       @alterar="alterar"
       @deletar="deletar"
-      :loading="loading"
     />
   </v-form>
 </template>
-
 
 <script>
 const db = 'compras'
@@ -162,15 +161,19 @@ export default {
     },
     fornecedores: {
       type: Array,
+      default: () => [],
     },
     obras: {
       type: Array,
+      default: () => [],
     },
     contas: {
       type: Array,
+      default: () => [],
     },
     etapas: {
       type: Array,
+      default: () => [],
     },
     form: {
       type: Object,
@@ -244,7 +247,7 @@ export default {
 
   methods: {
     comprovanteSelecionado(event, pagamento, index) {
-      let image = event.target.files[0]
+      const image = event.target.files[0]
       if (image && image.name) {
         this.comprovantes.push(image)
         pagamento.fileURL = URL.createObjectURL(image)
@@ -258,7 +261,7 @@ export default {
     },
     notaSelecionada(event, nota, index) {
       console.log(event)
-      let image = event.target.files[0]
+      const image = event.target.files[0]
       if (image && image.name) {
         this.notas.push(image)
         nota.fileURL = URL.createObjectURL(image)

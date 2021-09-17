@@ -5,8 +5,8 @@
 
       <Lista3
         :items="items"
-        :mobileHeaders="mobileHeaders"
-        :desktopHeaders="desktopHeaders"
+        :mobile-headers="mobileHeaders"
+        :desktop-headers="desktopHeaders"
         sort-by="data"
         :telefone="false"
         path="/compras"
@@ -44,8 +44,11 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.read()
+  },
   methods: {
-    async read() {
+    read() {
       this.loading = true
       this.$fire.firestore
         .collection(db)
@@ -67,9 +70,6 @@ export default {
           this.loading = false
         })
     },
-  },
-  mounted() {
-    this.read()
   },
 }
 </script>

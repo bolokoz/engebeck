@@ -11,10 +11,10 @@
       <ContasFormOnly :form="form" />
 
       <BotoesForm
-        :isEdit="true"
+        :is-edit="true"
+        :loading="loading"
         @deletar="deletar"
         @alterar="alterar"
-        :loading="loading"
       />
     </div>
 
@@ -84,8 +84,7 @@ export default {
         .collection(db)
         .doc(this.id)
         .update(modificacao)
-        .then((docRef) => {
-          // console.log('Documento modificado ID: ', docRef.id)
+        .then(() => {
           this.$notifier.showMessage({
             content: 'Item modificado ',
             color: 'info',
