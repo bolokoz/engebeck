@@ -141,7 +141,13 @@
 
     <v-divider class="my-3"></v-divider>
 
-    <BotoesForm :isEdit="isEdit" @adicionar="adicionar" :loading="loading" />
+    <BotoesForm
+      :isEdit="isEdit"
+      @adicionar="adicionar"
+      @alterar="alterar"
+      @deletar="deletar"
+      :loading="loading"
+    />
   </v-form>
 </template>
 
@@ -318,12 +324,22 @@ export default {
             this.comprovantes.forEach((image) => {
               try {
                 this.$fire.storage
-                  .ref('comprovantes')
+                  .ref('pagamentos')
                   .child(docRef.id)
                   .child(image.name)
                   .put(image)
                   .then((snap) => {
-                    console.log('uploaded', snap)
+                    snap.ref.getDownloadURL().then((url) => {
+                      this.$fire.firestore
+                        .collection(db)
+                        .doc(docRef.id)
+                        .update({
+                          pagamentos:
+                            this.$fireModule.firestore.FieldValue.arrayUnion(
+                              url
+                            ),
+                        })
+                    })
                   })
               } catch (error) {
                 this.$notifier.showMessage({
@@ -345,7 +361,17 @@ export default {
                   .child(image.name)
                   .put(image)
                   .then((snap) => {
-                    console.log('uploaded', snap)
+                    snap.getDownloadURL().then((url) => {
+                      this.$fire.firestore
+                        .collection(db)
+                        .doc(docRef.id)
+                        .update({
+                          notas:
+                            this.$fireModule.firestore.FieldValue.arrayUnion(
+                              url
+                            ),
+                        })
+                    })
                   })
               } catch (error) {
                 this.$notifier.showMessage({
@@ -376,6 +402,62 @@ export default {
           this.$router.push({
             path: '/compras',
           })
+        })
+    },
+    async alterar() {
+      this.loading = true
+      const modificacao = {
+        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        modifiedBy: this.authUser,
+        ...this.form,
+      }
+      //   console.log('modify', this.id, modificacao)
+      await this.$fire.firestore
+        .collection(db)
+        .doc(this.id)
+        .update(modificacao)
+        .then((docRef) => {
+          this.$notifier.showMessage({
+            content: 'Item modificado ',
+            color: 'info',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    async deletar() {
+      this.loading = true
+      await this.$fire.firestore
+        .collection(db)
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Item apagado',
+            color: 'warning',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push('/compras')
         })
     },
   },

@@ -17,7 +17,7 @@
         :isEdit="true"
       />
 
-      <!-- <DadosExtras :form="form" /> -->
+      <DadosExtras :form="compra" />
     </div>
 
     <div v-else>
