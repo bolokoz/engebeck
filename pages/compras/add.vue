@@ -12,8 +12,6 @@
       :contas="contas"
       :etapas="etapas"
     />
-
-    <v-divider class="my-5"></v-divider>
   </div>
 </template>
 <script>

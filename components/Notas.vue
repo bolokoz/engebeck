@@ -45,21 +45,26 @@
                   <v-col>
                     <input
                       type="file"
-                      @change="$emit('selectImage', $event, pagamento, i)"
+                      @change="$emit('selectImage', $event, nota, i)"
                     />
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col>
-                    <v-btn
-                      color="red"
-                      @click="$emit('removerPagamento', i)"
-                      outlined
-                      ><v-icon>mdi-delete</v-icon> Remover pagamento</v-btn
+                    <v-btn color="red" @click="$emit('removerNota', i)" outlined
+                      ><v-icon>mdi-delete</v-icon> Remover nota</v-btn
                     >
                   </v-col>
                 </v-row>
               </v-col>
             </v-row>
+            <v-col cols="12" align="center">
+              <v-img
+                :src="nota.fileURL"
+                contain
+                max-height="500"
+                v-if="nota.fileURL"
+              ></v-img>
+            </v-col>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -95,14 +100,7 @@ export default {
       menu: false,
     }
   },
-  methods: {
-    add() {
-      this.localNotas.push(obj)
-    },
-    remove(i) {
-      this.localNotas.pop(i)
-    },
-  },
+  methods: {},
 
   computed: {},
 

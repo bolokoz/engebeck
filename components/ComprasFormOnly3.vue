@@ -98,7 +98,7 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Pagamentos</h3>
-    <div v-if="saldo == 0 && form.valorTotal != 0">
+    <div v-if="saldoPago == 0 && form.valorTotal != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
         Valor do produto = Valor pago</span
@@ -106,7 +106,7 @@
     </div>
     <div v-else>
       <h5 class="primary--text">Total pago: R$ {{ totalPago }}</h5>
-      <h5 class="warning--text">Saldo a pagar: R$ {{ saldo }}</h5>
+      <h5 class="warning--text">Saldo a pagar: R$ {{ saldoPago }}</h5>
     </div>
 
     <Pagamentos
@@ -120,12 +120,22 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
+    <div v-if="saldoNotas == 0 && form.valorTotal != 0">
+      <span class="green--text">
+        <v-icon color="green">mdi-check</v-icon>
+        Valor pago = Valor de notas</span
+      >
+    </div>
+    <div v-else>
+      <h5 class="primary--text">Total pago: R$ {{ totalPago }}</h5>
+      <h5 class="warning--text">Saldo a pagar: R$ {{ saldoNotas }}</h5>
+    </div>
 
     <Notas
       :notas="form.notas"
       @addNota="addNota"
       @removerNota="removerNota(index)"
-      @selectImage="comprovanteSelecionado"
+      @selectImage="notaSelecionada"
     />
 
     <v-divider class="my-3"></v-divider>
@@ -189,8 +199,18 @@ export default {
       }
       return totalPago
     },
-    saldo() {
+    totalNotas() {
+      let totalNotas = 0
+      for (let index = 0; index < this.form.notas.length; index++) {
+        totalNotas += this.form.notas[index].valor
+      }
+      return totalNotas
+    },
+    saldoPago() {
       return this.form.valorTotal - this.totalPago
+    },
+    saldoNotas() {
+      return this.totalPago - this.totalNotas
     },
     authUser() {
       return this.$store.state.auth.authUser
@@ -201,24 +221,25 @@ export default {
     comprovanteSelecionado(event, pagamento, index) {
       let image = event.target.files[0]
       if (image && image.name) {
-        this.loading = true
         this.comprovantes.push(image)
         pagamento.fileURL = URL.createObjectURL(image)
         // pagamento.metadata = { contentType: pagamento.myFile.type }
       } else {
+        this.comprovantes.splice(index, 1)
         pagamento.myFile = null
         pagamento.fileURL = null
         pagamento.metadata = ''
       }
     },
     notaSelecionada(event, nota, index) {
+      console.log(event)
       let image = event.target.files[0]
       if (image && image.name) {
-        this.loading = true
-        this.comprovantes.push(image)
+        this.notas.push(image)
         nota.fileURL = URL.createObjectURL(image)
         // nota.metadata = { contentType: nota.myFile.type }
       } else {
+        this.notas.splice(index, 1)
         nota.myFile = null
         nota.fileURL = null
         nota.metadata = ''
@@ -230,13 +251,11 @@ export default {
         valor: 0,
         conta: 0,
         metodo: '',
+        obs: '',
         myFile: null,
         fileURL: null,
         metadata: '',
       })
-    },
-    removerPagamento(i) {
-      this.form.pagamentos.splice(i, 1)
     },
     addNota() {
       this.form.notas.push({
@@ -249,9 +268,13 @@ export default {
         metadata: '',
       })
     },
+    removerPagamento(i) {
+      this.form.pagamentos.splice(i, 1)
+    },
     removerNota(i) {
       this.form.notas.splice(i, 1)
     },
+
     async adicionar() {
       this.loading = true
 
@@ -260,6 +283,8 @@ export default {
         createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         createdBy: this.authUser,
         visible: true,
+        saldoNota: this.saldoNota,
+        saldoPago: this.saldoPago,
         ...this.form,
       }
       // adicionar no db
@@ -292,8 +317,8 @@ export default {
           }
 
           // se deu certo, adicionar as imagens com o id da compra
-          if (this.files.length > 0) {
-            this.files.forEach((image) => {
+          if (this.notas.length > 0) {
+            this.notas.forEach((image) => {
               try {
                 this.$fire.storage
                   .ref('notas')
@@ -314,7 +339,7 @@ export default {
           }
 
           this.$notifier.showMessage({
-            content: 'Adicionado,',
+            content: 'Compra adicionada',
             color: 'success',
             top: false,
           })
