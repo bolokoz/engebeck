@@ -2,21 +2,22 @@
   <v-container>
     <v-row justify="center">
       <v-expansion-panels inset>
-        <v-expansion-panel v-for="(nota, i) in localNotas" :key="i">
-          <v-expansion-panel-header class="font-weight-bold"
+        <v-expansion-panel v-for="(nota, i) in notas" :key="i">
+          <v-expansion-panel-header class="font-weight-bold green lighten-4"
             >Nota {{ i + 1 }}</v-expansion-panel-header
           >
-          <v-expansion-panel-content>
-            <v-row>
-              <v-col cols="12" sm="6" md="6" offset-lg="0" lg="2">
+          <v-expansion-panel-content class="green lighten-5">
+            <v-row class="my-2">
+              <v-col cols="12" sm="6" md="6" lg="6">
                 <v-date-picker
                   outlined
                   v-model="nota.data"
                   locale="pt-BR"
+                  full-width
                 ></v-date-picker>
               </v-col>
 
-              <v-col cols="12" sm="6" md="6" offset-lg="0" lg="2">
+              <v-col cols="12" sm="6" md="6" lg="6">
                 <v-text-field
                   v-model.number="nota.numero"
                   outlined
@@ -42,12 +43,18 @@
                 <v-spacer></v-spacer>
                 <v-row class="flex-nowrap">
                   <v-col>
-                    <v-btn color="primary">Carregar arquivo</v-btn>
+                    <input
+                      type="file"
+                      @change="$emit('selectImage', $event, pagamento, i)"
+                    />
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col>
-                    <v-btn x-small fab color="red" @click="remover(i)" outlined
-                      ><v-icon>mdi-delete</v-icon></v-btn
+                    <v-btn
+                      color="red"
+                      @click="$emit('removerPagamento', i)"
+                      outlined
+                      ><v-icon>mdi-delete</v-icon> Remover pagamento</v-btn
                     >
                   </v-col>
                 </v-row>
@@ -57,7 +64,13 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
-      <v-btn @click="add">Adicionar Nota</v-btn>
+      <v-row class="my-3" justify="center">
+        <v-col>
+          <v-btn color="green lighten-3" outlined @click="$emit('addNota')"
+            >Adicionar nota</v-btn
+          >
+        </v-col>
+      </v-row>
     </v-row>
   </v-container>
 </template>
@@ -76,15 +89,10 @@ export default {
       default: [],
       type: Array,
     },
-    contas: {
-      default: [],
-      type: Array,
-    },
   },
   data() {
     return {
       menu: false,
-      localNotas: [],
     }
   },
   methods: {

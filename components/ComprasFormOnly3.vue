@@ -46,17 +46,6 @@
         ></v-text-field>
       </v-col>
 
-      <!-- <v-col cols="12" md="6" offset-lg="0" lg="2">
-        <v-file-input
-          small-chips
-          multiple
-          show-size
-          outlined
-          label="PDF ou imagem de Notas"
-          v-model="files"
-        ></v-file-input>
-      </v-col> -->
-
       <v-col cols="12" md="6" offset-lg="0" lg="2">
         <v-text-field
           v-model="form.obs"
@@ -66,18 +55,12 @@
       </v-col>
     </v-row>
 
-    <!-- <v-row>
-      <v-col>
-        <UploadFiles :id="id"> Carregar notas </UploadFiles>
-      </v-col>
-    </v-row> -->
-
     <v-divider></v-divider>
     <h3 class="my-3 font-weight-bold">Dados de controle</h3>
     <v-row dense>
       <v-col cols="12" md="6" offset-lg="0" lg="4">
         <v-autocomplete
-          v-model="form.obra_id"
+          v-model="form.obra"
           outlined
           item-value="id"
           item-text="nome"
@@ -118,7 +101,7 @@
     <div v-if="saldo == 0 && form.valorTotal != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
-        Pagamento completo</span
+        Valor do produto = Valor pago</span
       >
     </div>
     <div v-else>
@@ -132,18 +115,20 @@
       :contas="contas"
       @addPagamento="addPagamento"
       @removerPagamento="removerPagamento(index)"
+      @selectImage="comprovanteSelecionado"
     />
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
 
-    <Notas :notas="[{ a: 2 }, { b: 3 }]" :contas="contas" />
-    <!-- Inicio -->
-    <v-row> </v-row>
+    <Notas
+      :notas="form.notas"
+      @addNota="addNota"
+      @removerNota="removerNota(index)"
+      @selectImage="comprovanteSelecionado"
+    />
 
-    <!-- Fim -->
-
-    <v-divider></v-divider>
+    <v-divider class="my-3"></v-divider>
 
     <BotoesForm :isEdit="isEdit" @adicionar="adicionar" :loading="loading" />
   </v-form>
@@ -174,32 +159,24 @@ export default {
 
   data() {
     return {
-      tipos: ['Material', 'Serviço', 'Outros'],
-      formas: ['TED', 'DOC', 'PIX', 'Boleto', 'Cartão', 'Cheque'],
-      menu: false,
-      menu2: false,
+      tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
       form: {
         descricao: '',
         tipo: '',
         obs: '',
         fornecedor: {},
         dataCompra: '',
-        obra_id: {},
-        comprador: '',
-        nota: '',
-        pedido: '',
+        obra: {},
         etapa: '',
         subetapa: '',
-        compra_id: '',
-        banco: '',
-        agencia: '',
-        conta: '',
         valorTotal: 0,
-        pagador: '',
-        forma: '',
+        conta: {},
+        metodo: '',
         pagamentos: [],
+        notas: [],
       },
-      files: [],
+      comprovantes: [],
+      notas: [],
       loading: false,
     }
   },
@@ -215,9 +192,38 @@ export default {
     saldo() {
       return this.form.valorTotal - this.totalPago
     },
+    authUser() {
+      return this.$store.state.auth.authUser
+    },
   },
 
   methods: {
+    comprovanteSelecionado(event, pagamento, index) {
+      let image = event.target.files[0]
+      if (image && image.name) {
+        this.loading = true
+        this.comprovantes.push(image)
+        pagamento.fileURL = URL.createObjectURL(image)
+        // pagamento.metadata = { contentType: pagamento.myFile.type }
+      } else {
+        pagamento.myFile = null
+        pagamento.fileURL = null
+        pagamento.metadata = ''
+      }
+    },
+    notaSelecionada(event, nota, index) {
+      let image = event.target.files[0]
+      if (image && image.name) {
+        this.loading = true
+        this.comprovantes.push(image)
+        nota.fileURL = URL.createObjectURL(image)
+        // nota.metadata = { contentType: nota.myFile.type }
+      } else {
+        nota.myFile = null
+        nota.fileURL = null
+        nota.metadata = ''
+      }
+    },
     addPagamento() {
       this.form.pagamentos.push({
         data: '',
@@ -232,26 +238,81 @@ export default {
     removerPagamento(i) {
       this.form.pagamentos.splice(i, 1)
     },
+    addNota() {
+      this.form.notas.push({
+        data: '',
+        chave: 0,
+        obs: 0,
+        valor: '',
+        myFile: null,
+        fileURL: null,
+        metadata: '',
+      })
+    },
+    removerNota(i) {
+      this.form.notas.splice(i, 1)
+    },
     async adicionar() {
       this.loading = true
 
+      // adicionar metadados
       const item = {
         createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         createdBy: this.authUser,
         visible: true,
         ...this.form,
       }
+      // adicionar no db
       await this.$fire.firestore
         .collection(db)
         .add(item)
         .then((docRef) => {
           console.log('Documento written ID: ', docRef.id)
 
-          if (this.form.pagamentos.length > 0) {
-            this.form.pagamentos.forEach((pagamento) => {
-              this.salvarImagem(pagamento.myFile, pagamento.metadata, docRef.id)
+          // se deu certo, adicionar comprovantes com o id da compra
+          if (this.comprovantes.length > 0) {
+            this.comprovantes.forEach((image) => {
+              try {
+                this.$fire.storage
+                  .ref('comprovantes')
+                  .child(docRef.id)
+                  .child(image.name)
+                  .put(image)
+                  .then((snap) => {
+                    console.log('uploaded', snap)
+                  })
+              } catch (error) {
+                this.$notifier.showMessage({
+                  content: error,
+                  color: 'error',
+                  top: false,
+                })
+              }
             })
           }
+
+          // se deu certo, adicionar as imagens com o id da compra
+          if (this.files.length > 0) {
+            this.files.forEach((image) => {
+              try {
+                this.$fire.storage
+                  .ref('notas')
+                  .child(docRef.id)
+                  .child(image.name)
+                  .put(image)
+                  .then((snap) => {
+                    console.log('uploaded', snap)
+                  })
+              } catch (error) {
+                this.$notifier.showMessage({
+                  content: error,
+                  color: 'error',
+                  top: false,
+                })
+              }
+            })
+          }
+
           this.$notifier.showMessage({
             content: 'Adicionado,',
             color: 'success',
@@ -273,11 +334,6 @@ export default {
           })
         })
     },
-    salvarImagem(myFile, metadata, compraId) {
-      const storageRef = this.$fire.storage.ref('notas')
-      storageRef.child(compraId).put(myFile, metadata)
-    },
-    deletarImagem(imagemURL) {},
   },
 }
 </script>

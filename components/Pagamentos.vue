@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col>
         <v-row v-if="fornecedor.banco !== undefined">
-          <v-col cols="12" md="6" offset-lg="0" lg="3">
+          <v-col cols="12" md="6" lg="3">
             <h3>Dados cadastrados do fornecedor</h3>
             <h5>{{ fornecedor.nomeBanco }}</h5>
             <h5>{{ fornecedor.banco }}</h5>
@@ -15,12 +15,12 @@
       </v-col>
       <v-expansion-panels inset>
         <v-expansion-panel v-for="(pagamento, i) in pagamentos" :key="i">
-          <v-expansion-panel-header class="font-weight-bold grey lighten-2"
+          <v-expansion-panel-header class="font-weight-bold blue lighten-4"
             >Pagamento {{ i + 1 }}</v-expansion-panel-header
           >
-          <v-expansion-panel-content class="grey lighten-3">
+          <v-expansion-panel-content class="blue lighten-5">
             <v-row class="my-2">
-              <v-col cols="12" sm="6" md="6" offset-lg="0" lg="6">
+              <v-col cols="12" sm="6" md="6" lg="6">
                 <v-date-picker
                   outlined
                   full-width
@@ -29,7 +29,7 @@
                 ></v-date-picker>
               </v-col>
 
-              <v-col cols="12" sm="6" md="6" offset-lg="0" lg="6">
+              <v-col cols="12" sm="6" md="6" lg="6">
                 <v-autocomplete
                   v-model="pagamento.metodo"
                   :items="metodo"
@@ -57,22 +57,10 @@
 
                 <v-row class="flex-nowrap">
                   <v-col>
-                    <v-file-input
-                      outlined
-                      show-size
-                      placeholder="Carregar arquivo"
-                      @change="selectImage($event, pagamento)"
-                      :disabled="processing"
-                    >
-                      <template v-slot:append-outer>
-                        <v-progress-circular
-                          v-if="processing"
-                          color="grey"
-                          indeterminate
-                          small
-                        />
-                      </template>
-                    </v-file-input>
+                    <input
+                      type="file"
+                      @change="$emit('selectImage', $event, pagamento, i)"
+                    />
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col>
@@ -100,7 +88,9 @@
 
       <v-row class="my-3" justify="center">
         <v-col>
-          <v-btn @click="$emit('addPagamento')">Adicionar pagamento</v-btn>
+          <v-btn color="blue lighten-3" outlined @click="$emit('addPagamento')"
+            >Adicionar pagamento</v-btn
+          >
         </v-col>
       </v-row>
     </v-row>
@@ -127,22 +117,20 @@ export default {
       menu: false,
       processing: false,
       myFile: null,
-      picture: null,
-      imageData: null,
       fileURL: null,
       metodo: ['PIX', 'TED', 'DOC', 'BOLETO', 'DINHEIRO', 'CARTAO'],
     }
   },
   methods: {
-    selectImage(image, pagamento) {
+    selectImage(event, pagamento) {
+      const image = event.target.files[0]
       try {
         if (image && image.name) {
           this.processing = true
           pagamento.myFile = image
           pagamento.fileURL = URL.createObjectURL(image)
-          const imgData = new FormData()
-          imgData.append('nota', pagamento.myFile)
           pagamento.metadata = { contentType: pagamento.myFile.type }
+          // this.$emit('atualizar', this.pagamentos)
         } else {
           pagamento.myFile = null
           pagamento.fileURL = null
@@ -158,21 +146,6 @@ export default {
         this.processing = false
       }
     },
-    async fileInput(event, pagamento) {
-      try {
-        if (file && file.name) {
-          // await this.$fire.storage
-          //   .ref('notas')
-          //   .child(filePath)
-          //   .put(this.myFile, metadata)
-          // console.log('filePath: ', filePath)
-        }
-      } catch (e) {
-        console.error(e)
-      } finally {
-        this.processing = false
-      }
-    },
   },
 
   computed: {
@@ -181,6 +154,8 @@ export default {
     // },
   },
 
-  mounted() {},
+  mounted() {
+    this.local = this.pagamentos
+  },
 }
 </script>

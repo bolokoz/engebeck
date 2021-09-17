@@ -11,7 +11,6 @@
       :fornecedores="fornecedores"
       :contas="contas"
       :etapas="etapas"
-      :files="files"
     />
 
     <v-divider class="my-5"></v-divider>
