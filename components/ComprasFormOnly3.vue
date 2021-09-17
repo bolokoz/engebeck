@@ -2,7 +2,7 @@
   <v-form ref="form">
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row dense>
-      <v-col cols="12" sm="8" md="6" offset-lg="0" lg="3">
+      <v-col cols="12" sm="8" md="6" lg="3">
         <v-text-field
           v-model="form.descricao"
           label="Descrição da compra"
@@ -11,7 +11,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="4" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" sm="4" md="6" lg="2">
         <v-autocomplete
           v-model="form.tipo"
           :items="tipos"
@@ -20,7 +20,7 @@
         ></v-autocomplete>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" md="6" lg="4">
         <v-autocomplete
           v-model="form.fornecedor"
           item-text="nome"
@@ -37,7 +37,7 @@
         </v-autocomplete>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="3">
+      <v-col cols="12" md="6" lg="3">
         <v-text-field
           v-model.number="form.valorTotal"
           prefix="R$"
@@ -46,7 +46,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="2">
+      <v-col cols="12" md="6" lg="6">
         <v-text-field
           v-model="form.obs"
           outlined
@@ -58,7 +58,7 @@
     <v-divider></v-divider>
     <h3 class="my-3 font-weight-bold">Dados de controle</h3>
     <v-row dense>
-      <v-col cols="12" md="6" offset-lg="0" lg="4">
+      <v-col cols="12" md="6" lg="4">
         <v-autocomplete
           v-model="form.obra"
           outlined
@@ -74,7 +74,7 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col cols="12" md="6" offset-lg="0" lg="4">
+      <v-col cols="12" md="6" lg="4">
         <v-combobox
           v-model="form.etapa"
           outlined
@@ -85,7 +85,7 @@
         ></v-combobox>
       </v-col>
 
-      <v-col cols="12" md="6" offset-lg="0" lg="4">
+      <v-col cols="12" md="6" lg="4">
         <v-combobox
           v-model="form.subetapa"
           outlined
@@ -166,12 +166,9 @@ export default {
     etapas: {
       type: Array,
     },
-  },
-
-  data() {
-    return {
-      tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
-      form: {
+    form: {
+      type: Object,
+      default: () => ({
         descricao: '',
         tipo: '',
         obs: '',
@@ -185,7 +182,28 @@ export default {
         metodo: '',
         pagamentos: [],
         notas: [],
-      },
+      }),
+    },
+  },
+
+  data() {
+    return {
+      tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
+      // form: {
+      //   descricao: '',
+      //   tipo: '',
+      //   obs: '',
+      //   fornecedor: {},
+      //   dataCompra: '',
+      //   obra: {},
+      //   etapa: '',
+      //   subetapa: '',
+      //   valorTotal: 0,
+      //   conta: {},
+      //   metodo: '',
+      //   pagamentos: [],
+      //   notas: [],
+      // },
       comprovantes: [],
       notas: [],
       loading: false,

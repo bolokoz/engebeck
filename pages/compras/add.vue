@@ -11,6 +11,7 @@
       :fornecedores="fornecedores"
       :contas="contas"
       :etapas="etapas"
+      :isEdit="false"
     />
   </div>
 </template>
