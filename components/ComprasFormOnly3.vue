@@ -78,19 +78,20 @@
         <v-combobox
           v-model="form.etapa"
           outlined
-          item-text="nome"
-          item-value="nome"
+          item-text="etapa"
+          item-value="etapa"
           :items="etapas"
           label="Etapa"
         ></v-combobox>
       </v-col>
 
       <v-col cols="12" md="6" offset-lg="0" lg="4">
-        <v-text-field
+        <v-combobox
           v-model="form.subetapa"
           outlined
-          label="SubEtapa"
-        ></v-text-field>
+          :items="form.etapa.subetapas"
+          label="Etapa"
+        ></v-combobox>
       </v-col>
     </v-row>
     <!-- Fim -->
@@ -120,7 +121,7 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
-    <div v-if="saldoNotas == 0 && form.valorTotal != 0">
+    <div v-if="saldoNota == 0 && totalPago != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
         Valor pago = Valor de notas</span
@@ -128,13 +129,13 @@
     </div>
     <div v-else>
       <h5 class="primary--text">Total pago: R$ {{ totalPago }}</h5>
-      <h5 class="warning--text">Saldo a pagar: R$ {{ saldoNotas }}</h5>
+      <h5 class="warning--text">Saldo de notas: R$ {{ saldoNota }}</h5>
     </div>
 
     <Notas
       :notas="form.notas"
       @addNota="addNota"
-      @removerNota="removerNota(index)"
+      @removerNota="removerNota(i)"
       @selectImage="notaSelecionada"
     />
 
@@ -199,18 +200,18 @@ export default {
       }
       return totalPago
     },
-    totalNotas() {
-      let totalNotas = 0
+    totalNota() {
+      let totalNota = 0
       for (let index = 0; index < this.form.notas.length; index++) {
-        totalNotas += this.form.notas[index].valor
+        totalNota += this.form.notas[index].valor
       }
-      return totalNotas
+      return totalNota
     },
     saldoPago() {
       return this.form.valorTotal - this.totalPago
     },
-    saldoNotas() {
-      return this.totalPago - this.totalNotas
+    saldoNota() {
+      return this.totalPago - this.totalNota
     },
     authUser() {
       return this.$store.state.auth.authUser

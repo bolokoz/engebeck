@@ -48,15 +48,88 @@ export default {
         })
       })
 
-    let etapas = []
-    await app.$fire.firestore
-      .collection('etapas')
-      .get()
-      .then((snap) => {
-        snap.forEach((doc) => {
-          etapas.push({ ...doc.data() })
-        })
-      })
+    let etapas = [
+      {
+        etapa: 'PROJETOS',
+        subetapas: [
+          'ARQUITETÔNICO',
+          'ESTRUTURAL',
+          'EXECUTIVO',
+          'HIDROSSANITÁRIO',
+          'ELÉTRICO',
+          'TELEFONIA, TV, INTERNET',
+          'LUMINOTÉCNICO',
+          'PAISAGÍSTICO',
+          'DECORATIVO',
+          'VIABILIDADE',
+        ],
+      },
+      {
+        etapa: 'SERVIÇOS PRELIMINARES',
+        subetapas: [
+          'SONDAGEM',
+          'TERRAPLANAGEM',
+          'DEPÓSITO',
+          'TAPUME',
+          'INSTALAÇÃO ÁGUA',
+          'INSTALAÇÃO DE ENERGIA',
+          'DEMOLIÇÕES',
+        ],
+      },
+      {
+        etapa: 'ESRTRUTURA',
+        subetapas: ['FUNDAÇÕES', 'PILARES', 'VIGAS', 'LAJES', 'ESCADAS'],
+      },
+      {
+        etapa: 'PAREDES',
+        subetapas: [
+          'PAREDES',
+          'DRYWALL',
+          'VERGAS E CONTRAVERGAS',
+          'TORRE CAIXA DAGUA',
+        ],
+      },
+      {
+        etapa: 'HIDROSSANITÁRIO',
+        subetapas: ['ÁGUA QUENTE', 'ÁGUA FRIA', 'ÁGUA PLUVIAL', 'ESGOTO'],
+      },
+      {
+        etapa: 'ELÉTRICO',
+        subetapas: ['CONDUÍTES', 'CAIXAS', 'FIAÇÃO', 'ATERRAMENTO'],
+      },
+      {
+        etapa: 'COMPLEMENTARES',
+        subetapas: ['TELEFONIA', 'TV', 'SEGURANÇA', 'GÁS', 'AR CONDICIONADO'],
+      },
+      {
+        etapa: 'COBERTURAS',
+        subetapas: ['TELHADO', 'IMPERMEABILIZAÇÃO', 'REGULARIZAÇÃO'],
+      },
+      {
+        etapa: 'ACABAMENTOS',
+        subetapas: [
+          'FORROS',
+          'JANELAS',
+          'PORTAS',
+          'PISOS',
+          'SOLEIRAS',
+          'PEITORIS',
+          'RODAPÉS',
+          'REVESTIMENTOS',
+          'LOUÇAS E METAIS',
+          'PINTURAS',
+        ],
+      },
+      {
+        etapa: 'PAISAGISMO',
+      },
+      {
+        etapa: 'DECORAÇÃO',
+      },
+      {
+        etapa: 'ENTREGA',
+      },
+    ]
 
     return { obras, fornecedores, etapas, contas }
   },

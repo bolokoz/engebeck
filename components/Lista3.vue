@@ -20,16 +20,27 @@
                 :headers="desktopHeaders"
                 :items="items"
                 :search="search"
+                sort-by="createdAt"
+                sort-desc
                 no-results-text="Nada encontrado"
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
               >
+                <template v-slot:item.createdAt="{ item }">
+                  {{
+                    new Date(item.createdAt.seconds * 1000).toLocaleString(
+                      'pt-BR'
+                    )
+                  }}
+                </template>
                 <template v-slot:item.valor="{ item }">
                   R$ {{ item.valor }}
                 </template>
-                <template v-slot:item.nota="{ item }">
+                <template v-slot:item.completo="{ item }">
                   <v-simple-checkbox
-                    v-model="item.nota ? true : false"
+                    v-model="
+                      item.saldoNota == 0 && item.saldoPago == 0 ? true : false
+                    "
                     disabled
                   ></v-simple-checkbox>
                 </template>
