@@ -8,7 +8,7 @@
     />
 
     <div v-if="form">
-      <FonecedoresFormOnly :form="form" />
+      <ContasFormOnly :form="form" />
 
       <BotoesForm
         :isEdit="true"
@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-const db = 'fornecedores'
+const db = 'contas'
 export default {
   middleware: 'securePage',
   transition: 'fade',
