@@ -1,5 +1,5 @@
 <template>
-  <v-container dark class="">
+  <v-container class="">
     <v-row justify="center">
       <v-col>
         <v-row v-if="fornecedor.banco !== undefined">
@@ -22,9 +22,10 @@
             <v-row class="my-2">
               <v-col cols="12" sm="6" md="6" lg="6">
                 <v-date-picker
-                  v-model="pagamento.data"
+                  v-model="pagamento.date"
                   outlined
                   full-width
+                  color="primary"
                   locale="pt-BR"
                 ></v-date-picker>
               </v-col>
@@ -61,32 +62,68 @@
                 <v-spacer></v-spacer>
 
                 <v-row class="flex-nowrap">
-                  <v-col>
-                    <input
-                      type="file"
-                      @change="$emit('selectImage', $event, pagamento, i)"
-                    />
+                  <v-col cols="6">
+                    <v-file-input
+                      v-model="pagamento.file"
+                      outlined
+                      label="Selecionar arquivo"
+                      @change="fileSelected($event, pagamento, i)"
+                    ></v-file-input>
                   </v-col>
                   <v-spacer></v-spacer>
-                  <v-col>
+                  <v-col cols="6">
                     <v-btn
                       color="red"
                       outlined
                       @click="$emit('removerPagamento', i)"
-                      ><v-icon>mdi-delete</v-icon> Remover pagamento</v-btn
+                      ><v-icon>mdi-delete</v-icon> apagar pagamento</v-btn
                     >
                   </v-col>
                 </v-row>
               </v-col>
             </v-row>
-            <v-col cols="12" align="center">
-              <v-img
-                v-if="pagamento.fileURL"
-                :src="pagamento.fileURL"
-                contain
-                max-height="500"
-              ></v-img>
-            </v-col>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-img
+                  v-if="pagamento.localURL"
+                  :src="pagamento.localURL"
+                  contain
+                  max-height="400"
+                  :gradient="
+                    pagamento.dbURL == null
+                      ? 'to top right, rgba(0,0,0,.33), rgba(0,0,0,.7)'
+                      : ''
+                  "
+                >
+                  <div v-if="pagamento.dbURL == null" class="mt-12">
+                    <h3>
+                      Apenas visualização. Para gravar, aperte o botão UPLOAD
+                    </h3>
+                  </div>
+                </v-img>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <div v-if="pagamento.dbURL == null">
+                  <v-btn
+                    v-if="pagamento.localURL != null"
+                    :loading="loading"
+                    :disabled="loading"
+                    color="primary"
+                    @click="upload(pagamento)"
+                    >Upload
+                    <v-icon right dark> mdi-cloud-upload </v-icon></v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn color="primary" class="my-2" :href="pagamento.dbURL"
+                    >Link arquivo: {{ pagamento.file.name }}</v-btn
+                  >
+                  <v-btn color="error" @click="deleteFile(pagamento)"
+                    >Deletar arquivo no banco</v-btn
+                  >
+                </div>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -122,9 +159,8 @@ export default {
     return {
       menu: false,
       processing: false,
-      myFile: null,
-      fileURL: null,
       metodo: ['PIX', 'TED', 'DOC', 'BOLETO', 'DINHEIRO', 'CARTAO'],
+      loading: false,
     }
   },
 
@@ -138,6 +174,64 @@ export default {
     // this.local = this.pagamentos
   },
   methods: {
+    fileSelected(file, item) {
+      if (file && file.name) {
+        item.localURL = URL.createObjectURL(file)
+        item.file = file
+      } else {
+        item.localURL = null
+        item.file = null
+      }
+    },
+    async upload(item) {
+      this.loading = true
+      const filename = item.date + '_' + item.file.name
+      await this.$fire.storage
+        .ref('pagamentos')
+        .child(filename)
+        .put(item.file)
+        .then((snap) => {
+          snap.ref.getDownloadURL().then((url) => {
+            item.dbURL = url
+            this.$notifier.showMessage({
+              content: 'Arquivo carregado',
+              color: 'success',
+              top: false,
+            })
+          })
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally((this.loading = false))
+    },
+    async deleteFile(item) {
+      const filename = item.date + '_' + item.file.name
+      const fileRef = this.$fire.storage.ref('pagamentos').child(filename)
+      await fileRef
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Arquivo deletado',
+            color: 'info',
+            top: false,
+          })
+          item.file = null
+          item.dbURL = null
+          item.localURL = null
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+    },
     // selectImage(event, pagamento) {
     //   const image = event.target.files[0]
     //   try {

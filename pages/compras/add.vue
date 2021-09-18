@@ -6,12 +6,12 @@
       link="/compras"
     />
 
-    <ComprasFormOnly3
+    <ComprasFormOnly4
       :obras="obras"
       :fornecedores="fornecedores"
       :contas="contas"
       :etapas="etapas"
-      :isEdit="false"
+      :is-edit="false"
     />
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
   transition: 'fade',
 
   async asyncData({ app }) {
-    let obras = []
+    const obras = []
     await app.$fire.firestore
       .collection('obras')
       .get()
@@ -30,7 +30,7 @@ export default {
           obras.push({ id: doc.id, ...doc.data() })
         })
       })
-    let fornecedores = []
+    const fornecedores = []
     await app.$fire.firestore
       .collection('fornecedores')
       .get()
@@ -39,7 +39,7 @@ export default {
           fornecedores.push({ id: doc.id, ...doc.data() })
         })
       })
-    let contas = []
+    const contas = []
     await app.$fire.firestore
       .collection('contas')
       .get()
@@ -49,7 +49,7 @@ export default {
         })
       })
 
-    let etapas = [
+    const etapas = [
       {
         etapa: 'PROJETOS',
         subetapas: [

@@ -10,8 +10,8 @@
             <v-row class="my-2">
               <v-col cols="12" sm="6" md="6" lg="6">
                 <v-date-picker
-                  outlined
                   v-model="nota.data"
+                  outlined
                   locale="pt-BR"
                   full-width
                 ></v-date-picker>
@@ -50,7 +50,7 @@
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col>
-                    <v-btn color="red" @click="$emit('removerNota', i)" outlined
+                    <v-btn color="red" outlined @click="$emit('removerNota', i)"
                       ><v-icon>mdi-delete</v-icon> Remover nota</v-btn
                     >
                   </v-col>
@@ -59,10 +59,10 @@
             </v-row>
             <v-col cols="12" align="center">
               <v-img
+                v-if="nota.fileURL"
                 :src="nota.fileURL"
                 contain
                 max-height="500"
-                v-if="nota.fileURL"
               ></v-img>
             </v-col>
           </v-expansion-panel-content>
@@ -100,7 +100,6 @@ export default {
       menu: false,
     }
   },
-  methods: {},
 
   computed: {},
 
@@ -111,5 +110,6 @@ export default {
       }
     }
   },
+  methods: {},
 }
 </script>

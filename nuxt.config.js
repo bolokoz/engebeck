@@ -3,10 +3,10 @@ import colors from 'vuetify/es5/util/colors'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-      router: {
-        base: '/dist/',
-      },
-    }
+        router: {
+          base: '/dist/',
+        },
+      }
     : {}
 
 export default {
@@ -50,7 +50,7 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     // https://firebase.nuxtjs.org
-    '@nuxtjs/firebase'
+    '@nuxtjs/firebase',
   ],
 
   ...routerBase,
@@ -62,9 +62,9 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: false,
+      dark: true,
       themes: {
-        dark: {
+        light: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
@@ -103,7 +103,7 @@ export default {
         ssr: false,
       },
       firestore: true,
-      storage: true
+      storage: true,
     },
   },
 
