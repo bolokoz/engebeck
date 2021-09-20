@@ -8,13 +8,14 @@
     />
 
     <div v-if="compra">
-      <ComprasFormOnly3
+      <ComprasFormOnly4
+        :id="id"
         :form="compra"
         :obras="obras"
         :fornecedores="fornecedores"
         :contas="contas"
         :etapas="etapas"
-        :isEdit="true"
+        :is-edit="true"
       />
 
       <DadosExtras :form="compra" />
@@ -57,7 +58,7 @@ export default {
         })
       })
 
-    let obras = []
+    const obras = []
     await app.$fire.firestore
       .collection('obras')
       .get()
@@ -66,7 +67,7 @@ export default {
           obras.push({ id: doc.id, ...doc.data() })
         })
       })
-    let fornecedores = []
+    const fornecedores = []
     await app.$fire.firestore
       .collection('fornecedores')
       .get()
@@ -75,7 +76,7 @@ export default {
           fornecedores.push({ id: doc.id, ...doc.data() })
         })
       })
-    let contas = []
+    const contas = []
     await app.$fire.firestore
       .collection('contas')
       .get()
@@ -85,9 +86,9 @@ export default {
         })
       })
 
-    let etapas = [
+    const etapas = [
       {
-        etapa: 'PROJETOS',
+        nome: 'PROJETOS',
         subetapas: [
           'ARQUITETÔNICO',
           'ESTRUTURAL',
@@ -102,7 +103,7 @@ export default {
         ],
       },
       {
-        etapa: 'SERVIÇOS PRELIMINARES',
+        nome: 'SERVIÇOS PRELIMINARES',
         subetapas: [
           'SONDAGEM',
           'TERRAPLANAGEM',
@@ -114,11 +115,11 @@ export default {
         ],
       },
       {
-        etapa: 'ESRTRUTURA',
+        nome: 'ESRTRUTURA',
         subetapas: ['FUNDAÇÕES', 'PILARES', 'VIGAS', 'LAJES', 'ESCADAS'],
       },
       {
-        etapa: 'PAREDES',
+        nome: 'PAREDES',
         subetapas: [
           'PAREDES',
           'DRYWALL',
@@ -127,23 +128,23 @@ export default {
         ],
       },
       {
-        etapa: 'HIDROSSANITÁRIO',
+        nome: 'HIDROSSANITÁRIO',
         subetapas: ['ÁGUA QUENTE', 'ÁGUA FRIA', 'ÁGUA PLUVIAL', 'ESGOTO'],
       },
       {
-        etapa: 'ELÉTRICO',
+        nome: 'ELÉTRICO',
         subetapas: ['CONDUÍTES', 'CAIXAS', 'FIAÇÃO', 'ATERRAMENTO'],
       },
       {
-        etapa: 'COMPLEMENTARES',
+        nome: 'COMPLEMENTARES',
         subetapas: ['TELEFONIA', 'TV', 'SEGURANÇA', 'GÁS', 'AR CONDICIONADO'],
       },
       {
-        etapa: 'COBERTURAS',
+        nome: 'COBERTURAS',
         subetapas: ['TELHADO', 'IMPERMEABILIZAÇÃO', 'REGULARIZAÇÃO'],
       },
       {
-        etapa: 'ACABAMENTOS',
+        nome: 'ACABAMENTOS',
         subetapas: [
           'FORROS',
           'JANELAS',
@@ -158,13 +159,13 @@ export default {
         ],
       },
       {
-        etapa: 'PAISAGISMO',
+        nome: 'PAISAGISMO',
       },
       {
-        etapa: 'DECORAÇÃO',
+        nome: 'DECORAÇÃO',
       },
       {
-        etapa: 'ENTREGA',
+        nome: 'ENTREGA',
       },
     ]
 
@@ -184,69 +185,6 @@ export default {
     },
   },
 
-  methods: {
-    async alterar() {
-      this.loading = true
-      const modificacao = {
-        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        modifiedBy: this.authUser,
-        ...this.form,
-      }
-      //   console.log('modify', this.id, modificacao)
-      await this.$fire.firestore
-        .collection(db)
-        .doc(this.id)
-        .update(modificacao)
-        .then((docRef) => {
-          if (this.files) {
-            files.forEach((d) => {
-              // await this.$fire.storage().ref('notas').put(`${docRef.id}_${d}`)
-              console.log(d)
-            })
-          }
-          this.$notifier.showMessage({
-            content: 'Item modificado ',
-            color: 'info',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    },
-    async deletar() {
-      this.loading = true
-      await this.$fire.firestore
-        .collection(db)
-        .doc(this.id)
-        .delete()
-        .then(() => {
-          this.$notifier.showMessage({
-            content: 'Item apagado',
-            color: 'warning',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$router.push('/compras')
-        })
-    },
-  },
+  methods: {},
 }
 </script>

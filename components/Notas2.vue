@@ -25,7 +25,7 @@
                     label="Número da nota"
                   ></v-text-field>
                   <v-text-field
-                    v-model.number="nota.cahve"
+                    v-model.number="nota.chave"
                     outlined
                     label="Chave da nota"
                   ></v-text-field>
@@ -41,8 +41,8 @@
                     label="Valor total"
                   ></v-text-field>
                   <v-spacer></v-spacer>
-                  <v-row class="flex-nowrap">
-                    <v-col cols="6">
+                  <v-row v-if="nota.uuid == null" class="flex-nowrap">
+                    <v-col cols="12">
                       <v-file-input
                         v-model="nota.file"
                         outlined
@@ -51,14 +51,6 @@
                       ></v-file-input>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="6">
-                      <v-btn
-                        color="red"
-                        outlined
-                        @click="$emit('removerNota', i)"
-                        ><v-icon>mdi-delete</v-icon> Remover nota</v-btn
-                      >
-                    </v-col>
                   </v-row>
                 </v-col>
               </v-row>
@@ -100,12 +92,39 @@
                       class="my-2"
                       :href="nota.dbURL"
                       target="_blank"
-                      >Link arquivo: {{ nota.file.name }}</v-btn
+                      >Link arquivo: {{ nota.dbURL }}</v-btn
                     >
-                    <v-btn color="error" @click="deleteFile(nota)"
-                      >Deletar arquivo no banco</v-btn
+                    <v-col cols="12" sm="6">
+                      <v-img
+                        v-if="nota.file == null"
+                        :src="nota.dbURL"
+                        contain
+                        max-height="400"
+                      >
+                        <template #placeholder>
+                          <v-row
+                            class="fill-height ma-0"
+                            align="center"
+                            justify="center"
+                          >
+                            <v-progress-circular
+                              indeterminate
+                              color="grey lighten-5"
+                            ></v-progress-circular>
+                          </v-row>
+                        </template>
+                      </v-img>
+                    </v-col>
+
+                    <v-btn color="error" @click="deleteFileByURL(nota)">
+                      Deletar</v-btn
                     >
                   </div>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn color="red" outlined @click="$emit('removerNota', i)"
+                    ><v-icon>mdi-delete</v-icon> Remover nota</v-btn
+                  >
                 </v-col>
               </v-row>
             </v-expansion-panel-content>
@@ -124,11 +143,16 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
     notas: {
       default: () => [],
       type: Array,
+    },
+    isEdit: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {
@@ -151,14 +175,16 @@ export default {
         item.file = null
       }
     },
-    async upload(item) {
+    upload(item) {
       this.loading = true
-      const filename = item.date + '_' + item.file.name
-      await this.$fire.storage
-        .ref('notas')
-        .child(filename)
+      const uuid = uuidv4()
+      item.uuid = uuid
+      this.$fire.storage
+        .ref()
+        .child(uuid)
         .put(item.file)
         .then((snap) => {
+          item.path = snap.ref._delegate._location.path_
           snap.ref.getDownloadURL().then((url) => {
             item.dbURL = url
             this.$notifier.showMessage({
@@ -177,10 +203,34 @@ export default {
         })
         .finally((this.loading = false))
     },
-    async deleteFile(item) {
-      const filename = item.date + '_' + item.file.name
-      const fileRef = this.$fire.storage.ref('notas').child(filename)
-      await fileRef
+    // async deleteFile(item) {
+    //   const filename = item.date + '_' + item.file.name
+    //   this.$fire.storage
+    //     .ref()
+    //     .delete()
+    //     .then(() => {
+    //       this.$notifier.showMessage({
+    //         content: 'Arquivo deletado',
+    //         color: 'info',
+    //         top: false,
+    //       })
+    //       item.file = null
+    //       item.dbURL = null
+    //       item.localURL = null
+    //     })
+    //     .catch((error) => {
+    //       this.$notifier.showMessage({
+    //         content: error,
+    //         color: 'error',
+    //         top: false,
+    //       })
+    //     })
+    // },
+    async deleteFileByURL(item) {
+      this.loading = true
+      await this.$fire.storage
+        .ref()
+        .child(item.uuid)
         .delete()
         .then(() => {
           this.$notifier.showMessage({
@@ -188,9 +238,6 @@ export default {
             color: 'info',
             top: false,
           })
-          item.file = null
-          item.dbURL = null
-          item.localURL = null
         })
         .catch((error) => {
           this.$notifier.showMessage({
@@ -198,6 +245,21 @@ export default {
             color: 'error',
             top: false,
           })
+        })
+        .finally(() => {
+          item.file = null
+          item.dbURL = null
+          item.path = null
+          item.uuid = null
+          item.localURL = null
+          if (this.isEdit) {
+            this.$fire.firestore
+              .collection('compras')
+              .doc(this.id)
+              .update(...this.localForm)
+          }
+
+          this.loading = false
         })
     },
   },

@@ -2,10 +2,29 @@
   <v-form ref="form">
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row>
+      <v-col cols="12" md="6" lg="4">
+        <v-autocomplete
+          v-model="localForm.fornecedor"
+          item-text="nome"
+          return-object
+          outlined
+          hint="Apenas fornecedores cadastrados"
+          :items="fornecedores"
+          label="Fornecedor"
+        >
+          <template #no-data>
+            <v-list-item>
+              <v-btn to="/financeiro/fornecedores">Criar fornecedor </v-btn>
+            </v-list-item>
+          </template>
+        </v-autocomplete>
+      </v-col>
+
       <v-col cols="12" sm="8" md="6" lg="6">
         <v-text-field
           v-model="localForm.descricao"
           label="Descrição da compra"
+          hint="Resumo do que está sendo comprado"
           outlined
           required
         ></v-text-field>
@@ -18,23 +37,6 @@
           outlined
           label="Tipo da compra"
         ></v-autocomplete>
-      </v-col>
-
-      <v-col cols="12" md="6" lg="4">
-        <v-autocomplete
-          v-model="localForm.fornecedor"
-          item-text="nome"
-          return-object
-          outlined
-          :items="fornecedores"
-          label="Fornecedor"
-        >
-          <template #no-data>
-            <v-list-item>
-              <v-btn to="/financeiro/fornecedores">Criar fornecedor </v-btn>
-            </v-list-item>
-          </template>
-        </v-autocomplete>
       </v-col>
 
       <v-col cols="12" md="6" lg="2">
@@ -76,10 +78,10 @@
       </v-col>
       <v-col cols="12" md="6" lg="4">
         <v-combobox
-          v-model="localForm.etapa"
+          v-model="local.etapa"
           outlined
-          item-text="etapa"
-          item-value="etapa"
+          item-text="nome"
+          item-value="nome"
           :items="etapas"
           label="Etapa"
         ></v-combobox>
@@ -89,7 +91,7 @@
         <v-combobox
           v-model="localForm.subetapa"
           outlined
-          :items="localForm.etapa.subetapas"
+          :items="subetapas"
           label="Sub Etapa"
         ></v-combobox>
       </v-col>
@@ -99,7 +101,7 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Pagamentos</h3>
-    <div v-if="saldoPago == 0 && localForm.valorTotal != 0">
+    <div v-if="saldoPago == 0 && localForm.valorTotal != 0 && totalPago != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
         Valor do produto = Valor pago</span
@@ -116,7 +118,6 @@
       :contas="contas"
       @addPagamento="addPagamento"
       @removerPagamento="removerPagamento(i)"
-      @selectImage="comprovanteSelecionado"
     />
     <v-divider></v-divider>
 
@@ -136,7 +137,6 @@
       :notas="localForm.notas"
       @addNota="addNota"
       @removerNota="removerNota(i)"
-      @selectImage="notaSelecionada"
     />
 
     <v-divider class="my-3"></v-divider>
@@ -158,6 +158,10 @@ export default {
     isEdit: {
       default: false,
       type: Boolean,
+    },
+    id: {
+      default: '',
+      type: String,
     },
     fornecedores: {
       type: Array,
@@ -213,29 +217,36 @@ export default {
         pagamentos: [],
         notas: [],
       },
-      localComprovantes: [],
-      localNotas: [],
       loading: false,
+      local: { etapa: '' },
     }
   },
 
   computed: {
     totalPago() {
       let totalPago = 0
-      for (let index = 0; index < this.form.pagamentos.length; index++) {
-        totalPago += this.form.pagamentos[index].valor
-      }
+      // for (let index = 0; index < this.localForm.pagamentos.length; index++) {
+      //   totalPago += this.localform.pagamentos[index].valor
+      // }
+      this.localForm.pagamentos.map((d) => (totalPago += d.valor))
       return totalPago
     },
     totalNota() {
       let totalNota = 0
-      for (let index = 0; index < this.form.notas.length; index++) {
-        totalNota += this.form.notas[index].valor
-      }
+      // for (let index = 0; index < this.localForm.notas.length; index++) {
+      //   totalNota += this.localForm.notas[index].valor
+      // }
+      this.localForm.notas.map((d) => (totalNota += d.valor))
       return totalNota
     },
+    subetapas() {
+      let list = []
+      const filter = this.local.etapa.nome
+      list = this.etapas.filter((d) => d.nome === filter)
+      return list[0]?.subetapas
+    },
     saldoPago() {
-      return this.form.valorTotal - this.totalPago
+      return this.localForm.valorTotal - this.totalPago
     },
     saldoNota() {
       return this.totalPago - this.totalNota
@@ -246,7 +257,8 @@ export default {
   },
   mounted() {
     if (this.isEdit) {
-      this.localForm = this.Form
+      this.localForm = this.form
+      this.local.etapa = this.form.etapa
     }
   },
 
@@ -257,13 +269,13 @@ export default {
           .toISOString()
           .substr(0, 10),
         valor: 0,
-        conta: 0,
+        conta: null,
         metodo: '',
         obs: '',
-        file: null,
+        path: '',
+        uuid: null,
         localURL: null,
         dbURL: null,
-        metadata: '',
       })
     },
     addNota() {
@@ -273,11 +285,11 @@ export default {
           .substr(0, 10),
         chave: 0,
         obs: '',
+        uuid: null,
+        path: '',
         valor: '',
-        file: null,
         localURL: null,
         dbURL: null,
-        metadata: '',
       })
     },
     removerPagamento(i) {
@@ -287,8 +299,19 @@ export default {
       this.localForm.notas.splice(i, 1)
     },
 
+    deleteFiles() {
+      this.localForm.notas.map((d) => (d.file = null))
+      this.localForm.pagamentos.map((d) => (d.file = null))
+    },
+
     async adicionar() {
       this.loading = true
+
+      // deleta arquivos para não adicioná-los no db
+      this.deleteFiles()
+
+      // work around for combobox not returning object correctly
+      this.localForm.etapa = this.local.etapa
 
       // adicionar metadados
       const item = {
@@ -329,17 +352,27 @@ export default {
     },
     async alterar() {
       this.loading = true
+
+      // deleta arquivos para não adicioná-los no db
+      this.deleteFiles()
+
+      // work around for combobox not returning object correctly
+      this.localForm.etapa = this.local.etapa
+
       const modificacao = {
         modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         modifiedBy: this.authUser,
-        ...this.form,
+        saldoNota: this.saldoNota,
+        saldoPago: this.saldoPago,
+        ...this.localForm,
       }
+      console.log(modificacao)
       //   console.log('modify', this.id, modificacao)
       await this.$fire.firestore
         .collection(db)
         .doc(this.id)
         .update(modificacao)
-        .then((docRef) => {
+        .then(() => {
           this.$notifier.showMessage({
             content: 'Item modificado ',
             color: 'info',
@@ -356,6 +389,9 @@ export default {
         })
         .finally(() => {
           this.loading = false
+          this.$router.push({
+            path: '/compras',
+          })
         })
     },
     async deletar() {

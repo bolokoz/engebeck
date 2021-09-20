@@ -1,11 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
-      color="light-green lighten-5"
-    >
+    <v-navigation-drawer v-model="drawer" fixed app>
       <v-list nuxt to="/profile">
         <!-- <v-list-item>
           <v-list-item-avatar>
@@ -50,17 +45,17 @@
         prepend-icon="mdi-account-circle"
         active-class="green lighten-4"
       >
-        <template v-slot:activator>
+        <template #activator>
           <v-list-item-content>
             <v-list-item-title>Compras</v-list-item-title>
           </v-list-item-content>
         </template>
 
         <v-list-item
-          active-class="green lighten-4"
-          color="green-lighten-3"
           v-for="([title, icon, link], i) in compras"
           :key="i"
+          active-class="green lighten-4"
+          color="green-lighten-3"
           nuxt
           :to="link"
           class="ml-4"
@@ -78,17 +73,17 @@
         prepend-icon="mdi-account-circle"
         active-class="green lighten-4"
       >
-        <template v-slot:activator>
+        <template #activator>
           <v-list-item-content>
             <v-list-item-title>Financeiro</v-list-item-title>
           </v-list-item-content>
         </template>
 
         <v-list-item
-          active-class="green lighten-4"
-          color="green-lighten-3"
           v-for="([title, icon, link], i) in financeiro"
           :key="i"
+          active-class="green lighten-4"
+          color="green-lighten-3"
           nuxt
           :to="link"
           class="ml-4"
@@ -106,17 +101,17 @@
         prepend-icon="mdi-account-circle"
         active-class="green lighten-4"
       >
-        <template v-slot:activator>
+        <template #activator>
           <v-list-item-content>
             <v-list-item-title>Obras</v-list-item-title>
           </v-list-item-content>
         </template>
 
         <v-list-item
-          active-class="green lighten-4"
-          color="green-lighten-3"
           v-for="([title, icon, link], i) in obras"
           :key="i"
+          active-class="green lighten-4"
+          color="green-lighten-3"
           nuxt
           :to="link"
           class="ml-4"
@@ -134,7 +129,7 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar fixed app color="light-blue lighten-4">
+    <v-app-bar fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="font-weight-light" v-text="title" />
       <v-spacer />

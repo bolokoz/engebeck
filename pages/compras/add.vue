@@ -51,7 +51,7 @@ export default {
 
     const etapas = [
       {
-        etapa: 'PROJETOS',
+        nome: 'PROJETOS',
         subetapas: [
           'ARQUITETÔNICO',
           'ESTRUTURAL',
@@ -66,7 +66,7 @@ export default {
         ],
       },
       {
-        etapa: 'SERVIÇOS PRELIMINARES',
+        nome: 'SERVIÇOS PRELIMINARES',
         subetapas: [
           'SONDAGEM',
           'TERRAPLANAGEM',
@@ -78,11 +78,11 @@ export default {
         ],
       },
       {
-        etapa: 'ESRTRUTURA',
+        nome: 'ESRTRUTURA',
         subetapas: ['FUNDAÇÕES', 'PILARES', 'VIGAS', 'LAJES', 'ESCADAS'],
       },
       {
-        etapa: 'PAREDES',
+        nome: 'PAREDES',
         subetapas: [
           'PAREDES',
           'DRYWALL',
@@ -91,23 +91,23 @@ export default {
         ],
       },
       {
-        etapa: 'HIDROSSANITÁRIO',
+        nome: 'HIDROSSANITÁRIO',
         subetapas: ['ÁGUA QUENTE', 'ÁGUA FRIA', 'ÁGUA PLUVIAL', 'ESGOTO'],
       },
       {
-        etapa: 'ELÉTRICO',
+        nome: 'ELÉTRICO',
         subetapas: ['CONDUÍTES', 'CAIXAS', 'FIAÇÃO', 'ATERRAMENTO'],
       },
       {
-        etapa: 'COMPLEMENTARES',
+        nome: 'COMPLEMENTARES',
         subetapas: ['TELEFONIA', 'TV', 'SEGURANÇA', 'GÁS', 'AR CONDICIONADO'],
       },
       {
-        etapa: 'COBERTURAS',
+        nome: 'COBERTURAS',
         subetapas: ['TELHADO', 'IMPERMEABILIZAÇÃO', 'REGULARIZAÇÃO'],
       },
       {
-        etapa: 'ACABAMENTOS',
+        nome: 'ACABAMENTOS',
         subetapas: [
           'FORROS',
           'JANELAS',
@@ -122,13 +122,13 @@ export default {
         ],
       },
       {
-        etapa: 'PAISAGISMO',
+        nome: 'PAISAGISMO',
       },
       {
-        etapa: 'DECORAÇÃO',
+        nome: 'DECORAÇÃO',
       },
       {
-        etapa: 'ENTREGA',
+        nome: 'ENTREGA',
       },
     ]
 

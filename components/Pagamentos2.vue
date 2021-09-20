@@ -61,23 +61,14 @@
 
                 <v-spacer></v-spacer>
 
-                <v-row class="flex-nowrap">
-                  <v-col cols="6">
+                <v-row v-if="pagamento.uuid == null" class="flex-nowrap">
+                  <v-col cols="12">
                     <v-file-input
                       v-model="pagamento.file"
                       outlined
                       label="Selecionar arquivo"
                       @change="fileSelected($event, pagamento, i)"
                     ></v-file-input>
-                  </v-col>
-                  <v-spacer></v-spacer>
-                  <v-col cols="6">
-                    <v-btn
-                      color="red"
-                      outlined
-                      @click="$emit('removerPagamento', i)"
-                      ><v-icon>mdi-delete</v-icon> apagar pagamento</v-btn
-                    >
                   </v-col>
                 </v-row>
               </v-col>
@@ -115,13 +106,47 @@
                   >
                 </div>
                 <div v-else>
-                  <v-btn color="primary" class="my-2" :href="pagamento.dbURL"
-                    >Link arquivo: {{ pagamento.file.name }}</v-btn
+                  <v-btn
+                    color="primary"
+                    class="my-2"
+                    :href="pagamento.dbURL"
+                    target="_blank"
+                    >Link arquivo: {{ pagamento.dbURL }}</v-btn
                   >
-                  <v-btn color="error" @click="deleteFile(pagamento)"
-                    >Deletar arquivo no banco</v-btn
+
+                  <v-col cols="12" sm="6">
+                    <v-img
+                      v-if="pagamento.file == null"
+                      :src="pagamento.dbURL"
+                      contain
+                      max-height="400"
+                    >
+                      <template #placeholder>
+                        <v-row
+                          class="fill-height ma-0"
+                          align="center"
+                          justify="center"
+                        >
+                          <v-progress-circular
+                            indeterminate
+                            color="grey lighten-5"
+                          ></v-progress-circular>
+                        </v-row>
+                      </template>
+                    </v-img>
+                  </v-col>
+                  <v-btn color="error" @click="deleteFileByURL(pagamento)"
+                    >Deletar</v-btn
                   >
                 </div>
+              </v-col>
+              <v-col cols="12">
+                <v-btn
+                  color="red"
+                  outlined
+                  @click="$emit('removerPagamento', i)"
+                  ><v-icon>mdi-delete</v-icon> Remover pagamento</v-btn
+                >
               </v-col>
             </v-row>
           </v-expansion-panel-content>
@@ -140,6 +165,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
     pagamentos: {
@@ -185,12 +211,15 @@ export default {
     },
     async upload(item) {
       this.loading = true
-      const filename = item.date + '_' + item.file.name
+      const uuid = uuidv4()
+      item.uuid = uuid
+
       await this.$fire.storage
-        .ref('pagamentos')
-        .child(filename)
+        .ref()
+        .child(uuid)
         .put(item.file)
         .then((snap) => {
+          item.path = snap.ref._delegate._location.path_
           snap.ref.getDownloadURL().then((url) => {
             item.dbURL = url
             this.$notifier.showMessage({
@@ -209,10 +238,11 @@ export default {
         })
         .finally((this.loading = false))
     },
-    async deleteFile(item) {
-      const filename = item.date + '_' + item.file.name
-      const fileRef = this.$fire.storage.ref('pagamentos').child(filename)
-      await fileRef
+    async deleteFileByURL(item) {
+      this.loading = true
+      await this.$fire.storage
+        .ref()
+        .child(item.uuid)
         .delete()
         .then(() => {
           this.$notifier.showMessage({
@@ -220,9 +250,6 @@ export default {
             color: 'info',
             top: false,
           })
-          item.file = null
-          item.dbURL = null
-          item.localURL = null
         })
         .catch((error) => {
           this.$notifier.showMessage({
@@ -230,6 +257,21 @@ export default {
             color: 'error',
             top: false,
           })
+        })
+        .finally(() => {
+          item.file = null
+          item.dbURL = null
+          item.path = null
+          item.uuid = null
+          item.localURL = null
+          if (this.isEdit) {
+            this.$fire.firestore
+              .collection('compras')
+              .doc(this.id)
+              .update(...this.localForm)
+          }
+
+          this.loading = false
         })
     },
     // selectImage(event, pagamento) {
