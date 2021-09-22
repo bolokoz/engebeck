@@ -6,10 +6,14 @@
       texto_link="Voltar para obra"
       link="/obras"
     />
+    <div v-if="item">
+      <ObrasFormOnly :id="id" :form="item" :is-edit="true" />
 
-    <ObrasFormOnly :id="id" :form="item" :is-edit="true" />
-
-    <DadosExtras :form="item" />
+      <DadosExtras :form="item" />
+    </div>
+    <div v-else>
+      <h3>Documento não encontrado</h3>
+    </div>
   </div>
 </template>
 <script>
