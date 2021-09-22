@@ -111,7 +111,8 @@
                     class="my-2"
                     :href="pagamento.dbURL"
                     target="_blank"
-                    >Link arquivo: {{ pagamento.dbURL }}</v-btn
+                    >Abrir arquivo
+                    <v-icon right dark>mdi-arrow-top-right</v-icon></v-btn
                   >
 
                   <v-col cols="12" sm="6">

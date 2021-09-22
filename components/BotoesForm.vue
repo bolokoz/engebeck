@@ -19,6 +19,7 @@
             loading ? 'enviando' : 'ALTERAR'
           }}</v-btn>
         </v-col>
+        <v-spacer></v-spacer>
         <v-col>
           <v-btn dark color="red light" outlined @click="deletar">{{
             loading ? 'enviando' : 'DELETAR'

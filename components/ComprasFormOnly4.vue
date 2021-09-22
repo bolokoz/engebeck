@@ -91,6 +91,7 @@
         <v-combobox
           v-model="localForm.subetapa"
           outlined
+          multiple
           :items="subetapas"
           label="Sub Etapa"
         ></v-combobox>
@@ -117,7 +118,7 @@
       :fornecedor="localForm.fornecedor"
       :contas="contas"
       @addPagamento="addPagamento"
-      @removerPagamento="removerPagamento(i)"
+      @removerPagamento="removerPagamento"
     />
     <v-divider></v-divider>
 
@@ -136,18 +137,24 @@
     <Notas2
       :notas="localForm.notas"
       @addNota="addNota"
-      @removerNota="removerNota(i)"
+      @removerNota="removerNota"
     />
 
     <v-divider class="my-3"></v-divider>
 
-    <BotoesForm
-      :is-edit="isEdit"
-      :loading="loading"
-      @adicionar="adicionar"
-      @alterar="alterar"
-      @deletar="deletar"
-    />
+    <v-container>
+      <v-row>
+        <v-col>
+          <BotoesForm
+            :is-edit="isEdit"
+            :loading="loading"
+            @adicionar="adicionar"
+            @alterar="alterar"
+            @deletar="deletar"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-form>
 </template>
 
@@ -293,6 +300,7 @@ export default {
       })
     },
     removerPagamento(i) {
+      console.log(i)
       this.localForm.pagamentos.splice(i, 1)
     },
     removerNota(i) {

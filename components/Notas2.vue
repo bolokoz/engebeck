@@ -92,7 +92,8 @@
                       class="my-2"
                       :href="nota.dbURL"
                       target="_blank"
-                      >Link arquivo: {{ nota.dbURL }}</v-btn
+                      >Abrir arquivo
+                      <v-icon right dark>mdi-arrow-top-right</v-icon></v-btn
                     >
                     <v-col cols="12" sm="6">
                       <v-img
@@ -116,7 +117,7 @@
                       </v-img>
                     </v-col>
 
-                    <v-btn color="error" @click="deleteFileByURL(nota)">
+                    <v-btn color="error" @click="deleteFileByURL(i)">
                       Deletar</v-btn
                     >
                   </div>

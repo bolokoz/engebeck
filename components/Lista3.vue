@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <div class="d-none d-sm-block">
+          <div>
             <v-card>
               <v-card-title>
                 <v-btn color="primary" @click.stop="addItem"> Adicionar </v-btn>
@@ -26,17 +26,17 @@
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
               >
-                <template v-slot:item.createdAt="{ item }">
+                <template #item.createdAt="{ item }">
                   {{
                     new Date(item.createdAt.seconds * 1000).toLocaleString(
                       'pt-BR'
                     )
                   }}
                 </template>
-                <template v-slot:item.valor="{ item }">
+                <template #item.valor="{ item }">
                   R$ {{ item.valor }}
                 </template>
-                <template v-slot:item.completo="{ item }">
+                <template #item.completo="{ item }">
                   <v-simple-checkbox
                     v-model="
                       item.saldoNota == 0 && item.saldoPago == 0 ? true : false
@@ -63,7 +63,7 @@
               </v-data-table>
             </v-card>
           </div>
-          <div class="d-flex flex-column d-sm-none">
+          <!-- <div class="d-flex flex-column d-sm-none">
             <v-simple-table>
               <template #default>
                 <thead>
@@ -91,7 +91,7 @@
                 </tbody>
               </template>
             </v-simple-table>
-          </div>
+          </div> -->
         </v-col>
       </v-row>
     </v-container>
@@ -106,6 +106,8 @@ export default {
       required: true,
     },
     editItemObject: {
+      default: () => ({}),
+      required: false,
       type: Object,
     },
     mobileHeaders: {
@@ -126,7 +128,9 @@ export default {
       default: true,
     },
     dialog: {
+      type: Boolean,
       default: false,
+      required: false,
     },
   },
   data() {

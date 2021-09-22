@@ -78,7 +78,13 @@ export default {
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
+  build: {
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+      ],
+    },
+  },
 
   /*
    ** Nuxt Firebase configuration

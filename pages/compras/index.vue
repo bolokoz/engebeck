@@ -39,7 +39,7 @@ export default {
       ],
       mobileHeaders: [
         { text: 'Descrição', value: 'descricao' },
-        { text: 'Valor', value: 'valor' },
+        { text: 'Fornecedor', value: 'fornecedor' },
         { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
       ],
     }
