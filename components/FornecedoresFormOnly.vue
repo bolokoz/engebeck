@@ -15,11 +15,23 @@
         <v-combobox
           v-model="localForm.tipo"
           outlined
-          :items="tipos"
+          :items="tiposFornecedores"
           label="Tipo fornecedor"
+          hide-selected
+          hint="TAB para adicionar. Pode ser mais de um"
           multiple
           chips
-        ></v-combobox>
+        >
+          <template #no-data>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Esse tipo não existe ainda, aperte TAB para criar
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-combobox>
       </v-col>
 
       <v-col cols="12" md="6" lg="5">
@@ -164,6 +176,10 @@ export default {
       default: '',
       type: String,
     },
+    tiposFornecedores: {
+      default: () => [],
+      type: Array,
+    },
 
     form: {
       type: Object,
@@ -205,16 +221,6 @@ export default {
         conta: '',
         pix: '',
       },
-      tipos: [
-        'Loja material construção',
-        'Loja material hidraulica',
-        'Loja material elétrica',
-        'Loja depósito',
-        'Loja distribuidora areia',
-        'Distribuidora areia',
-        'Distribuidora brita',
-        'Caçambas',
-      ],
     }
   },
   computed: {
@@ -229,9 +235,18 @@ export default {
   },
 
   methods: {
+    adicionarCasoNovoCombobox(listaNovos, doc) {
+      const listaRef = this.$fire.firestore.collection('listas').doc(doc)
+      listaNovos.forEach((d) => {
+        listaRef.update({
+          tipos: this.$fireModule.firestore.FieldValue.arrayUnion(d),
+        })
+      })
+    },
     async adicionar() {
       this.loading = true
       // adicionar metadados
+      this.adicionarCasoNovoCombobox(this.localForm.tipo, 'fornecedores')
       const item = {
         createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         createdBy: this.authUser,

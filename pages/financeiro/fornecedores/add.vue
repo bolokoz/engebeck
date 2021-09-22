@@ -6,13 +6,27 @@
       link="/financeiro/fornecedores"
     />
 
-    <FornecedoresFormOnly :is-edit="false" />
+    <FornecedoresFormOnly :is-edit="false" :tipos-fornecedores="lista" />
   </div>
 </template>
 <script>
 export default {
   middleware: 'securePage',
   transition: 'fade',
+  async asyncData({ app }) {
+    let lista = []
+    await app.$fire.firestore
+      .collection('listas')
+      .doc('fornecedores')
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          lista = doc.data().tipos
+        }
+      })
+
+    return { lista }
+  },
 
   data() {
     return {

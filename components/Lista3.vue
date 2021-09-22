@@ -33,8 +33,8 @@
                     )
                   }}
                 </template>
-                <template #item.valor="{ item }">
-                  R$ {{ item.valor }}
+                <template #item.valorTotal="{ item }">
+                  R$ {{ item.valorTotal }}
                 </template>
                 <template #item.completo="{ item }">
                   <v-simple-checkbox

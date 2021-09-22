@@ -7,8 +7,13 @@
       link="/financeiro/fornecedores"
     />
 
-    <div v-if="form">
-      <FornecedoresFormOnly :id="id" :form="item" :is-edit="true" />
+    <div v-if="item">
+      <FornecedoresFormOnly
+        :id="id"
+        :form="item"
+        :is-edit="true"
+        :tipos-fornecedoers="lista"
+      />
 
       <DadosExtras :form="item" />
     </div>
@@ -50,7 +55,18 @@ export default {
         })
       })
 
-    return { id, item }
+    let lista = []
+    await app.$fire.firestore
+      .collection('listas')
+      .doc('fornecedores')
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          lista = doc.data().tipos
+        }
+      })
+
+    return { id, item, lista }
   },
 
   data() {
