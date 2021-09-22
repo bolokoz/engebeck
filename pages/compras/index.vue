@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="mx-0 px-0">
       <h1 class="font-weight-regular">Compras</h1>
 
       <Lista3

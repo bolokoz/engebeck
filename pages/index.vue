@@ -1,30 +1,37 @@
 <template>
   <v-app>
     <v-app-bar fixed flat hide-on-scroll color="transparent">
-      <v-img
-        class="mt-2"
-        :src="require('~/assets/TETRAHEDRON.png')"
-        max-height="60"
-        max-width="60"
-        contain
-      ></v-img>
-      <v-toolbar-title class="font-weight-black headline white--text">
-        EngeBECK
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <div v-if="!isLoggedIn">
-        <v-btn outlined color="white" nuxt to="/login"> Login </v-btn>
-      </div>
-      <div v-else>
-        <v-row
-          ><v-col>
-            <v-btn outlined color="white" nuxt to="/app" class="mr-2">
-              Entrar
-            </v-btn>
-            <v-btn color="secondary" @click="logout"> Logout </v-btn>
-          </v-col></v-row
-        >
-      </div>
+      <v-row no-gutters align="end" justify="space-between" class="flex-nowrap">
+        <v-col>
+          <v-btn text>
+            <v-img
+              class="mt-2 mr-2"
+              :src="require('~/assets/TETRAHEDRON.png')"
+              max-height="60"
+              max-width="60"
+              contain
+            ></v-img>
+            EngeBeck
+          </v-btn>
+        </v-col>
+        <v-col grow></v-col>
+        <v-col v-if="!isLoggedIn">
+          <v-btn outlined color="white" nuxt to="/login"> Login </v-btn>
+        </v-col>
+        <v-col v-else>
+          <v-row no-gutters
+            ><v-col cols="9">
+              <v-btn outlined small color="green" nuxt to="/app" class="mr-2">
+                Acesso
+              </v-btn> </v-col
+            ><v-col cols="3">
+              <v-btn color="red" small text @click="logout">
+                <v-icon>mdi-logout</v-icon>
+              </v-btn>
+            </v-col></v-row
+          >
+        </v-col>
+      </v-row>
     </v-app-bar>
 
     <v-main>

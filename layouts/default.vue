@@ -198,7 +198,7 @@ export default Vue.extend({
         {
           icon: 'mdi-apps',
           title: 'Início',
-          to: '/',
+          to: '/app',
         },
         {
           icon: 'mdi-apps',

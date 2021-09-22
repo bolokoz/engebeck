@@ -1,26 +1,15 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="mx-0 px-0">
       <h1 class="font-weight-regular">Obras</h1>
       <v-row no-gutters>
         <v-col cols="12">
-          <v-dialog v-model="dialog" max-width="600px" persistent>
-            <ObrasForm
-              :dialog.sync="dialog"
-              @refresh="read"
-              :editItemObject.sync="editItemObject"
-            />
-          </v-dialog>
-          <Lista
+          <Lista3
             :items="items"
-            @addItem="addItem"
-            :editItemObject.sync="editItemObject"
-            :dialog.sync="dialog"
-            :mobileTableHeaders="mobileTableHeaders"
-            :mobileTableItems="mobileTableItems"
-            :desktopTableHeaders="desktopTableHeaders"
-            :telefone="true"
-            editPath="/obras"
+            :mobile-headers="mobileHeaders"
+            :desktop-headers="desktopHeaders"
+            path="/obras"
+            sort-by="data"
           />
         </v-col>
       </v-row>
@@ -30,37 +19,43 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import {
-  emptyForm,
-  mobileTableHeaders,
-  mobileTableItems,
-  desktopTableHeaders,
-} from '~/dados/obras.js'
-
-export default Vue.extend({
+const db = 'obras'
+export default {
   middleware: 'securePage',
 
   data() {
     return {
       loading: false,
-      dialog: false,
-      editItemObject: { ...emptyForm },
       items: [],
-      mobileTableHeaders: mobileTableHeaders,
-      mobileTableItems: mobileTableItems,
-      desktopTableHeaders: desktopTableHeaders,
-      search: '',
+      desktopHeaders: [
+        { text: 'Obra', value: 'nome' },
+        { text: 'Cidade', value: 'cidade' },
+        {
+          text: 'Editar',
+          value: 'actions',
+          sortable: false,
+          align: 'end',
+          width: 30,
+        },
+      ],
+      mobileHeaders: [
+        { text: 'Obra', value: 'nome' },
+        { text: 'Cidade', value: 'cidade' },
+        { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
+      ],
     }
   },
 
   computed: {},
+  mounted() {
+    this.read()
+  },
 
   methods: {
-    async read() {
+    read() {
       this.loading = true
       this.$fire.firestore
-        .collection('obras')
+        .collection(db)
         .get()
         .then((snap) => {
           this.items = []
@@ -79,19 +74,6 @@ export default Vue.extend({
           this.loading = false
         })
     },
-
-    editItem(item) {
-      this.editItemObject = { ...item }
-      this.dialog = true
-    },
-
-    addItem() {
-      this.editItemObject = null
-      this.dialog = true
-    },
   },
-  mounted() {
-    this.read()
-  },
-})
+}
 </script>

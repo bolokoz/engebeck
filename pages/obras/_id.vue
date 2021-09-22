@@ -6,52 +6,54 @@
       texto_link="Voltar para obra"
       link="/obras"
     />
-    <v-divider></v-divider>
 
-    <ObrasForm
-      @refresh="goBack"
-      :isDialog="false"
-      :editItemObject="editItemObject"
-    />
+    <ObrasFormOnly :id="id" :form="item" :is-edit="true" />
 
-    <v-divider class="my-5"></v-divider>
-    <!-- <DadosExtras :item="editItemObject" /> -->
+    <DadosExtras :form="item" />
   </div>
 </template>
 <script>
+const db = 'obras'
 export default {
   middleware: 'securePage',
 
-  asyncData({ params }) {
+  async asyncData({ params, app }) {
     const id = params.id
-    return { id }
+    const docRef = app.$fire.firestore.collection(db).doc(id)
+    let item
+    await docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          item = doc.data()
+        } else {
+          app.$notifier.showMessage({
+            content: 'Documento não existe',
+            color: 'error',
+            top: false,
+          })
+        }
+      })
+      .catch((error) => {
+        app.$notifier.showMessage({
+          content: error,
+          color: 'error',
+          top: false,
+        })
+      })
+
+    return { id, item }
   },
 
   data() {
     return {
-      dialog: true,
-      editItemObject: null,
       loading: false,
     }
-  },
-
-  async fetch() {
-    const doc = await this.$fire.firestore
-      .collection('obras')
-      .doc(this.id)
-      .get()
-    this.editItemObject = doc.data()
   },
 
   computed: {
     authUser() {
       return this.$store.state.auth.authUser
-    },
-  },
-
-  methods: {
-    goBack() {
-      this.$router.push('/obras')
     },
   },
 }

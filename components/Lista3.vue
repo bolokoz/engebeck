@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="px-0 mx-0">
       <v-row>
         <v-col cols="12">
           <div>
