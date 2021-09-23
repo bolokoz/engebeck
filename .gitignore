@@ -90,3 +90,4 @@ sw.*
 *.swp
 
 static/firebase-auth-sw.js
+.firebase/hosting.ZGlzdA.cache
