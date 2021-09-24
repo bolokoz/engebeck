@@ -8,13 +8,13 @@
           item-text="nome"
           return-object
           outlined
-          hint="Apenas fornecedores cadastrados"
+          :search-input.sync="search"
           :items="fornecedores"
           label="Fornecedor"
         >
           <template #no-data>
             <v-list-item>
-              <v-btn to="/financeiro/fornecedores">Criar fornecedor </v-btn>
+              <v-btn @click="adicionarFornecedor()">Criar {{ search }} </v-btn>
             </v-list-item>
           </template>
         </v-autocomplete>
@@ -22,6 +22,7 @@
 
       <v-col cols="12" sm="8" md="6" lg="6">
         <v-text-field
+          ref="descricao"
           v-model="localForm.descricao"
           label="Descrição da compra"
           hint="Resumo do que está sendo comprado"
@@ -64,27 +65,27 @@
         <v-autocomplete
           v-model="localForm.obra"
           outlined
-          item-value="id"
           item-text="nome"
+          return-object
           :items="obras"
           label="Obra"
         >
           <template #no-data>
             <v-list-item>
-              <v-btn to="/obras">Criar Obra </v-btn>
+              <v-btn to="/obras">Sair e criar Obra </v-btn>
             </v-list-item>
           </template>
         </v-autocomplete>
       </v-col>
       <v-col cols="12" md="6" lg="4">
-        <v-combobox
-          v-model="local.etapa"
+        <v-autocomplete
+          v-model="localForm.etapa"
           outlined
           item-text="nome"
-          item-value="nome"
+          return-object
           :items="etapas"
           label="Etapa"
-        ></v-combobox>
+        ></v-autocomplete>
       </v-col>
 
       <v-col cols="12" md="6" lg="4">
@@ -92,7 +93,7 @@
           v-model="localForm.subetapa"
           outlined
           multiple
-          :items="subetapas"
+          :items="localForm.etapa.subetapas"
           label="Sub Etapa"
         ></v-combobox>
       </v-col>
@@ -143,6 +144,10 @@
     <v-divider class="my-3"></v-divider>
 
     <v-container>
+      <v-checkbox
+        v-model="localForm.completo"
+        label="Compra completa"
+      ></v-checkbox>
       <v-row>
         <v-col>
           <BotoesForm
@@ -202,12 +207,14 @@ export default {
         metodo: '',
         pagamentos: [],
         notas: [],
+        completo: false,
       }),
     },
   },
 
   data() {
     return {
+      search: null,
       tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
       localForm: {
         descricao: '',
@@ -223,6 +230,7 @@ export default {
         metodo: '',
         pagamentos: [],
         notas: [],
+        completo: false,
       },
       loading: false,
       local: { etapa: '' },
@@ -312,6 +320,52 @@ export default {
       this.localForm.pagamentos.map((d) => (d.file = null))
     },
 
+    async adicionarFornecedor() {
+      const newName = this.search
+      const novo = {
+        nome: newName,
+        tipo: '',
+        vendedor: '',
+        cnpj: '',
+        email: '',
+        telefone: '',
+        cidade: '',
+        obs: '',
+        forma: '',
+        nomeBanco: '',
+        banco: '',
+        agencia: '',
+        conta: '',
+        pix: '',
+        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        createdBy: this.authUser,
+        visible: true,
+      }
+
+      this.loading = true
+      const fornecedoresRef = this.$fire.firestore.collection('fornecedores')
+      await fornecedoresRef
+        .add(novo)
+        .then(
+          this.$notifier.showMessage({
+            content: 'Criado, complementar depois`',
+            color: 'success',
+            top: false,
+          })
+        )
+        .catch((error) =>
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        )
+        .finally(() => {
+          this.loading = false
+          this.localForm.fornecedor = { ...novo }
+        })
+    },
+
     async adicionar() {
       this.loading = true
 
@@ -319,7 +373,7 @@ export default {
       this.deleteFiles()
 
       // work around for combobox not returning object correctly
-      this.localForm.etapa = this.local.etapa
+      this.localForm.etapa = this.localForm.etapa.nome
 
       // adicionar metadados
       const item = {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container class="mx-0 px-0">
-      <h1 class="font-weight-regular">Compras</h1>
+      <h1 class="font-weight-regular">Relatório por Conta</h1>
 
       <Lista3
         :items="items"
@@ -26,7 +26,6 @@ export default {
       desktopHeaders: [
         { text: 'Descrição', value: 'descricao' },
         { text: 'Fornecedor', value: 'fornecedor.nome' },
-        { text: 'Obra', value: 'obra.nome' },
         { text: 'Valor', value: 'valorTotal' },
         { text: 'Data criada', value: 'createdAt', align: 'end' },
         { text: 'Completo', value: 'completo', width: 30, align: 'end' },

@@ -38,9 +38,7 @@
                 </template>
                 <template #item.completo="{ item }">
                   <v-simple-checkbox
-                    v-model="
-                      item.saldoNota == 0 && item.saldoPago == 0 ? true : false
-                    "
+                    v-model="item.completo"
                     disabled
                   ></v-simple-checkbox>
                 </template>

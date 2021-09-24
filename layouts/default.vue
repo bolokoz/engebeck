@@ -122,6 +122,33 @@
           <v-list-item-title v-text="title"></v-list-item-title>
         </v-list-item>
       </v-list-group>
+      <!-- SubGroup -->
+      <v-list-group
+        :value_relatorio="false"
+        prepend-icon="mdi-account-circle"
+        active-class="green lighten-4"
+      >
+        <template #activator>
+          <v-list-item-content>
+            <v-list-item-title>Relatorios</v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="([title, icon, link], i) in relatorios"
+          :key="i"
+          active-class="green lighten-4"
+          color="green-lighten-3"
+          nuxt
+          :to="link"
+          class="ml-4"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
+      </v-list-group>
 
       <template #append>
         <div class="pa-2">
@@ -193,6 +220,25 @@ export default Vue.extend({
         ['Gerenciar Obras', 'mdi-account-multiple-outline', '/obras'],
         ['Gerenciar Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
       ],
+      relatorios: [
+        ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
+        ['Por obra ', 'mdi-account-multiple-outline', '/relatorios/obra'],
+        [
+          'Por conta pagadora',
+          'mdi-account-multiple-outline',
+          '/relatorios/conta',
+        ],
+        [
+          'Ressarcimento',
+          'mdi-account-multiple-outline',
+          '/relatorios/ressarcimento',
+        ],
+        [
+          'Administração',
+          'mdi-account-multiple-outline',
+          '/relatorios/administracao',
+        ],
+      ],
 
       items: [
         {
@@ -204,11 +250,6 @@ export default Vue.extend({
           icon: 'mdi-apps',
           title: 'Calendario',
           to: '/calendario',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Relatórios',
-          to: '/relatorio',
         },
       ],
       title: 'EngeBeck',

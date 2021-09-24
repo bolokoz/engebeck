@@ -9,7 +9,12 @@
       <p></p>
 
       <v-row>
-        <v-col v-for="n in menus" :key="n" class="d-flex child-flex" cols="4">
+        <v-col
+          v-for="(n, i) in menus"
+          :key="i"
+          class="d-flex child-flex"
+          cols="4"
+        >
           <v-card
             outlined
             class="d-flex justify-center align-center text-center"

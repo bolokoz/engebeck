@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container class="mx-0 px-0">
-      <h1 class="font-weight-regular">Compras</h1>
+      <h1 class="font-weight-regular">Relatórios de ressarcimento</h1>
 
       <Lista3
         :items="items"
@@ -9,27 +9,22 @@
         :desktop-headers="desktopHeaders"
         sort-by="data"
         :telefone="false"
-        path="/compras"
+        path="/relatorios/ressarcimento"
       />
     </v-container>
   </div>
 </template>
 
 <script>
-const db = 'compras'
-
 export default {
   data() {
     return {
       items: [],
       loading: false,
       desktopHeaders: [
-        { text: 'Descrição', value: 'descricao' },
-        { text: 'Fornecedor', value: 'fornecedor.nome' },
-        { text: 'Obra', value: 'obra.nome' },
+        { text: 'Obra', value: 'obra' },
         { text: 'Valor', value: 'valorTotal' },
         { text: 'Data criada', value: 'createdAt', align: 'end' },
-        { text: 'Completo', value: 'completo', width: 30, align: 'end' },
         {
           text: 'Editar',
           value: 'actions',
@@ -39,8 +34,8 @@ export default {
         },
       ],
       mobileHeaders: [
-        { text: 'Descrição', value: 'descricao' },
-        { text: 'Fornecedor', value: 'fornecedor' },
+        { text: 'Obra', value: 'obra' },
+        { text: 'Data', value: 'createdAt' },
         { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
       ],
     }
@@ -52,7 +47,8 @@ export default {
     read() {
       this.loading = true
       this.$fire.firestore
-        .collection(db)
+        .collection('relatorios')
+        .doc('ressarcimentos')
         .get()
         .then((snap) => {
           this.items = []
