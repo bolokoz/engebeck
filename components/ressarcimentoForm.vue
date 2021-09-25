@@ -175,7 +175,8 @@ export default {
       return pagamentos
     },
     total() {
-      return 130
+      const total = this.selected.reduce((d, i) => d + (i[valor] || 0), 0)
+      return total
     },
   },
 
