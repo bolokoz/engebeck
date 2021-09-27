@@ -20,17 +20,17 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6">
                   <v-text-field
-                    v-model.number="nota.numero"
+                    v-model="nota.numero"
                     outlined
                     label="Número da nota"
                   ></v-text-field>
                   <v-text-field
-                    v-model.number="nota.chave"
+                    v-model="nota.chave"
                     outlined
                     label="Chave da nota"
                   ></v-text-field>
                   <v-text-field
-                    v-model.number="nota.obs"
+                    v-model="nota.obs"
                     outlined
                     label="Observações"
                   ></v-text-field>

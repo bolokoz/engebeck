@@ -13,6 +13,7 @@
           :items="obras"
           label="Obra"
           dense
+          return-object
           item-text="nome"
           item-value="id"
           outlined
@@ -76,6 +77,35 @@
     </v-row>
     <v-row>
       <v-col>
+        <v-divider></v-divider>
+
+        <h3>Dados que irão para o Relatório</h3>
+
+        <p>Tipo de relatório:<b> Ressarcimento</b></p>
+        <p>
+          Obra:<b> {{ obra.nome }}</b>
+        </p>
+        <p>
+          Período:<b> Início {{ datesBR[0] }} até {{ datesBR[1] }}</b>
+        </p>
+        <p>
+          Conta a receber<b> {{ recebedor.nome }}</b>
+        </p>
+        <p>
+          Conta devedora <b>{{ devedor.nome }}</b>
+        </p>
+        <p>
+          Quantidade de itens <b>{{ selected.length }}</b>
+        </p>
+        <p>Taxa do servico: <b>0% (ressarcimento apenas)</b></p>
+        <p>Valor do serviço?<b> R$ 0</b></p>
+        <p>
+          Valor total: <b>R$ {{ valorTotal }}</b>
+        </p>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <v-btn @click="generatePDF">Gerar PDF</v-btn>
       </v-col>
     </v-row>
@@ -85,6 +115,11 @@
 <script>
 // import jsPDFInvoiceTemplate from 'jspdf-invoice-template'
 export default {
+  filters: {
+    dateToStringBR(value) {
+      return value.toLocaleString('pt-BR').split(' ')[0]
+    },
+  },
   props: {
     isEdit: {
       default: false,
@@ -148,9 +183,9 @@ export default {
     items() {
       return this.pagamentos.filter(
         (e) =>
-          e.obraId === this.obra &&
-          e.date > new Date(this.dates[0]) &&
-          e.date < new Date(this.dates[1]) &&
+          e.obraId === this.obra.id &&
+          e.date >= new Date(this.dates[0]) &&
+          e.date <= new Date(this.dates[1]) &&
           e.pagador === this.recebedor.nome
       )
     },
@@ -174,9 +209,16 @@ export default {
       })
       return pagamentos
     },
-    total() {
-      const total = this.selected.reduce((d, i) => d + (i[valor] || 0), 0)
+    valorTotal() {
+      const total = this.selected.reduce((d, i) => d + (i.valor || 0), 0)
       return total
+    },
+    datesBR() {
+      const datesBR = [
+        new Date(this.dates[0]).toLocaleString('pt-BR').split(' ')[0],
+        new Date(this.dates[1]).toLocaleString('pt-BR').split(' ')[0],
+      ]
+      return datesBR
     },
   },
 
@@ -201,58 +243,70 @@ export default {
           address: 'Rua Conselheiro Furtado, 123',
           phone: '(67) 999767835 ',
           email: 'yuri@engebeck.com.br',
-          website: 'www.engebeck.com.br',
+          phone: 'www.engebeck.com.br',
         },
         contact: {
           label: 'Relatório destinado à:',
           name: 'MRB Investimentos LTDA',
           address: 'Av. Afonso Pena, 2131, sala 2203',
-          phone: '(67) 981238383',
-          email: 'mrbinvestagroind@gmail.com',
+          phone: 'mrbinvestagroind@gmail.com',
+          // phone: '',
         },
         invoice: {
           label: 'Relatório de ressarcimento ' + this.obra.nome,
-          num: 19,
-          invDate: this.dates[0],
-          invGenDate: 'Invoice Date: 02/02/2021 10:17',
-          headerBorder: false,
+          // num: ,
+          invDate: `Período: ${this.datesBR[0]} até ${this.datesBR[1]}`,
+          invGenDate:
+            'Relatório gerado em: ' +
+            new Date().toLocaleString('pt-BR').split(' ')[0],
+          headerBorder: true,
           tableBodyBorder: false,
           header: ['#', 'Descrição', 'Fornecedor', 'Data', 'Valor'],
           table: this.selected.map((d, i) => [
             i + 1,
             d.descricao,
             d.fornecedor,
-            d.date,
+            d.date | this.dateToStringBR,
             d.valor,
           ]),
-          invTotalLabel: 'SubTotal:',
-          invTotal: '100.000,00',
-          invCurrency: 'R$',
-          row1: {
-            col1: 'Administração:',
-            col2: '10',
-            col3: '%',
-            style: {
-              fontSize: 10, // optional, default 12
-            },
-          },
+          // invTotalLabel: 'SubTotal:',
+          // invTotal: this.valorTotal,
+          // invCurrency: 'R$',
+          // row1: {
+          //   col1: '',
+          //   col2: '',
+          //   col3: '',
+          //   style: {
+          //     fontSize: 10, // optional, default 12
+          //   },
+          // },
           row2: {
             col1: 'Total:',
-            col2: '116,199.90',
+            col2: this.valorTotal.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            }),
             col3: 'R$',
             style: {
               fontSize: 14, // optional, default 12
             },
           },
-          invDescLabel: '',
+          invDescLabel:
+            '____________________________                                                      _____________________________',
           invDesc:
-            "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+            'Pelo presente, YBTECH, empresa inscrita no CNPJ nº 26.285.435/0001-13, representado legalmente por YURI VINÍCIUS FURUSHO BECKER, inscrito no CPF 013.132.261-30, declara que RECEBEU na data de 06/09/2021, o valor de R$ ' +
+            this.valorTotal +
+            ' por meio de transferência bancária de MRB INVESTIMENTOS AGRO IND. LTDA, inscrita no CNPJ nº 07.704.974/0001-03, referente ao ressarcimento de despesas de pequenos valores do período ' +
+            this.datesBR[0] +
+            ' até ' +
+            this.datesBR[1] +
+            ', pagas diretamente pela YBTECH na obra ' +
+            this.obra.nome,
         },
         footer: {
-          text: '--',
+          text: 'Relatório Ressarcimento',
         },
         pageEnable: true,
-        pageLabel: 'Relatório',
+        pageLabel: 'EngeBeck 2021',
       }
 
       jsPDFInvoiceTemplate.default(pdfConfig)
