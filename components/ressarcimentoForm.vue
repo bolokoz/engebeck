@@ -1,3 +1,4 @@
+/* eslint-disable vue/valid-v-slot */
 <template>
   <v-form ref="form">
     <!-- <h3 class="my-3 font-weight-bold">Escolha as datas</h3> -->
@@ -243,7 +244,7 @@ export default {
           address: 'Rua Conselheiro Furtado, 123',
           phone: '(67) 999767835 ',
           email: 'yuri@engebeck.com.br',
-          phone: 'www.engebeck.com.br',
+          website: 'www.engebeck.com.br',
         },
         contact: {
           label: 'Relatório destinado à:',

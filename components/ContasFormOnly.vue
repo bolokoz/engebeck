@@ -1,27 +1,67 @@
 <template>
   <v-form ref="form">
     <v-row>
-      <v-col sm="12" md="6" lg="5">
+      <h3 class="my-3 font-weight-bold">Dados do Cliente</h3>
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
-          v-model.number="localForm.nome"
+          v-model="localForm.nome"
           outlined
           label="Nome da conta"
           dense
           required
         ></v-text-field>
       </v-col>
+      <v-col sm="12" md="6" lg="4">
+        <v-text-field
+          v-model="localForm.endereco"
+          outlined
+          label="Endereço da conta"
+          dense
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col sm="12" md="6" lg="4">
+        <v-text-field
+          v-model="localForm.email"
+          outlined
+          label="Email do contato da conta"
+          dense
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col sm="12" md="6" lg="4">
+        <v-text-field
+          v-model="localForm.representante"
+          outlined
+          label="Nome completo do representante (assinante) "
+          dense
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col sm="12" md="6" lg="4">
+        <v-text-field
+          v-model="localForm.telefone"
+          outlined
+          label="Telefone de contato da conta"
+          dense
+          required
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <h3 class="my-3 font-weight-bold">Dados da conta de pagamento</h3>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-autocomplete
           v-model="localForm.tipo"
           outlined
           :items="tipos"
           dense
-          label="Tipo da conta"
+          label="Método de pagamento"
         ></v-autocomplete>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.banco"
           dense
@@ -30,7 +70,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.cnpj"
           outlined
@@ -39,7 +79,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.obs"
           outlined
@@ -48,7 +88,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.agencia"
           outlined
@@ -57,7 +97,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.conta"
           dense
@@ -66,7 +106,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col sm="12" md="6" lg="5">
+      <v-col sm="12" md="6" lg="4">
         <v-text-field
           v-model="localForm.pix"
           dense
@@ -111,9 +151,11 @@ export default {
       default: () => ({
         nome: '',
         tipo: '',
+        endereco: '',
+        email: '',
+        representante: '',
         vendedor: '',
         cnpj: '',
-        email: '',
         telefone: '',
         cidade: '',
         obs: '',
@@ -133,9 +175,11 @@ export default {
       localForm: {
         nome: '',
         tipo: '',
+        endereco: '',
+        email: '',
+        representante: '',
         vendedor: '',
         cnpj: '',
-        email: '',
         telefone: '',
         cidade: '',
         obs: '',
