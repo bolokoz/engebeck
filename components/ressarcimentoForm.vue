@@ -38,6 +38,13 @@
           dense
           outlined
         ></v-select>
+        <v-text-field
+          v-model.number="taxa"
+          label="Taxa de serviço"
+          suffix="%"
+          dense
+          outlined
+        ></v-text-field>
       </v-col>
       <v-col cols="12">
         <v-data-table
@@ -98,8 +105,15 @@
         <p>
           Quantidade de itens <b>{{ selected.length }}</b>
         </p>
-        <p>Taxa do servico: <b>0% (ressarcimento apenas)</b></p>
-        <p>Valor do serviço?<b> R$ 0</b></p>
+        <p>
+          Valor subtotal: <b>R$ {{ valorSemTaxa }}</b>
+        </p>
+        <p>
+          Taxa do servico: <b>{{ taxa }} %</b>
+        </p>
+        <p>
+          Valor do serviço<b> R$ {{ valorTaxa }}</b>
+        </p>
         <p>
           Valor total: <b>R$ {{ valorTotal }}</b>
         </p>
@@ -114,13 +128,8 @@
 </template>
 
 <script>
-// import jsPDFInvoiceTemplate from 'jspdf-invoice-template'
+import { relatorioRessarcimento } from './ressarcimento.js'
 export default {
-  filters: {
-    dateToStringBR(value) {
-      return value.toLocaleString('pt-BR').split(' ')[0]
-    },
-  },
   props: {
     isEdit: {
       default: false,
@@ -168,17 +177,18 @@ export default {
       devedor: {},
       recebedor: {},
       obra: {},
+      taxa: 0,
     }
   },
-  head() {
-    return {
-      script: [
-        {
-          src: 'https://unpkg.com/jspdf-invoice-template@latest/dist/index.js',
-        },
-      ],
-    }
-  },
+  // head() {
+  //   return {
+  //     script: [
+  //       {
+  //         src: 'https://unpkg.com/jspdf-invoice-template@latest/dist/index.js',
+  //       },
+  //     ],
+  //   }
+  // },
 
   computed: {
     items() {
@@ -192,16 +202,17 @@ export default {
     },
     pagamentos() {
       const pagamentos = []
-      this.compras.forEach((compra) => {
-        compra.pagamentos.forEach((pagamento) => {
+      this.compras.forEach((compra, d) => {
+        compra.pagamentos.forEach((pagamento, i) => {
           const item = {}
           item.obra = compra.obra.nome
           item.obraId = compra.obra.id
           item.descricao = compra.descricao
           item.fornecedor = compra.fornecedor.nome
           item.valor = pagamento.valor
-          item.key = pagamento.valor + '_' + pagamento.date
+          item.key = d + '_' + i
           item.date = new Date(pagamento.date)
+
           item.pagador = pagamento.conta.nome
           item.pagadorId = pagamento.conta.id
           item.metodo = pagamento.metodo
@@ -210,9 +221,16 @@ export default {
       })
       return pagamentos
     },
-    valorTotal() {
+    valorSemTaxa() {
       const total = this.selected.reduce((d, i) => d + (i.valor || 0), 0)
-      return total
+      return +total
+    },
+    valorTaxa() {
+      const taxa = (this.valorSemTaxa * this.taxa) / 100
+      return +taxa.toFixed(2)
+    },
+    valorTotal() {
+      return +this.valorSemTaxa + +this.valorTaxa
     },
     datesBR() {
       const datesBR = [
@@ -240,81 +258,96 @@ export default {
           },
         },
         business: {
-          name: 'EngeBeck',
-          address: 'Rua Conselheiro Furtado, 123',
-          phone: '(67) 999767835 ',
-          email: 'yuri@engebeck.com.br',
-          website: 'www.engebeck.com.br',
+          name: this.recebedor.nome,
+          address: this.recebedor.endereco,
+          phone: this.recebedor.telefone,
+          email: this.recebedor.email,
+          website: this.recebedor.site,
         },
         contact: {
           label: 'Relatório destinado à:',
-          name: 'MRB Investimentos LTDA',
-          address: 'Av. Afonso Pena, 2131, sala 2203',
-          phone: 'mrbinvestagroind@gmail.com',
+          name: this.devedor.nome,
+          address: this.devedor.endereco,
+          phone: this.devedor.telefone,
+          email: this.devedor.email,
           // phone: '',
         },
         invoice: {
-          label: 'Relatório de ressarcimento ' + this.obra.nome,
-          // num: ,
-          invDate: `Período: ${this.datesBR[0]} até ${this.datesBR[1]}`,
+          label: 'Ressarcimento Obra: ',
+          num: this.obra.nome,
+          invDate: `${this.datesBR[0]} até ${this.datesBR[1]}`,
           invGenDate:
             'Relatório gerado em: ' +
             new Date().toLocaleString('pt-BR').split(' ')[0],
-          headerBorder: true,
+          headerBorder: false,
           tableBodyBorder: false,
           header: ['#', 'Descrição', 'Fornecedor', 'Data', 'Valor'],
           table: this.selected.map((d, i) => [
             i + 1,
             d.descricao,
             d.fornecedor,
-            d.date | this.dateToStringBR,
+            d.date.toLocaleString('pt-BR').split(' ')[0],
             d.valor,
           ]),
+          assinante1: 'Assinatne 1',
+          assinante2: 'Yuri Vinícius Furusho Becker',
           // invTotalLabel: 'SubTotal:',
           // invTotal: this.valorTotal,
           // invCurrency: 'R$',
           // row1: {
-          //   col1: '',
-          //   col2: '',
-          //   col3: '',
+          //   col1: 'col1',
+          //   col2: ' col2 row 1',
+          //   col3: 'col 3 row 1',
           //   style: {
           //     fontSize: 10, // optional, default 12
           //   },
           // },
           row2: {
             col1: 'Total:',
-            col2: this.valorTotal.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-            }),
-            col3: 'R$',
+            col2:
+              'R$ ' +
+              this.valorTotal.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }),
+            // col3: 'R$',
             style: {
               fontSize: 14, // optional, default 12
             },
           },
-          invDescLabel:
-            '____________________________                                                      _____________________________',
           invDesc:
-            'Pelo presente, YBTECH, empresa inscrita no CNPJ nº 26.285.435/0001-13, representado legalmente por YURI VINÍCIUS FURUSHO BECKER, inscrito no CPF 013.132.261-30, declara que RECEBEU na data de 06/09/2021, o valor de R$ ' +
+            'Pelo presente,' +
+            this.recebedor.nome +
+            ', empresa inscrita no CNPJ nº ' +
+            this.recebedor.cnpj +
+            ', representado legalmente por ' +
+            this.recebedor.representante +
+            ', inscrito no CPF ' +
+            this.recebedor.cpf +
+            ', declara que RECEBEU na data de ' +
+            new Date().toLocaleString('pt-BR').split(' ')[0] +
+            ', o valor de R$ ' +
             this.valorTotal +
-            ' por meio de transferência bancária de MRB INVESTIMENTOS AGRO IND. LTDA, inscrita no CNPJ nº 07.704.974/0001-03, referente ao ressarcimento de despesas de pequenos valores do período ' +
+            ' por meio de transferência bancária de ' +
+            this.devedor.nome +
+            ', inscrita no CNPJ nº ' +
+            this.devedor.cnpj +
+            ', referente ao ressarcimento de despesas de pequenos valores do período ' +
             this.datesBR[0] +
             ' até ' +
             this.datesBR[1] +
-            ', pagas diretamente pela YBTECH na obra ' +
+            ', pagas diretamente pela ' +
+            this.recebedor.nome +
+            ' na obra ' +
             this.obra.nome,
         },
         footer: {
-          text: 'Relatório Ressarcimento',
+          text: 'Relatório Ressarcimento - EngeBeck 2021',
         },
         pageEnable: true,
-        pageLabel: 'EngeBeck 2021',
+        pageLabel: 'Pág.',
       }
 
-      jsPDFInvoiceTemplate.default(pdfConfig)
-      //   const doc = new jsPDF()
-
-      //   doc.text('Hello world!', 10, 10)
-      //   doc.save('a4.pdf')
+      relatorioRessarcimento(pdfConfig)
     },
   },
 }
