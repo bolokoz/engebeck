@@ -22,9 +22,10 @@ export default {
       items: [],
       loading: false,
       desktopHeaders: [
-        { text: 'Obra', value: 'obra' },
+        { text: 'Obra', value: 'obra.nome' },
+        { text: 'Recebedor', value: 'receiver.nome' },
         { text: 'Valor', value: 'valorTotal' },
-        { text: 'Data criada', value: 'createdAt', align: 'end' },
+        { text: 'Feito em', value: 'date', align: 'end' },
         {
           text: 'Editar',
           value: 'actions',
@@ -48,12 +49,13 @@ export default {
       this.loading = true
       this.$fire.firestore
         .collection('relatorios')
-        .doc('ressarcimentos')
         .get()
         .then((snap) => {
           this.items = []
           snap.forEach((doc) => {
-            this.items.push({ id: doc.id, ...doc.data() })
+            if (doc.data().tipo === 'ressarcimento') {
+              this.items.push({ id: doc.id, ...doc.data() })
+            }
           })
         })
         .catch(() => {

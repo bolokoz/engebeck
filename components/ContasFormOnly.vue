@@ -13,9 +13,19 @@
       </v-col>
       <v-col sm="12" md="6" lg="4">
         <v-text-field
+          v-model="localForm.cnpj"
+          outlined
+          label="CNPJ"
+          dense
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col sm="12" md="6" lg="4">
+        <v-text-field
           v-model="localForm.endereco"
           outlined
           label="Endereço da conta"
+          hint="Rua, "
           dense
           required
         ></v-text-field>
@@ -67,15 +77,6 @@
           dense
           outlined
           label="Banco"
-        ></v-text-field>
-      </v-col>
-
-      <v-col sm="12" md="6" lg="4">
-        <v-text-field
-          v-model="localForm.cnpj"
-          outlined
-          dense
-          label="CPF/CNPJ do proprietário"
         ></v-text-field>
       </v-col>
 

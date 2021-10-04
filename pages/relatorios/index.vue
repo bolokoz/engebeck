@@ -1,75 +1,70 @@
 <template>
   <div>
-    <v-container class="mx-0 px-0">
-      <h1 class="font-weight-regular">Compras</h1>
+    <v-container>
+      <h1 class="font-weight regular">Bem vindo</h1>
+      <p>
+        {{ authUser.displayName }} 🎈 hoje é dia
+        {{ new Date().toLocaleDateString('pt-BR') }}
+      </p>
+      <p></p>
 
-      <Lista3
-        :items="items"
-        :mobile-headers="mobileHeaders"
-        :desktop-headers="desktopHeaders"
-        sort-by="data"
-        :telefone="false"
-        path="/compras"
-      />
+      <v-row>
+        <v-col
+          v-for="(n, i) in menus"
+          :key="i"
+          class="d-flex child-flex"
+          cols="4"
+        >
+          <v-card
+            outlined
+            class="d-flex justify-center align-center text-center"
+            height="100"
+            :to="n.link"
+          >
+            <h5 class="">
+              {{ n.name }}
+            </h5>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
 
-<script>
-const db = 'compras'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
+export default Vue.extend({
+  middleware: 'securePage',
+
   data() {
     return {
-      items: [],
-      loading: false,
-      desktopHeaders: [
-        { text: 'Descrição', value: 'descricao' },
-        { text: 'Fornecedor', value: 'fornecedor.nome' },
-        { text: 'Valor', value: 'valorTotal' },
-        { text: 'Data criada', value: 'createdAt', align: 'end' },
-        { text: 'Completo', value: 'completo', width: 30, align: 'end' },
-        {
-          text: 'Editar',
-          value: 'actions',
-          sortable: false,
-          align: 'end',
-          width: 30,
-        },
-      ],
-      mobileHeaders: [
-        { text: 'Descrição', value: 'descricao' },
-        { text: 'Fornecedor', value: 'fornecedor' },
-        { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
+      menus: [
+        { name: 'Administração', link: 'relatorios/administracao' },
+        { name: 'Ressarcimento', link: 'relatorios/ressarcimento' },
+        // { name: 'Gasto por obra', link: 'relatorios' },
       ],
     }
   },
-  mounted() {
-    this.read()
-  },
-  methods: {
-    read() {
-      this.loading = true
-      this.$fire.firestore
-        .collection(db)
-        .get()
-        .then((snap) => {
-          this.items = []
-          snap.forEach((doc) => {
-            this.items.push({ id: doc.id, ...doc.data() })
-          })
-        })
-        .catch(() => {
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-        })
+
+  computed: {
+    authUser(): string {
+      return this.$store.state.auth.authUser
     },
   },
-}
+
+  mounted(): void {
+    /* this.$fire.firestore
+      .collection('users')
+      .doc(this.authUser.id)
+      .collection('products')
+      .get()
+      .then((snap) => {
+        this.messages = []
+        snap.forEach((doc) => {
+          this.messages.push(doc)
+        })
+      }) */
+  },
+})
 </script>

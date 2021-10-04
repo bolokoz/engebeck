@@ -1,9 +1,9 @@
 <template>
   <div>
     <Titulo
-      titulo="Adicionar compra"
-      texto_link="Voltar para compras"
-      link="/compras"
+      titulo="Adicionar Relatório de Ressarcimento"
+      texto_link="Voltar para Relatórios"
+      link="/relatorios"
     />
 
     <RessarcimentoForm
@@ -57,8 +57,19 @@ export default {
           compras.push({ id: doc.id, ...doc.data() })
         })
       })
+    const ressarcimentos = []
+    await app.$fire.firestore
+      .collection('relatorios')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          if (doc.data().tipo === 'ressarcimento') {
+            ressarcimentos.push({ id: doc.id, ...doc.data() })
+          }
+        })
+      })
 
-    return { obras, contas, compras }
+    return { obras, contas, compras, ressarcimentos }
   },
   data() {
     return {

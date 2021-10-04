@@ -5,12 +5,16 @@
     <!-- <h4 class="my-3 font-weight-bold">De {{ dates[0] }} até {{ dates[1] }}</h4> -->
     <v-row justify="center">
       <v-col cols="12" sm="6" md="6" lg="4">
-        <v-date-picker v-model="dates" range locale="pt-BR"></v-date-picker>
+        <v-date-picker
+          v-model="localForm.dates"
+          range
+          locale="pt-BR"
+        ></v-date-picker>
       </v-col>
 
       <v-col cols="12" sm="6" md="6" lg="6">
         <v-select
-          v-model="obra"
+          v-model="localForm.obra"
           :items="obras"
           label="Obra"
           dense
@@ -21,7 +25,7 @@
         ></v-select>
 
         <v-select
-          v-model="recebedor"
+          v-model="localForm.recebedor"
           :items="contas"
           label="Conta recebedora"
           item-text="nome"
@@ -30,7 +34,7 @@
           outlined
         ></v-select>
         <v-select
-          v-model="devedor"
+          v-model="localForm.devedor"
           :items="contas"
           label="Conta devedora"
           item-text="nome"
@@ -39,7 +43,7 @@
           outlined
         ></v-select>
         <v-text-field
-          v-model.number="taxa"
+          v-model.number="localForm.taxa"
           label="Taxa de serviço"
           suffix="%"
           dense
@@ -48,7 +52,7 @@
       </v-col>
       <v-col cols="12">
         <v-data-table
-          v-model="selected"
+          v-model="localForm.selected"
           :headers="desktopHeaders"
           :items="items"
           item-key="key"
@@ -84,32 +88,36 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <!-- <v-col>
         <v-divider></v-divider>
 
         <h3>Dados que irão para o Relatório</h3>
 
         <p>Tipo de relatório:<b> Ressarcimento</b></p>
         <p>
-          Obra:<b> {{ obra.nome }}</b>
+          Obra:<b> {{ localForm.obra.nome }}</b>
         </p>
         <p>
-          Período:<b> Início {{ datesBR[0] }} até {{ datesBR[1] }}</b>
+          Período:<b>
+            Início
+            {{ localForm.dates[0].toLocaleString('pt-BR').split(' ')[0] }} até
+            {{ localForm.dates[1].toLocaleString('pt-BR').split(' ')[0] }}</b
+          >
         </p>
         <p>
-          Conta a receber<b> {{ recebedor.nome }}</b>
+          Conta a receber<b> {{ localForm.recebedor.nome }}</b>
         </p>
         <p>
-          Conta devedora <b>{{ devedor.nome }}</b>
+          Conta devedora <b>{{ localForm.devedor.nome }}</b>
         </p>
         <p>
-          Quantidade de itens <b>{{ selected.length }}</b>
+          Quantidade de itens <b>{{ localForm.selected.length }}</b>
         </p>
         <p>
           Valor subtotal: <b>R$ {{ valorSemTaxa }}</b>
         </p>
         <p>
-          Taxa do servico: <b>{{ taxa }} %</b>
+          Taxa do servico: <b>{{ localForm.taxa }} %</b>
         </p>
         <p>
           Valor do serviço<b> R$ {{ valorTaxa }}</b>
@@ -117,23 +125,36 @@
         <p>
           Valor total: <b>R$ {{ valorTotal }}</b>
         </p>
-      </v-col>
+      </v-col> -->
     </v-row>
     <v-row>
       <v-col>
         <v-btn @click="generatePDF">Gerar PDF</v-btn>
+        <!-- <v-btn @click="adicionar">Salvar no banco</v-btn> -->
+        <BotoesForm
+          :is-edit="isEdit"
+          :loading="loading"
+          @adicionar="adicionar"
+          @alterar="alterar"
+          @deletar="deletar"
+        />
       </v-col>
     </v-row>
   </v-form>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import { relatorioRessarcimento } from './ressarcimento.js'
 export default {
   props: {
     isEdit: {
       default: false,
       type: Boolean,
+    },
+    id: {
+      default: '',
+      type: String,
     },
     obras: {
       type: Array,
@@ -147,15 +168,25 @@ export default {
       type: Array,
       default: () => [],
     },
+    form: {
+      type: Object,
+      default: () => ({
+        selected: [],
+        dates: [
+          new Date(Date.now()).toISOString().substr(0, 10),
+          new Date(Date.now() + 1).toISOString().substr(0, 10),
+        ],
+        devedor: {},
+        recebedor: {},
+        obra: {},
+        taxa: 0,
+      }),
+    },
   },
   data() {
     return {
       loading: false,
-      selected: [],
-      dates: [
-        new Date(Date.now()).toISOString().substr(0, 10),
-        new Date(Date.now() + 1).toISOString().substr(0, 10),
-      ],
+
       desktopHeaders: [
         { text: 'Obra', value: 'obra' },
         { text: 'Valor', value: 'valor' },
@@ -174,59 +205,66 @@ export default {
         { text: 'Data', value: 'date' },
         { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
       ],
-      devedor: {},
-      recebedor: {},
-      obra: {},
-      taxa: 0,
+      localForm: {
+        selected: [],
+        dates: [
+          new Date(Date.now()).toISOString().substr(0, 10),
+          new Date(Date.now() + 1).toISOString().substr(0, 10),
+        ],
+        devedor: {},
+        recebedor: {},
+        obra: {},
+        taxa: 0,
+      },
     }
   },
-  // head() {
-  //   return {
-  //     script: [
-  //       {
-  //         src: 'https://unpkg.com/jspdf-invoice-template@latest/dist/index.js',
-  //       },
-  //     ],
-  //   }
-  // },
 
   computed: {
     items() {
-      return this.pagamentos.filter(
-        (e) =>
-          e.obraId === this.obra.id &&
-          e.date >= new Date(this.dates[0]) &&
-          e.date <= new Date(this.dates[1]) &&
-          e.pagador === this.recebedor.nome
-      )
+      if (!this.isEdit) {
+        return this.pagamentos.filter(
+          (e) =>
+            e.obraId === this.localForm.obra.id &&
+            e.date >= new Date(this.localForm.dates[0]) &&
+            e.date <= new Date(this.localForm.dates[1]) &&
+            e.pagador === this.localForm.recebedor.nome
+        )
+      } else {
+        return []
+      }
     },
     pagamentos() {
       const pagamentos = []
-      this.compras.forEach((compra, d) => {
-        compra.pagamentos.forEach((pagamento, i) => {
-          const item = {}
-          item.obra = compra.obra.nome
-          item.obraId = compra.obra.id
-          item.descricao = compra.descricao
-          item.fornecedor = compra.fornecedor.nome
-          item.valor = pagamento.valor
-          item.key = d + '_' + i
-          item.date = new Date(pagamento.date)
+      if (!this.isEdit) {
+        this.compras.forEach((compra, d) => {
+          compra.pagamentos.forEach((pagamento, i) => {
+            const item = {}
+            item.obra = compra.obra.nome
+            item.obraId = compra.obra.id
+            item.descricao = compra.descricao
+            item.fornecedor = compra.fornecedor.nome
+            item.valor = pagamento.valor
+            item.key = d + '_' + i
+            item.date = new Date(pagamento.date)
 
-          item.pagador = pagamento.conta.nome
-          item.pagadorId = pagamento.conta.id
-          item.metodo = pagamento.metodo
-          pagamentos.push(item)
+            item.pagador = pagamento.conta.nome
+            item.pagadorId = pagamento.conta.id
+            item.metodo = pagamento.metodo
+            pagamentos.push(item)
+          })
         })
-      })
+      }
       return pagamentos
     },
     valorSemTaxa() {
-      const total = this.selected.reduce((d, i) => d + (i.valor || 0), 0)
+      const total = this.localForm.selected.reduce(
+        (d, i) => d + (i.valor || 0),
+        0
+      )
       return +total
     },
     valorTaxa() {
-      const taxa = (this.valorSemTaxa * this.taxa) / 100
+      const taxa = (this.valorSemTaxa * this.localForm.taxa) / 100
       return +taxa.toFixed(2)
     },
     valorTotal() {
@@ -234,11 +272,19 @@ export default {
     },
     datesBR() {
       const datesBR = [
-        new Date(this.dates[0]).toLocaleString('pt-BR').split(' ')[0],
-        new Date(this.dates[1]).toLocaleString('pt-BR').split(' ')[0],
+        new Date(this.localForm.dates[0]).toLocaleString('pt-BR').split(' ')[0],
+        new Date(this.localForm.dates[1]).toLocaleString('pt-BR').split(' ')[0],
       ]
       return datesBR
     },
+    authUser() {
+      return this.$store.state.auth.authUser
+    },
+  },
+  mounted() {
+    if (this.isEdit) {
+      this.localForm = this.form
+    }
   },
 
   methods: {
@@ -246,7 +292,7 @@ export default {
       const pdfConfig = {
         outputType: 'save',
         returnJsPDFDocObject: true,
-        fileName: 'Ressarcimento ' + this.recebedor.nome,
+        fileName: 'Ressarcimento ' + this.localForm.recebedor.nome,
         orientationLandscape: false,
         logo: {
           src: 'https://raw.githubusercontent.com/bolokoz/engebeck/main/assets/logo_transparent.png',
@@ -258,23 +304,23 @@ export default {
           },
         },
         business: {
-          name: this.recebedor.nome,
-          address: this.recebedor.endereco,
-          phone: this.recebedor.telefone,
-          email: this.recebedor.email,
-          website: this.recebedor.site,
+          name: this.localForm.recebedor.nome,
+          address: this.localForm.recebedor.endereco,
+          phone: this.localForm.recebedor.telefone,
+          email: this.localForm.recebedor.email,
+          website: this.localForm.recebedor.site,
         },
         contact: {
           label: 'Relatório destinado à:',
-          name: this.devedor.nome,
-          address: this.devedor.endereco,
-          phone: this.devedor.telefone,
-          email: this.devedor.email,
+          name: this.localForm.devedor.nome,
+          address: this.localForm.devedor.endereco,
+          phone: this.localForm.devedor.telefone,
+          email: this.localForm.devedor.email,
           // phone: '',
         },
         invoice: {
           label: 'Ressarcimento Obra: ',
-          num: this.obra.nome,
+          num: this.localForm.obra.nome,
           invDate: `${this.datesBR[0]} até ${this.datesBR[1]}`,
           invGenDate:
             'Relatório gerado em: ' +
@@ -282,7 +328,7 @@ export default {
           headerBorder: false,
           tableBodyBorder: false,
           header: ['#', 'Descrição', 'Fornecedor', 'Data', 'Valor'],
-          table: this.selected.map((d, i) => [
+          table: this.localForm.selected.map((d, i) => [
             i + 1,
             d.descricao,
             d.fornecedor,
@@ -316,29 +362,29 @@ export default {
           },
           invDesc:
             'Pelo presente,' +
-            this.recebedor.nome +
+            this.localForm.recebedor.nome +
             ', empresa inscrita no CNPJ nº ' +
-            this.recebedor.cnpj +
+            this.localForm.recebedor.cnpj +
             ', representado legalmente por ' +
-            this.recebedor.representante +
+            this.localForm.recebedor.representante +
             ', inscrito no CPF ' +
-            this.recebedor.cpf +
+            this.localForm.recebedor.cpf +
             ', declara que RECEBEU na data de ' +
             new Date().toLocaleString('pt-BR').split(' ')[0] +
             ', o valor de R$ ' +
             this.valorTotal +
             ' por meio de transferência bancária de ' +
-            this.devedor.nome +
+            this.localForm.devedor.nome +
             ', inscrita no CNPJ nº ' +
-            this.devedor.cnpj +
+            this.localForm.devedor.cnpj +
             ', referente ao ressarcimento de despesas de pequenos valores do período ' +
             this.datesBR[0] +
             ' até ' +
             this.datesBR[1] +
             ', pagas diretamente pela ' +
-            this.recebedor.nome +
+            this.localForm.recebedor.nome +
             ' na obra ' +
-            this.obra.nome,
+            this.localForm.obra.nome,
         },
         footer: {
           text: 'Relatório Ressarcimento - EngeBeck 2021',
@@ -348,6 +394,76 @@ export default {
       }
 
       relatorioRessarcimento(pdfConfig)
+    },
+    async adicionar() {
+      this.loading = true
+
+      // adicionar metadados
+      const item = {
+        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        createdBy: this.authUser,
+        visible: true,
+        recebedor: this.localForm.recebedor,
+        devedor: this.localForm.devedor,
+        obra: this.localForm.obra,
+        date: new Date().toLocaleString('pt-BR').split(' ')[0],
+        valorTotal: this.valorTotal,
+        selected: this.localForm.selected,
+        tipo: 'ressarcimento',
+      }
+      // adicionar no db
+      await this.$fire.firestore
+        .collection('relatorios')
+        .add(item)
+        .then((docRef) => {
+          console.log('Documento written ID: ', docRef.id)
+
+          this.$notifier.showMessage({
+            content: 'Adicionado',
+            color: 'success',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push({
+            path: '/relatorios/ressarcimento',
+          })
+        })
+    },
+    alterar() {},
+    async deletar() {
+      this.loading = true
+      await this.$fire.firestore
+        .collection('relatorios')
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Item apagado',
+            color: 'warning',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push('/relatorios/ressarcimento')
+        })
     },
   },
 }

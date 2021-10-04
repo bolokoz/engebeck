@@ -278,30 +278,6 @@ export default {
           this.loading = false
         })
     },
-    // selectImage(event, pagamento) {
-    //   const image = event.target.files[0]
-    //   try {
-    //     if (image && image.name) {
-    //       this.processing = true
-    //       pagamento.myFile = image
-    //       pagamento.fileURL = URL.createObjectURL(image)
-    //       pagamento.metadata = { contentType: pagamento.myFile.type }
-    //       // this.$emit('atualizar', this.pagamentos)
-    //     } else {
-    //       pagamento.myFile = null
-    //       pagamento.fileURL = null
-    //       pagamento.metadata = ''
-    //     }
-    //   } catch (e) {
-    //     this.$notifier.showMessage({
-    //       content: e,
-    //       color: 'error',
-    //       top: false,
-    //     })
-    //   } finally {
-    //     this.processing = false
-    //   }
-    // },
   },
 }
 </script>
