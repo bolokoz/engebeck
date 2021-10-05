@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="font-weight-regular">Relatórios de ressarcimento</h1>
+    <h1 class="font-weight-regular">Relatórios de administração</h1>
     <v-container class="mx-0 px-0">
       <Lista3
         :items="items"
@@ -8,7 +8,7 @@
         :desktop-headers="desktopHeaders"
         sort-by="data"
         :telefone="false"
-        path="/relatorios/ressarcimento"
+        path="/relatorios/administracao"
       />
     </v-container>
   </div>
@@ -53,7 +53,7 @@ export default {
         .then((snap) => {
           this.items = []
           snap.forEach((doc) => {
-            if (doc.data().tipo === 'ressarcimento') {
+            if (doc.data().tipo === 'administracao') {
               this.items.push({ id: doc.id, ...doc.data() })
             }
           })

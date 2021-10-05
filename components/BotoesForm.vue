@@ -15,9 +15,14 @@
     <div v-else>
       <v-row>
         <v-col>
-          <v-btn dark color="green light" outlined @click="alterar">{{
-            loading ? 'enviando' : 'ALTERAR'
-          }}</v-btn>
+          <v-btn
+            :disabled="immutable"
+            dark
+            color="green light"
+            outlined
+            @click="alterar"
+            >{{ loading ? 'enviando' : 'ALTERAR' }}</v-btn
+          >
         </v-col>
         <v-spacer></v-spacer>
         <v-col>
@@ -40,6 +45,11 @@ export default {
     loading: {
       type: Boolean,
       required: true,
+    },
+    immutable: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   methods: {

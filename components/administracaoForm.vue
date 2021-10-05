@@ -29,17 +29,18 @@
         <v-select
           v-model="localForm.recebedor"
           :items="contas"
-          label="Conta recebedora"
+          label="Administrador da obra"
           item-text="nome"
           :disabled="isEdit"
           return-object
           dense
           outlined
         ></v-select>
+
         <v-select
           v-model="localForm.devedor"
           :items="contas"
-          label="Conta devedora"
+          label="Contratante da administração"
           item-text="nome"
           :disabled="isEdit"
           return-object
@@ -104,7 +105,7 @@
 
         <h3>Dados que irão para o Relatório</h3>
 
-        <p>Tipo de relatório:<b> Ressarcimento</b></p>
+        <p>Tipo de relatório:<b> Administração</b></p>
         <p>
           Obra:<b> {{ localForm.obra.nome }}</b>
         </p>
@@ -155,7 +156,7 @@
 </template>
 
 <script>
-import { relatorioRessarcimento } from './ressarcimento.js'
+import { relatorioAdministracao } from './administracao.js'
 export default {
   props: {
     isEdit: {
@@ -189,7 +190,7 @@ export default {
         devedor: {},
         recebedor: {},
         obra: {},
-        taxa: 0,
+        taxa: 10,
       }),
     },
   },
@@ -227,7 +228,7 @@ export default {
         devedor: {},
         recebedor: {},
         obra: {},
-        taxa: 0,
+        taxa: 10,
       },
     }
   },
@@ -240,7 +241,7 @@ export default {
             e.obraId === this.localForm.obra.id &&
             e.date >= new Date(this.localForm.dates[0]) &&
             e.date <= new Date(this.localForm.dates[1]) &&
-            e.pagadorId === this.localForm.recebedor.id
+            e.pagadorId === this.localForm.devedor.id
         )
       } else {
         return this.form.selected
@@ -308,7 +309,7 @@ export default {
       const pdfConfig = {
         outputType: 'save',
         returnJsPDFDocObject: true,
-        fileName: 'Ressarcimento ' + this.localForm.recebedor.nome,
+        fileName: 'Adminsitracao ' + this.localForm.obra.nome,
         orientationLandscape: false,
         logo: {
           src: 'https://raw.githubusercontent.com/bolokoz/engebeck/main/assets/logo_transparent.png',
@@ -335,7 +336,7 @@ export default {
           // phone: '',
         },
         invoice: {
-          label: 'Ressarcimento Obra: ',
+          label: 'Administração Obra: ',
           num: this.localForm.obra.nome,
           invDate: `${this.datesBR[0]} até ${this.datesBR[1]}`,
           invGenDate:
@@ -351,24 +352,24 @@ export default {
             d.date.toLocaleString('pt-BR').split(' ')[0],
             d.valor,
           ]),
-          assinante1: 'Assinatne 1',
-          assinante2: 'Yuri Vinícius Furusho Becker',
-          // invTotalLabel: 'SubTotal:',
-          // invTotal: this.valorTotal,
-          // invCurrency: 'R$',
-          // row1: {
-          //   col1: 'col1',
-          //   col2: ' col2 row 1',
-          //   col3: 'col 3 row 1',
-          //   style: {
-          //     fontSize: 10, // optional, default 12
-          //   },
-          // },
+          assinante1: this.localForm.devedor.representante,
+          assinante2: this.localForm.recebedor.representante,
+          invTotalLabel: 'SubTotal:',
+          invTotal: this.valorSemTaxa.toString(),
+          invCurrency: 'R$',
+          row1: {
+            col1: 'taxa:',
+            col2: this.localForm.taxa.toString(),
+            col3: '%',
+            style: {
+              fontSize: 12, // optional, default 12
+            },
+          },
           row2: {
-            col1: 'Total:',
+            col1: 'Administração:',
             col2:
               'R$ ' +
-              this.valorTotal.toLocaleString(undefined, {
+              this.valorTaxa.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
             // col3: 'R$',
@@ -393,7 +394,7 @@ export default {
             this.localForm.devedor.nome +
             ', inscrita no CNPJ nº ' +
             this.localForm.devedor.cnpj +
-            ', referente ao ressarcimento de despesas de pequenos valores do período ' +
+            ', referente à administração de obras do período ' +
             this.datesBR[0] +
             ' até ' +
             this.datesBR[1] +
@@ -403,13 +404,13 @@ export default {
             this.localForm.obra.nome,
         },
         footer: {
-          text: 'Relatório Ressarcimento - EngeBeck 2021',
+          text: 'Relatório Administração - EngeBeck 2021',
         },
         pageEnable: true,
         pageLabel: 'Pág.',
       }
 
-      relatorioRessarcimento(pdfConfig)
+      relatorioAdministracao(pdfConfig)
     },
     editItem(item) {
       console.log(item)
@@ -429,7 +430,7 @@ export default {
         obra: this.localForm.obra,
         valorTotal: this.valorTotal,
         selected: this.localForm.selected,
-        tipo: 'ressarcimento',
+        tipo: 'administracao',
         dates: this.localForm.dates,
       }
       console.log(item)
@@ -457,7 +458,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.$router.push({
-            path: '/relatorios/ressarcimento',
+            path: '/relatorios/administracao',
           })
         })
     },
@@ -484,7 +485,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$router.push('/relatorios/ressarcimento')
+          this.$router.push('/relatorios/administracao')
         })
     },
   },
