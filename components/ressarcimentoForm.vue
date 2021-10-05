@@ -311,7 +311,7 @@ export default {
         fileName: 'Ressarcimento ' + this.localForm.recebedor.nome,
         orientationLandscape: false,
         logo: {
-          src: '/assets/logo_transparent.png',
+          src: '../../logo_transparent.png',
           width: 53.33, // aspect ratio = width/height
           height: 26.66,
           margin: {

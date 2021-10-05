@@ -174,6 +174,8 @@ export function relatorioAdministracao(props) {
 
   const colorBlack = '#000000'
   const colorGray = '#4d4e53'
+  const colorAccent = '#7fb800'
+  const colorPrimary = '#0d2c54'
   // starting at 15mm
   let currentHeight = 15
   // var startPointRectPanel1 = currentHeight + 6;
@@ -239,7 +241,7 @@ export function relatorioAdministracao(props) {
     currentHeight += pdfConfig.lineHeight
   }
 
-  doc.setTextColor(colorBlack)
+  doc.setTextColor(colorAccent)
   doc.setFontSize(pdfConfig.headerTextSize - 5)
   if (param.contact.name) doc.text(10, currentHeight, param.contact.name)
 
@@ -262,7 +264,7 @@ export function relatorioAdministracao(props) {
     doc.text(10, currentHeight, param.contact.address)
 
     // texto maior
-    doc.setTextColor(colorBlack)
+    doc.setTextColor(colorPrimary)
     doc.setFontSize(pdfConfig.headerTextSize - 7)
     doc.text(docWidth - 10, currentHeight + 2, param.invoice.invDate, 'right')
     currentHeight += pdfConfig.subLineHeight
@@ -308,7 +310,7 @@ export function relatorioAdministracao(props) {
   const addTableHeader = () => {
     if (param.invoice.headerBorder) addTableHeaderBoarder()
 
-    currentHeight += pdfConfig.subLineHeight
+    currentHeight += pdfConfig.subLineHeight + 3
     doc.setTextColor(colorBlack)
     doc.setFontSize(pdfConfig.fieldTextSize)
     // border color
