@@ -312,7 +312,7 @@ export default {
         fileName: 'Adminsitracao ' + this.localForm.obra.nome,
         orientationLandscape: false,
         logo: {
-          src: 'https://raw.githubusercontent.com/bolokoz/engebeck/main/assets/logo_transparent.png',
+          src: '../../logo_transparent.png',
           width: 53.33, // aspect ratio = width/height
           height: 26.66,
           margin: {

@@ -353,15 +353,19 @@ export function relatorioAdministracao(props) {
     // display text into row cells
     // Object.entries(row).forEach(function(col, index) {
     row.forEach(function (rr, index) {
-      const item = splitTextAndGetHeight(rr.toString(), 3 * tdWidth) // minus 1, to fix the padding issue between borders
-
-      if (index === 0) doc.text(item.text, 11, currentHeight + 4)
-      else if (index === 1) doc.text(item.text, 15, currentHeight + 4)
-      else if (index === 2) doc.text(item.text, 3 * tdWidth, currentHeight + 4)
-      else if (index === 3) doc.text(item.text, 4 * tdWidth, currentHeight + 4)
+      // console.log(rr)
+      if (index === 0) doc.text(rr.toString(), 11, currentHeight + 4)
+      else if (index === 1) {
+        const item = splitTextAndGetHeight(rr.toString(), 3 * tdWidth) // minus 1, to fix the padding issue between borders
+        doc.text(item.text, 15, currentHeight + 4)
+      } else if (index === 2) {
+        const item = splitTextAndGetHeight(rr.toString(), tdWidth - 1) // minus 1, to fix the padding issue between borders
+        doc.text(item.text, 3 * tdWidth, currentHeight + 4)
+      } else if (index === 3)
+        doc.text(rr.toString(), 4 * tdWidth, currentHeight + 4)
       else if (index === lastIndex)
-        doc.text(item.text, docWidth - 25, currentHeight + 4, 'right')
-      else doc.text(item.text, 11 + index * tdWidth, currentHeight + 4)
+        doc.text(rr.toString(), docWidth - 25, currentHeight + 4, 'right')
+      else doc.text(rr.toString(), 11 + index * tdWidth, currentHeight + 4)
     })
 
     currentHeight += maxHeight - 4

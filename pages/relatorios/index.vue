@@ -1,12 +1,7 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight regular">Bem vindo</h1>
-      <p>
-        {{ authUser.displayName }} 🎈 hoje é dia
-        {{ new Date().toLocaleDateString('pt-BR') }}
-      </p>
-      <p></p>
+      <h1 class="font-weight regular">Relatórios</h1>
 
       <v-row>
         <v-col
@@ -40,8 +35,8 @@ export default Vue.extend({
   data() {
     return {
       menus: [
-        { name: 'Administração', link: 'relatorios/administracao' },
-        { name: 'Ressarcimento', link: 'relatorios/ressarcimento' },
+        { name: 'Administração', link: '/relatorios/administracao' },
+        { name: 'Ressarcimento', link: '/relatorios/ressarcimento' },
         // { name: 'Gasto por obra', link: 'relatorios' },
       ],
     }

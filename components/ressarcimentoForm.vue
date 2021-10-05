@@ -311,7 +311,7 @@ export default {
         fileName: 'Ressarcimento ' + this.localForm.recebedor.nome,
         orientationLandscape: false,
         logo: {
-          src: 'https://raw.githubusercontent.com/bolokoz/engebeck/main/assets/logo_transparent.png',
+          src: '/assets/logo_transparent.png',
           width: 53.33, // aspect ratio = width/height
           height: 26.66,
           margin: {
@@ -351,8 +351,8 @@ export default {
             d.date.toLocaleString('pt-BR').split(' ')[0],
             d.valor,
           ]),
-          assinante1: 'Assinatne 1',
-          assinante2: 'Yuri Vinícius Furusho Becker',
+          assinante1: this.localForm.devedor.representante,
+          assinante2: this.localForm.recebedor.representante,
           // invTotalLabel: 'SubTotal:',
           // invTotal: this.valorTotal,
           // invCurrency: 'R$',
@@ -383,8 +383,6 @@ export default {
             this.localForm.recebedor.cnpj +
             ', representado legalmente por ' +
             this.localForm.recebedor.representante +
-            ', inscrito no CPF ' +
-            this.localForm.recebedor.cpf +
             ', declara que RECEBEU na data de ' +
             new Date().toLocaleString('pt-BR').split(' ')[0] +
             ', o valor de R$ ' +

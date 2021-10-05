@@ -222,12 +222,12 @@ export default Vue.extend({
       ],
       relatorios: [
         ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
-        ['Por obra ', 'mdi-account-multiple-outline', '/relatorios/obra'],
-        [
-          'Por conta pagadora',
-          'mdi-account-multiple-outline',
-          '/relatorios/conta',
-        ],
+        // ['Por obra ', 'mdi-account-multiple-outline', '/relatorios/obra'],
+        // [
+        //   'Por conta pagadora',
+        //   'mdi-account-multiple-outline',
+        //   '/relatorios/conta',
+        // ],
         [
           'Ressarcimento',
           'mdi-account-multiple-outline',
