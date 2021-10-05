@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
 import { relatorioAdministracao } from './administracao.js'
 export default {
   props: {
@@ -184,8 +185,8 @@ export default {
       default: () => ({
         selected: [],
         dates: [
-          new Date(Date.now()).toISOString().substr(0, 10),
-          new Date(Date.now() + 1).toISOString().substr(0, 10),
+          DateTime.now().minus({ month: 1 }).startOf('month').toISODate(),
+          DateTime.now().startOf('month').minus({ days: 1 }).toISODate(),
         ],
         devedor: {},
         recebedor: {},
@@ -222,8 +223,8 @@ export default {
       localForm: {
         selected: [],
         dates: [
-          new Date(Date.now()).toISOString().substr(0, 10),
-          new Date(Date.now() + 1).toISOString().substr(0, 10),
+          DateTime.now().minus({ month: 1 }).startOf('month').toISODate(),
+          DateTime.now().startOf('month').minus({ days: 1 }).toISODate(),
         ],
         devedor: {},
         recebedor: {},
@@ -263,7 +264,7 @@ export default {
             item.cnpj = compra.fornecedor?.cnpj || ''
             item.valor = pagamento.valor
             item.key = d + '_' + i
-            item.date = new Date(pagamento.date)
+            item.date = DateTime.fromISO(pagamento.date)
             item.pagador = pagamento.conta.nome
             item.pagadorId = pagamento.conta.id
             item.metodo = pagamento.metodo
@@ -289,8 +290,8 @@ export default {
     },
     datesBR() {
       const datesBR = [
-        new Date(this.localForm.dates[0]).toLocaleString('pt-BR').split(' ')[0],
-        new Date(this.localForm.dates[1]).toLocaleString('pt-BR').split(' ')[0],
+        DateTime.fromISO(this.localForm.dates[0]).toFormat('dd/MM/yy'),
+        DateTime.fromISO(this.localForm.dates[1]).toFormat('dd/MM/yy'),
       ]
       return datesBR
     },
