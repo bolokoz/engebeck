@@ -60,7 +60,7 @@ export default {
             this.items.push({ id: doc.id, ...doc.data() })
           })
         })
-        .catch(() => {
+        .catch((error) => {
           this.$notifier.showMessage({
             content: error,
             color: 'error',

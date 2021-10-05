@@ -366,9 +366,10 @@ export function relatorioRessarcimento(props) {
         doc.text(item.text, 3 * tdWidth, currentHeight + 4)
       } else if (index === 3)
         doc.text(rr.toString(), 4 * tdWidth, currentHeight + 4)
-      else if (index === lastIndex)
+      else if (index === lastIndex) {
+        console.log(rr)
         doc.text(rr.toString(), docWidth - 25, currentHeight + 4, 'right')
-      else doc.text(rr.toString(), 11 + index * tdWidth, currentHeight + 4)
+      } else doc.text(rr.toString(), 11 + index * tdWidth, currentHeight + 4)
     })
 
     currentHeight += maxHeight - 4

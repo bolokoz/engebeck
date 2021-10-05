@@ -6,6 +6,7 @@
           v-model.number="localForm.nome"
           outlined
           label="Nome fornecedor"
+          :hint="hintName"
           dense
           required
         ></v-text-field>
@@ -15,7 +16,7 @@
         <v-combobox
           v-model="localForm.tipo"
           outlined
-          :items="tiposFornecedores"
+          :items="tipos"
           label="Tipo fornecedor"
           hide-selected
           hint="TAB para adicionar. Pode ser mais de um"
@@ -48,6 +49,7 @@
           v-model="localForm.cnpj"
           outlined
           dense
+          :hint="hintCnpj"
           label="CNPJ"
         ></v-text-field>
       </v-col>
@@ -176,11 +178,10 @@ export default {
       default: '',
       type: String,
     },
-    tiposFornecedores: {
+    fornecedores: {
       default: () => [],
       type: Array,
     },
-
     form: {
       type: Object,
       default: () => ({
@@ -226,6 +227,64 @@ export default {
   computed: {
     authUser() {
       return this.$store.state.auth.authUser
+    },
+    hintName() {
+      const matchingStrings = []
+
+      this.nomes.forEach((list) => {
+        if (
+          list
+            .toLocaleLowerCase()
+            .search(this.localForm.nome.toLocaleLowerCase()) > -1
+        ) {
+          matchingStrings.push(list)
+        }
+      })
+      if (this.localForm.nome.length > 3 && matchingStrings.length > 0) {
+        return 'Já existe: ' + matchingStrings.join(' ') + ' no banco'
+      } else {
+        return 'OK: Nenhum nome semelhante encontrado'
+      }
+    },
+    hintCnpj() {
+      const matchingStrings = []
+
+      this.cnpjs.forEach((list) => {
+        if (
+          list
+            .toLocaleLowerCase()
+            .search(this.localForm.cnpj.toLocaleLowerCase()) > -1
+        ) {
+          console.log(list)
+          matchingStrings.push(list)
+        }
+      })
+      if (this.localForm.cnpj.length > 3 && matchingStrings.length > 0) {
+        return 'Já existe: ' + matchingStrings.join(' ') + ' no banco'
+      } else {
+        return 'OK: Nenhum cnpj semelhante encontrado'
+      }
+    },
+    tipos() {
+      const tipos = []
+      this.fornecedores.forEach((d) => {
+        if (d?.tipo !== undefined && d.tipo !== '') tipos.push(d.tipo)
+      })
+      return tipos
+    },
+    nomes() {
+      const nomes = []
+      this.fornecedores.forEach((d) => {
+        if (d?.tipo !== undefined) nomes.push(d.nome)
+      })
+      return nomes
+    },
+    cnpjs() {
+      const cnpjs = []
+      this.fornecedores.forEach((d) => {
+        if (d?.tipo !== undefined) cnpjs.push(d.cnpj)
+      })
+      return cnpjs
     },
   },
   mounted() {

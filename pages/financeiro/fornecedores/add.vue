@@ -6,7 +6,7 @@
       link="/financeiro/fornecedores"
     />
 
-    <FornecedoresFormOnly :is-edit="false" :tipos-fornecedores="lista" />
+    <FornecedoresFormOnly :is-edit="false" :fornecedores="fornecedores" />
   </div>
 </template>
 <script>
@@ -14,18 +14,17 @@ export default {
   middleware: 'securePage',
   transition: 'fade',
   async asyncData({ app }) {
-    let lista = []
+    const fornecedores = []
     await app.$fire.firestore
-      .collection('listas')
-      .doc('fornecedores')
+      .collection('fornecedores')
       .get()
-      .then((doc) => {
-        if (doc.exists) {
-          lista = doc.data().tipos
-        }
+      .then((snap) => {
+        snap.forEach((doc) => {
+          fornecedores.push({ id: doc.id, ...doc.data() })
+        })
       })
 
-    return { lista }
+    return { fornecedores }
   },
 
   data() {
@@ -39,5 +38,7 @@ export default {
       return this.$store.state.auth.authUser
     },
   },
+
+  mounted() {},
 }
 </script>

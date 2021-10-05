@@ -111,7 +111,7 @@
         <p>
           Período:<b>
             Início
-            {{ datesBR[0] }} até {{ datesBR[1] }}</b
+            {{ localForm.dates[0] | localDate }} até {{ datesBR[1] }}</b
           >
         </p>
         <p>
@@ -157,6 +157,23 @@
 <script>
 import { relatorioRessarcimento } from './ressarcimento.js'
 export default {
+  filters: {
+    localDate(ISOString) {
+      console.log(ISOString)
+      const date = new Date(ISOString)
+      console.log(date)
+      const year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let dt = date.getDate()
+      if (dt < 10) {
+        dt = '0' + dt
+      }
+      if (month < 10) {
+        month = '0' + month
+      }
+      return dt + '/' + month + '/' + year
+    },
+  },
   props: {
     isEdit: {
       default: false,
@@ -183,8 +200,12 @@ export default {
       default: () => ({
         selected: [],
         dates: [
-          new Date(Date.now()).toISOString().substr(0, 10),
-          new Date(Date.now() + 1).toISOString().substr(0, 10),
+          new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+            .toISOString()
+            .substr(0, 10),
+          new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+            .toISOString()
+            .substr(0, 10),
         ],
         devedor: {},
         recebedor: {},
@@ -293,10 +314,12 @@ export default {
       ]
       return datesBR
     },
+
     authUser() {
       return this.$store.state.auth.authUser
     },
   },
+
   mounted() {
     if (this.isEdit) {
       this.localForm = this.form

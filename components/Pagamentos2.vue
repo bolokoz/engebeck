@@ -58,6 +58,8 @@
                 <v-text-field
                   v-model.number="pagamento.valor"
                   prefix="R$"
+                  hint="USAR PONTO PARA CENTAVOS"
+                  :rules="[rules.required, rules.decimmalDot]"
                   outlined
                   label="Valor total"
                 ></v-text-field>
@@ -189,6 +191,13 @@ export default {
     return {
       menu: false,
       processing: false,
+      rules: {
+        required: (value) => !!value || 'Obrigatório',
+        decimmalDot: (value) => {
+          const pattern = /^\$?\d+(\.\d{2})?$/
+          return pattern.test(value) || 'USAR PONTO PARA CENTAVOS'
+        },
+      },
       metodo: ['PIX', 'TED', 'DOC', 'BOLETO', 'DINHEIRO', 'CARTAO'],
       loading: false,
     }
