@@ -10,7 +10,7 @@
       :search="search"
       class="elevation-5"
     >
-      <template v-slot:top>
+      <template #top>
         <v-toolbar flat>
           <v-text-field
             v-model="search"
@@ -22,7 +22,7 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="600px" persistent>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn color="primary" v-bind="attrs" v-on="on">Novo</v-btn>
             </template>
             <v-card>
@@ -80,7 +80,8 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      // eslint-disable-next-line vue/valid-v-slot
+      <template #item.actions="{ item }">
         <v-icon small class="mr-4" @click="call(item)"> mdi-phone </v-icon>
         <v-icon small class="mr-4" @click="whatsapp(item)">
           mdi-whatsapp
@@ -99,7 +100,7 @@
     <v-snackbar v-model="snackbar" timeout="2000">
       {{ snackText }}
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn color="indigo" text v-bind="attrs" @click="snackbar = false">
           Close
         </v-btn>
@@ -126,8 +127,8 @@
   </v-container>
 </template>
 
-// <script>
-import { mapState } from 'vuex'
+//
+<script>
 // import FuncionariosDb from '@/firebase/funcionarios-db'
 
 const funcDB = new FuncionariosDb()

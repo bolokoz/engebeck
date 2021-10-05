@@ -45,6 +45,7 @@ export default {
         : 'Não modificado ainda'
     },
     modifiedByChecked() {
+      // eslint-disable-next-line valid-typeof
       if (typeof this.form.modifiedBy !== undefined) {
         return this.form.modifiedBy
       } else {

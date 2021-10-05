@@ -4,18 +4,17 @@
       <h1 class="font-weight-regular">{{ titulo }}</h1>
       <Lista3
         :items="items"
-        @addItem="addItem"
-        @editItem="editItem"
-        :mobileHeaders="mobileHeaders"
-        :desktopHeaders="desktopHeaders"
+        :mobile-headers="mobileHeaders"
+        :desktop-headers="desktopHeaders"
         sort-by="data"
         :telefone="false"
         :path="path"
+        @addItem="addItem"
+        @editItem="editItem"
       />
     </v-container>
   </div>
 </template>
-
 
 <script>
 export default {
@@ -44,8 +43,11 @@ export default {
       loading: false,
     }
   },
+  mounted() {
+    this.read()
+  },
   methods: {
-    async read() {
+    read() {
       this.loading = true
       this.$fire.firestore
         .collection(this.db)
@@ -67,9 +69,6 @@ export default {
           this.loading = false
         })
     },
-  },
-  mounted() {
-    this.read()
   },
 }
 </script>

@@ -26,6 +26,7 @@
                 no-data-text="Banco de dados vazio"
                 loading-text="Carregando dados..."
               >
+                // eslint-disable-next-line vue/valid-v-slot
                 <template #item.createdAt="{ item }">
                   {{
                     new Date(item.createdAt.seconds * 1000).toLocaleString(
@@ -33,6 +34,7 @@
                     )
                   }}
                 </template>
+                // eslint-disable-next-line vue/valid-v-slot
                 <template #item.valorTotal="{ item }">
                   R$ {{ item.valorTotal }}
                 </template>

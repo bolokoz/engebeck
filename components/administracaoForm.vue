@@ -1,4 +1,4 @@
-/* eslint-disable vue/valid-v-slot */
+/* eslint-disable vue/valid-v-slot */ /* eslint-disable vue/valid-v-slot */
 <template>
   <v-form ref="form">
     <!-- <h3 class="my-3 font-weight-bold">Escolha as datas</h3> -->

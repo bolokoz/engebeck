@@ -159,7 +159,7 @@ export function relatorioAdministracao(props) {
     }
   }
   if (param.invoice.table && param.invoice.table.length) {
-    if (param.invoice.table[0].length != param.invoice.header.length)
+    if (param.invoice.table[0].length !== param.invoice.header.length)
       throw new Error('Length of header and table column must be equal.')
   }
 
@@ -338,7 +338,7 @@ export function relatorioAdministracao(props) {
     // get nax height for the current row
     const rowsHeight = []
     const getRowsHeight = function () {
-      row.forEach(function (rr, index) {
+      row.forEach(function (rr) {
         // size should be the same used in other td
         const item = splitTextAndGetHeight(rr.toString(), tdWidth - 1) // minus 1, to fix the padding issue between borders
         rowsHeight.push(item.height)
