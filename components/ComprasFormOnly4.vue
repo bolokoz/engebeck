@@ -102,6 +102,73 @@
     </v-row>
     <!-- Fim -->
 
+    <div>
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        offset-x
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn color="indigo" dark v-bind="attrs" v-on="on">
+            Pedir pagamento
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-list>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-text-field
+                    v-model.number="pedirValor"
+                    label="Valor"
+                    prefix="R$"
+                  ></v-text-field>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-text-field
+                    v-model="pedirObs"
+                    label="Obs"
+                    prefix=""
+                  ></v-text-field>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+          <v-divider></v-divider>
+
+          <h3 class="info--text">Dados cadastrados do fornecedor</h3>
+          <h5 class="info--text">Nome: {{ localForm.fornecedor.nome }}</h5>
+          <h5 class="info--text">
+            Nome conta: {{ localForm.fornecedor.nomeBanco }}
+          </h5>
+          <h5 class="info--text">CNPJ: {{ localForm.fornecedor.cnpj }}</h5>
+          <h5 class="info--text">Banco: {{ localForm.fornecedor.banco }}</h5>
+          <h5 class="info--text">
+            Método de pagamento: {{ localForm.fornecedor.metodo }}
+          </h5>
+          <h5 class="info--text">
+            agencia: {{ localForm.fornecedor.agencia }}
+          </h5>
+          <h5 class="info--text">conta: {{ localForm.fornecedor.conta }}</h5>
+          <h5 class="info--text">pix: {{ localForm.fornecedor.pix }}</h5>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn text @click="menu = false"> Cancel </v-btn>
+            <v-btn color="primary" text @click="menu = false"> Whatsapp </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
+    </div>
+
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Pagamentos</h3>
@@ -241,6 +308,12 @@ export default {
         notas: [],
         completo: false,
       },
+      fav: true,
+      menu: false,
+      message: false,
+      hints: true,
+      pedirValor: 0,
+      pedirObs: '',
       loading: false,
       local: { etapa: '' },
     }

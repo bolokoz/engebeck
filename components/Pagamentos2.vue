@@ -1,21 +1,6 @@
 <template>
   <v-container class="">
     <v-row justify="center">
-      <v-col>
-        <v-row v-if="fornecedor.banco !== undefined">
-          <v-col cols="12" md="6" lg="6">
-            <h3 class="info--text">Dados cadastrados do fornecedor</h3>
-            <h5 class="info--text">Nome conta: {{ fornecedor.nomeBanco }}</h5>
-            <h5 class="info--text">Banco: {{ fornecedor.banco }}</h5>
-            <h5 class="info--text">
-              Método de pagamento: {{ fornecedor.metodo }}
-            </h5>
-            <h5 class="info--text">{{ fornecedor.agencia }}</h5>
-            <h5 class="info--text">{{ fornecedor.conta }}</h5>
-            <h5 class="info--text">{{ fornecedor.pix }}</h5>
-          </v-col>
-        </v-row>
-      </v-col>
       <v-expansion-panels inset>
         <v-expansion-panel v-for="(pagamento, i) in pagamentos" :key="i">
           <v-expansion-panel-header class="font-weight-bold"

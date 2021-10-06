@@ -1,12 +1,7 @@
 <template>
   <div>
     <v-container>
-      <h1 class="font-weight regular">Bem vindo</h1>
-      <p>
-        {{ authUser.displayName }} 🎈 hoje é dia
-        {{ new Date().toLocaleDateString('pt-BR') }}
-      </p>
-      <p></p>
+      <h1 class="font-weight regular">Financeiro</h1>
 
       <v-row>
         <v-col
@@ -40,14 +35,9 @@ export default Vue.extend({
   data() {
     return {
       menus: [
-        { name: 'Diário de obra', link: 'diario' },
-        { name: 'Calendário', link: 'calendario' },
-        { name: 'Compras', link: 'compras' },
-        { name: 'Relatórios', link: 'relatorios' },
-        { name: 'Previsão tempo', link: 'https://climatempo.com.br' },
-        { name: 'Gerenciar Obras', link: 'obras' },
-        { name: 'Fornecedores', link: 'compras/fornecedores' },
-        { name: 'Contas e bancos', link: 'contas' },
+        { name: 'Contas e cartões', link: '/financeiro/contas' },
+        { name: 'Despesas', link: '/financeiro/despesas' },
+        { name: 'Receitas', link: '/financeiro/receitas' },
       ],
     }
   },

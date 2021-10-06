@@ -192,29 +192,31 @@ export default Vue.extend({
           'mdi-account-multiple-outline',
           '/financeiro/contas',
         ],
+
+        ['Financeiro', 'mdi-account-multiple-outline', '/financeiro/'],
         [
-          'Fornecedores',
+          'Contabilidade',
           'mdi-account-multiple-outline',
-          '/financeiro/fornecedores',
-        ],
-        [
-          'Gerenciar Pagamentos',
-          'mdi-account-multiple-outline',
-          '/financeiro/gerenciar',
+          '/financeiro/contabilidade',
         ],
       ],
       compras: [
         ['Compras gerais', 'mdi-account-multiple-outline', '/compras'],
         [
-          'Compras recorrentes',
+          'Fornecedores',
           'mdi-account-multiple-outline',
-          '/compras/recorrentes',
+          '/compras/fornecedores',
         ],
-        [
-          'Pedidos/Orçamentos',
-          'mdi-account-multiple-outline',
-          '/compras/pedidos',
-        ],
+        // [
+        //   'Compras recorrentes',
+        //   'mdi-account-multiple-outline',
+        //   '/compras/recorrentes',
+        // ],
+        // [
+        //   'Pedidos/Orçamentos',
+        //   'mdi-account-multiple-outline',
+        //   '/compras/pedidos',
+        // ],
       ],
       obras: [
         ['Gerenciar Obras', 'mdi-account-multiple-outline', '/obras'],

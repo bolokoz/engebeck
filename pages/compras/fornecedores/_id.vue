@@ -4,7 +4,7 @@
       titulo="Editar Fornecedor"
       :subtitulo="`Id: ${id}`"
       texto_link="Voltar para fornecedores"
-      link="/financeiro/fornecedores"
+      link="/compras/fornecedores"
     />
 
     <div v-if="item">
