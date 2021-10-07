@@ -1,19 +1,14 @@
 <template>
   <div>
     <Titulo
-      titulo="Editar Fornecedor"
-      :subtitulo="`Id: ${id}`"
-      texto_link="Voltar para fornecedores"
-      link="/compras/fornecedores"
+      titulo="Editar fornecedor"
+      :subtitulo="`id: ${id}`"
+      texto_link="Voltar"
+      link="/fornecedores"
     />
 
     <div v-if="item">
-      <FornecedoresFormOnly
-        :id="id"
-        :form="item"
-        :is-edit="true"
-        :tipos-fornecedoers="lista"
-      />
+      <ContasFormOnly :id="id" :form="item" :is-edit="true" />
 
       <DadosExtras :form="item" />
     </div>
@@ -24,7 +19,7 @@
   </div>
 </template>
 <script>
-const db = 'fornecedores'
+const db = 'contas'
 export default {
   middleware: 'securePage',
   transition: 'fade',
@@ -55,24 +50,12 @@ export default {
         })
       })
 
-    let lista = []
-    await app.$fire.firestore
-      .collection('listas')
-      .doc('fornecedores')
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          lista = doc.data().tipos
-        }
-      })
-
-    return { id, item, lista }
+    return { id, item }
   },
 
   data() {
     return {
       loading: false,
-      item: {},
     }
   },
 

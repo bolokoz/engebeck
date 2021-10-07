@@ -46,7 +46,7 @@ export default Vue.extend({
         { name: 'Relatórios', link: 'relatorios' },
         { name: 'Previsão tempo', link: 'https://climatempo.com.br' },
         { name: 'Gerenciar Obras', link: 'obras' },
-        { name: 'Fornecedores', link: 'compras/fornecedores' },
+        { name: 'Fornecedores', link: 'fornecedores' },
         { name: 'Contas e bancos', link: 'contas' },
       ],
     }

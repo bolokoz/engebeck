@@ -1,10 +1,6 @@
 <template>
   <div>
-    <Titulo
-      titulo="Adicionar conta"
-      texto_link="Voltar "
-      link="/financeiro/contas"
-    />
+    <Titulo titulo="Adicionar conta" texto_link="Voltar " link="/contas" />
 
     <ContasFormOnly :is-edit="false" />
   </div>

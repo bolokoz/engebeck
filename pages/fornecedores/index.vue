@@ -8,7 +8,7 @@
             :items="items"
             :mobile-headers="mobileHeaders"
             :desktop-headers="desktopHeaders"
-            path="/compras/fornecedores"
+            path="/fornecedores"
             sort-by="data"
           />
         </v-col>

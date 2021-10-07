@@ -35,7 +35,7 @@ export default Vue.extend({
   data() {
     return {
       menus: [
-        { name: 'Contas e cartões', link: '/financeiro/contas' },
+        { name: 'Contas e cartões', link: '/contas' },
         { name: 'Despesas', link: '/financeiro/despesas' },
         { name: 'Receitas', link: '/financeiro/receitas' },
       ],

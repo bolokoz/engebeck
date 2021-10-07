@@ -40,11 +40,7 @@
       </v-list>
 
       <!-- SubGroup -->
-      <v-list-group
-        :value="false"
-        prepend-icon="mdi-account-circle"
-        active-class="green lighten-4"
-      >
+      <v-list-group :value="false" prepend-icon="mdi-cart">
         <template #activator>
           <v-list-item-content>
             <v-list-item-title>Compras</v-list-item-title>
@@ -68,11 +64,7 @@
       </v-list-group>
 
       <!-- SubGroup -->
-      <v-list-group
-        :value="false"
-        prepend-icon="mdi-account-circle"
-        active-class="green lighten-4"
-      >
+      <v-list-group :value="false" prepend-icon="mdi-finance">
         <template #activator>
           <v-list-item-content>
             <v-list-item-title>Financeiro</v-list-item-title>
@@ -96,11 +88,7 @@
       </v-list-group>
 
       <!-- SubGroup -->
-      <v-list-group
-        :value="false"
-        prepend-icon="mdi-account-circle"
-        active-class="green lighten-4"
-      >
+      <v-list-group :value="false" prepend-icon="mdi-domain">
         <template #activator>
           <v-list-item-content>
             <v-list-item-title>Obras</v-list-item-title>
@@ -123,11 +111,7 @@
         </v-list-item>
       </v-list-group>
       <!-- SubGroup -->
-      <v-list-group
-        :value_relatorio="false"
-        prepend-icon="mdi-account-circle"
-        active-class="green lighten-4"
-      >
+      <v-list-group :value_relatorio="false" prepend-icon="mdi-chart-box">
         <template #activator>
           <v-list-item-content>
             <v-list-item-title>Relatorios</v-list-item-title>
@@ -187,26 +171,14 @@ export default Vue.extend({
       drawer: false,
       fixed: false,
       financeiro: [
-        [
-          'Contas e cartões',
-          'mdi-account-multiple-outline',
-          '/financeiro/contas',
-        ],
+        ['Contas e cartões', 'mdi-bank', '/contas'],
 
-        ['Financeiro', 'mdi-account-multiple-outline', '/financeiro/'],
-        [
-          'Contabilidade',
-          'mdi-account-multiple-outline',
-          '/financeiro/contabilidade',
-        ],
+        // ['Financeiro', 'mdi-cash', '/financeiro/'],
+        ['Contabilidade', 'mdi-currency-usd', '/contabilidade'],
       ],
       compras: [
-        ['Compras gerais', 'mdi-account-multiple-outline', '/compras'],
-        [
-          'Fornecedores',
-          'mdi-account-multiple-outline',
-          '/compras/fornecedores',
-        ],
+        ['Compras gerais', 'mdi-card-outline', '/compras'],
+        ['Fornecedores', 'mdi-store', '/fornecedores'],
         // [
         //   'Compras recorrentes',
         //   'mdi-account-multiple-outline',
@@ -219,8 +191,8 @@ export default Vue.extend({
         // ],
       ],
       obras: [
-        ['Gerenciar Obras', 'mdi-account-multiple-outline', '/obras'],
-        ['Gerenciar Etapas ', 'mdi-account-multiple-outline', '/obras/etapas'],
+        ['Gerenciar Obras', 'mdi-home-city', '/obras'],
+        ['Gerenciar Etapas ', 'mdi-view-list', '/obras/etapas'],
       ],
       relatorios: [
         ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
@@ -231,12 +203,12 @@ export default Vue.extend({
         //   '/relatorios/conta',
         // ],
         [
-          'Ressarcimento',
+          'Ressarcimento Obra',
           'mdi-account-multiple-outline',
           '/relatorios/ressarcimento',
         ],
         [
-          'Administração',
+          'Administração Obra',
           'mdi-account-multiple-outline',
           '/relatorios/administracao',
         ],
@@ -244,12 +216,12 @@ export default Vue.extend({
 
       items: [
         {
-          icon: 'mdi-apps',
+          icon: 'mdi-home',
           title: 'Início',
           to: '/app',
         },
         {
-          icon: 'mdi-apps',
+          icon: 'mdi-calendar',
           title: 'Calendario',
           to: '/calendario',
         },

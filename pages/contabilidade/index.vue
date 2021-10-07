@@ -1,34 +1,36 @@
 <template>
   <div>
     <v-container class="mx-0 px-0">
-      <h1 class="font-weight-regular">Contas de pagamento</h1>
-      <v-row no-gutters>
-        <v-col cols="12">
-          <Lista3
-            :items="items"
-            :mobile-headers="mobileHeaders"
-            :desktop-headers="desktopHeaders"
-            path="/financeiro/contas"
-            sort-by="data"
-          />
-        </v-col>
-      </v-row>
+      <h1 class="font-weight-regular">Contabilidade</h1>
+      <h5 class="font-weight-light">
+        Movimentações financeiras não relacionadas à obras
+      </h5>
+
+      <Lista3
+        :items="items"
+        :desktop-headers="desktopHeaders"
+        :mobile-headers="mobileHeaders"
+        sort-by="data"
+        :telefone="false"
+        path="/contabilidade"
+      />
     </v-container>
-    <v-divider></v-divider>
   </div>
 </template>
-
 <script>
-const db = 'contas'
-export default {
-  middleware: 'securePage',
+const db = 'contabilidade'
 
+export default {
   data() {
     return {
-      loading: false,
       items: [],
+      loading: false,
       desktopHeaders: [
-        { text: 'Nome', value: 'nome' },
+        { text: 'Data', value: 'createdAt', align: 'end' },
+        { text: 'Categoria', value: 'categoria' },
+        { text: 'Destino/Origem', value: 'destinoOrigem' },
+        { text: 'Obs', value: 'obs' },
+        { text: 'Valor', value: 'valorTotal' },
         {
           text: 'Editar',
           value: 'actions',
@@ -38,17 +40,15 @@ export default {
         },
       ],
       mobileHeaders: [
-        { text: 'Nome', value: 'nome' },
+        { text: 'Descrição', value: 'descricao' },
+        { text: 'Fornecedor', value: 'fornecedor' },
         { text: 'Editar', value: 'actions', sortable: false, align: 'end' },
       ],
     }
   },
-
-  computed: {},
   mounted() {
     this.read()
   },
-
   methods: {
     read() {
       this.loading = true
@@ -61,7 +61,7 @@ export default {
             this.items.push({ id: doc.id, ...doc.data() })
           })
         })
-        .catch(() => {
+        .catch((error) => {
           this.$notifier.showMessage({
             content: error,
             color: 'error',

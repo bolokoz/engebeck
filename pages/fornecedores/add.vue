@@ -3,7 +3,7 @@
     <Titulo
       titulo="Adicionar Fornecedor"
       texto_link="Voltar para fornecedores"
-      link="/compras/fornecedores"
+      link="/fornecedores"
     />
 
     <FornecedoresFormOnly :is-edit="false" :fornecedores="fornecedores" />
