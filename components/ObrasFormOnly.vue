@@ -2,7 +2,7 @@
   <v-form ref="form">
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row>
-      <v-col cols="12" md="6" lg="4">
+      <v-col cols="12" md="6" lg="6">
         <v-text-field
           v-model.number="localForm.nome"
           label="Nome da obra"
@@ -10,7 +10,7 @@
           required
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="6" lg="4">
+      <v-col cols="12" md="6" lg="6">
         <v-text-field
           v-model.number="localForm.cidade"
           label="Cidade da obra"
@@ -19,7 +19,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="8" md="6" lg="6">
+      <v-col cols="12" sm="6" md="6" lg="6">
         <v-autocomplete
           v-model="localForm.tipo"
           :items="tiposObra"
@@ -28,12 +28,15 @@
         ></v-autocomplete>
       </v-col>
 
-      <v-col cols="12" sm="4" md="6" lg="2">
-        <v-text-field
+      <v-col cols="12" sm="6" md="6" lg="6">
+        <v-autocomplete
           v-model="localForm.proprietario"
+          return-object
+          item-text="nome"
+          :items="contas"
           dense
           label="Proprietário"
-        ></v-text-field>
+        ></v-autocomplete>
       </v-col>
 
       <v-col cols="12" md="6" lg="2">
@@ -44,21 +47,21 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="6" lg="10">
+      <v-col cols="12" md="6" lg="6">
         <v-text-field
           v-model="localForm.engenheiro"
           dense
           label="Engenheiro geral"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="6" lg="10">
+      <v-col cols="12" md="6" lg="6">
         <v-text-field
           v-model="localForm.arquiteto"
           dense
           label="Arquiteto"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="6" lg="10">
+      <v-col cols="12" md="12" lg="10">
         <v-text-field
           v-model="localForm.endereco"
           dense
@@ -103,6 +106,10 @@ export default {
     id: {
       default: '',
       type: String,
+    },
+    contas: {
+      default: () => [],
+      type: Array,
     },
 
     form: {

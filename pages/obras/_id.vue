@@ -7,7 +7,7 @@
       link="/obras"
     />
     <div v-if="item">
-      <ObrasFormOnly :id="id" :form="item" :is-edit="true" />
+      <ObrasFormOnly :id="id" :form="item" :contas="contas" :is-edit="true" />
 
       <DadosExtras :form="item" />
     </div>
@@ -45,8 +45,17 @@ export default {
           top: false,
         })
       })
+    const contas = []
+    await app.$fire.firestore
+      .collection('contas')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          contas.push({ id: doc.id, ...doc.data() })
+        })
+      })
 
-    return { id, item }
+    return { id, item, contas }
   },
 
   data() {
