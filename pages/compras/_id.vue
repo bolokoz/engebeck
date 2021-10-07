@@ -13,6 +13,7 @@
         :form="compra"
         :obras="obras"
         :fornecedores="fornecedores"
+        :compras="compras"
         :contas="contas"
         :etapas="etapas"
         :is-edit="true"
@@ -83,6 +84,15 @@ export default {
       .then((snap) => {
         snap.forEach((doc) => {
           contas.push({ id: doc.id, ...doc.data() })
+        })
+      })
+    const compras = []
+    await app.$fire.firestore
+      .collection('compras')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          compras.push({ id: doc.id, ...doc.data() })
         })
       })
 
@@ -169,7 +179,7 @@ export default {
       },
     ]
 
-    return { id, compra, obras, fornecedores, etapas, contas }
+    return { id, compra, compras, obras, fornecedores, etapas, contas }
   },
 
   data() {

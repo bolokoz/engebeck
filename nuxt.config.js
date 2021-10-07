@@ -21,7 +21,24 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'WebApp gerenciamento de obras',
+      },
+      { hid: 'og:title', name: 'og:title', content: 'EngeBeck' },
+      { hid: 'og:image', name: 'og:image', content: '/maskable_icon_x192.png' },
+      {
+        hid: 'og:url',
+        name: 'og:url',
+        content: 'https://www.engebeck.com.br/',
+      },
+      {
+        hid: 'og:description',
+        name: 'og:description',
+        content: 'WebApp gerenciamento de obra',
+      },
+      { hid: 'og:locale', name: 'og:locale', content: 'pt_BR' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },

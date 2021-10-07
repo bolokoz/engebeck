@@ -102,7 +102,7 @@
     </v-row>
     <!-- Fim -->
 
-    <div>
+    <div class="my-2">
       <v-menu
         v-model="menu"
         :close-on-content-click="false"
@@ -142,31 +142,45 @@
           </v-list>
 
           <v-divider></v-divider>
-
-          <h3 class="info--text">Dados cadastrados do fornecedor</h3>
-          <h5 class="info--text">Nome: {{ localForm.fornecedor.nome }}</h5>
-          <h5 class="info--text">
-            Nome conta: {{ localForm.fornecedor.nomeBanco }}
-          </h5>
-          <h5 class="info--text">CNPJ: {{ localForm.fornecedor.cnpj }}</h5>
-          <h5 class="info--text">Banco: {{ localForm.fornecedor.banco }}</h5>
-          <h5 class="info--text">
-            Método de pagamento: {{ localForm.fornecedor.metodo }}
-          </h5>
-          <h5 class="info--text">
-            agencia: {{ localForm.fornecedor.agencia }}
-          </h5>
-          <h5 class="info--text">conta: {{ localForm.fornecedor.conta }}</h5>
-          <h5 class="info--text">pix: {{ localForm.fornecedor.pix }}</h5>
-
+          <v-card-text>
+            <h3 class="info--text">Dados cadastrados do fornecedor</h3>
+            <h5 class="info--text">Obra: {{ localForm.obra.nome }}</h5>
+            <h5 class="info--text">Nome: {{ localForm.fornecedor.nome }}</h5>
+            <h5 class="info--text">
+              Nome conta: {{ localForm.fornecedor.nomeBanco }}
+            </h5>
+            <h5 class="info--text">CNPJ: {{ localForm.fornecedor.cnpj }}</h5>
+            <h5 class="info--text">Banco: {{ localForm.fornecedor.banco }}</h5>
+            <h5 class="info--text">
+              Método de pagamento: {{ localForm.fornecedor.metodo }}
+            </h5>
+            <h5 class="info--text">
+              agencia: {{ localForm.fornecedor.agencia }}
+            </h5>
+            <h5 class="info--text">conta: {{ localForm.fornecedor.conta }}</h5>
+            <h5 class="info--text">pix: {{ localForm.fornecedor.pix }}</h5>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
 
             <v-btn text @click="menu = false"> Cancel </v-btn>
-            <v-btn color="primary" text @click="menu = false"> Whatsapp </v-btn>
+            <v-btn color="primary" text @click="shareWhatsapp">Whatsapp </v-btn>
           </v-card-actions>
         </v-card>
       </v-menu>
+    </div>
+
+    <div v-if="pagamentosFornecedor.length > 0" class="my-2">
+      <h3 class="info--text">Últimos pagamentos para deste fornecedor</h3>
+      <h5
+        v-for="(pagamento, i) in pagamentosFornecedor"
+        :key="i"
+        class="info--text"
+      >
+        #{{ i + 1 }}: {{ pagamento.date }} - R$ {{ pagamento.valor }} -
+        {{ localForm.obra.nome }} - {{ pagamento.descricao }} -
+        {{ pagamento.obs }}
+      </h5>
     </div>
 
     <v-divider></v-divider>
@@ -245,6 +259,10 @@ export default {
       type: String,
     },
     fornecedores: {
+      type: Array,
+      default: () => [],
+    },
+    compras: {
       type: Array,
       default: () => [],
     },
@@ -348,6 +366,22 @@ export default {
     saldoNota() {
       return this.totalPago - this.totalNota
     },
+    pagamentosFornecedor() {
+      const pagamentos = []
+      if (this.localForm.fornecedor.id) {
+        this.compras.forEach((compra) => {
+          // console.log(compra.fornecedor.id)
+          if (compra.fornecedor.id === this.localForm.fornecedor.id) {
+            console.log(`matched fornecedor`, compra)
+            compra?.pagamentos.forEach((pagamento) => {
+              if (compra.id !== this.id)
+                pagamentos.push({ ...pagamento, descricao: compra.descricao })
+            })
+          }
+        })
+      }
+      return pagamentos
+    },
     authUser() {
       return this.$store.state.auth.authUser
     },
@@ -400,6 +434,25 @@ export default {
     deleteFiles() {
       this.localForm.notas.map((d) => (d.file = null))
       this.localForm.pagamentos.map((d) => (d.file = null))
+    },
+    shareWhatsapp() {
+      this.menu = false
+      let text = `*Requisição de pagamento* %0a %0a`
+      text += `*Valor*: R$ ${this.pedirValor} %0a`
+      text += `*Obs*: ${this.pedirObs} %0a`
+      text += `*Obra*: ${this.localForm.obra.nome}%0a`
+      text += `*Fornecedor*: ${this.localForm.fornecedor.nome}%0a`
+      text += `CNPJ: ${this.localForm.fornecedor.cnpj}%0a`
+      text += `Banco: ${this.localForm.fornecedor.nomeBanco}%0a`
+      text += `Agencia: ${this.localForm.fornecedor.agencia}%0a`
+      text += `Conta: ${this.localForm.fornecedor.conta} %0a`
+      text += `PIX: ${this.localForm.fornecedor.pix} %0a %0a`
+      text += `Requerinte: ${this.authUser.displayName} %0a`
+      text += `Data: ${new Date().toLocaleDateString('pt-BR')} %0a%0a`
+      text += `*Link para confirmar pagamento* %0a`
+      text += `https://www.engebeck.com.br/compras/${this.$route.params.id} %0a`
+
+      window.open(`whatsapp://send?text=${text}`)
     },
 
     async adicionarFornecedor() {

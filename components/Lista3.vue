@@ -20,6 +20,7 @@
                 :headers="desktopHeaders"
                 :items="items"
                 :search="search"
+                items-per-page="20"
                 sort-by="createdAt"
                 sort-desc
                 no-results-text="Nada encontrado"
