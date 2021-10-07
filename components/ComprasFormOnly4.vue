@@ -164,7 +164,7 @@
             <v-spacer></v-spacer>
 
             <v-btn text @click="menu = false"> Cancel </v-btn>
-            <v-btn color="primary" text @click="shareWhatsapp">Whatsapp </v-btn>
+            <v-btn color="primary" text @click="whatsappPay">Whatsapp </v-btn>
           </v-card-actions>
         </v-card>
       </v-menu>
@@ -207,6 +207,33 @@
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
+    <div class="my-2">
+      <v-menu
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        offset-x
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn color="indigo" dark v-bind="attrs" v-on="on">
+            Pedir nota / entrega
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-text>
+            <h3 class="info--text">Dados Para Faturamento</h3>
+            <h5 class="info--text">{{}}</h5>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn text @click="menu = false"> Cancel </v-btn>
+            <v-btn color="primary" text @click="whatsappNF">Whatsapp </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
+    </div>
     <div v-if="saldoNota == 0 && totalPago != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
@@ -328,8 +355,7 @@ export default {
       },
       fav: true,
       menu: false,
-      message: false,
-      hints: true,
+      menu2: false,
       pedirValor: 0,
       pedirObs: '',
       loading: false,
@@ -370,9 +396,7 @@ export default {
       const pagamentos = []
       if (this.localForm.fornecedor.id) {
         this.compras.forEach((compra) => {
-          // console.log(compra.fornecedor.id)
           if (compra.fornecedor.id === this.localForm.fornecedor.id) {
-            console.log(`matched fornecedor`, compra)
             compra?.pagamentos.forEach((pagamento) => {
               if (compra.id !== this.id)
                 pagamentos.push({ ...pagamento, descricao: compra.descricao })
@@ -381,6 +405,30 @@ export default {
         })
       }
       return pagamentos
+    },
+    nota() {
+      const nota = {
+        priprietario: '',
+        cnpj: '',
+        endereco: '',
+        telefone: '',
+        email: '',
+      }
+      const obraId = this.localForm.obra.id
+      const obraRoot = this.obras.find((obra) => obra.id === obraId)
+      console.log(obraRoot)
+      const proprietarioId = obraRoot.proprietario.id
+      const proprietarioRoot = this.contas.find(
+        (conta) => conta.id === proprietarioId
+      )
+      console.log(proprietarioRoot)
+      nota.proprietario = proprietarioRoot.nome
+      nota.cnpj = proprietarioRoot.cnpj
+      nota.endereco = proprietarioRoot.endereco
+      nota.telefone = proprietarioRoot.telefone
+      nota.email = proprietarioRoot.email
+
+      return nota
     },
     authUser() {
       return this.$store.state.auth.authUser
@@ -435,9 +483,9 @@ export default {
       this.localForm.notas.map((d) => (d.file = null))
       this.localForm.pagamentos.map((d) => (d.file = null))
     },
-    shareWhatsapp() {
+    whatsappPay() {
       this.menu = false
-      let text = `*Requisição de pagamento* %0a %0a`
+      let text = `*REQUISIÇÃO DE PAGAMENTO* %0a %0a`
       text += `*Valor*: R$ ${this.pedirValor} %0a`
       text += `*Obs*: ${this.pedirObs} %0a`
       text += `*Obra*: ${this.localForm.obra.nome}%0a`
@@ -451,6 +499,20 @@ export default {
       text += `Data: ${new Date().toLocaleDateString('pt-BR')} %0a%0a`
       text += `*Link para confirmar pagamento* %0a`
       text += `https://www.engebeck.com.br/compras/${this.$route.params.id} %0a`
+
+      window.open(`whatsapp://send?text=${text}`)
+    },
+    whatsappNF() {
+      this.menu2 = false
+      let text = `*DADOS PARA FATURAMENTO* %0a`
+      text += `*Nome*: ${this.nota.proprietario} %0a`
+      text += `*CNPJ*: ${this.nota.cnpj} %0a`
+      text += `*Endereco empresa*: ${this.nota.endereco}%0a`
+      text += `*Telefone*: ${this.nota.telefone}%0a`
+      text += `*Email*: ${this.nota.email}%0a %0a`
+      text += `*DADOS PARA ENTREGA* %0a`
+      text += `*Obra*: ${this.localForm.obra.nome}%0a %0a`
+      text += `*Endereço obra*: ${this.localForm.obra.endereco}%0a %0a`
 
       window.open(`whatsapp://send?text=${text}`)
     },
