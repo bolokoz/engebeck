@@ -76,7 +76,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -120,20 +120,20 @@ export default Vue.extend({
   },
 
   computed: {
-    authUser(): string {
+    authUser() {
       return this.$store.state.auth.authUser
     },
   },
 
   mounted() {
-    this.$refs.calendar.checkChange()
+    // this.$refs.calendar.checkChange()
   },
   methods: {
-    viewDay({ date }) {
-      this.focus = date
-      this.type = 'day'
+    viewDay(e) {
+      this.focus = e
+      // this.type = 'day'
     },
-    showEvent({ nativeEvent, event }) {
+    showEvent(nativeEvent, event) {
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target

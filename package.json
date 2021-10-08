@@ -1,6 +1,6 @@
 {
   "name": "engebeck",
-  "version": "0.3.1",
+  "version": "0.5.1",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -21,6 +21,7 @@
     "@nuxtjs/firebase": "^7.4.1",
     "@nuxtjs/pwa": "^3.0.2",
     "core-js": "^3.18.1",
+    "excellentexport": "^3.7.1",
     "firebase": "^8.10.0",
     "firebaseui": "^4.8.1",
     "html5-qrcode": "^2.0.12",
@@ -30,7 +31,8 @@
     "luxon": "^2.0.2",
     "nuxt": "^2.15.8",
     "uuid": "^8.3.2",
-    "vue-upload-component": "^2.8.22"
+    "vue-upload-component": "^2.8.22",
+    "xlsexport": "^1.5.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.8",

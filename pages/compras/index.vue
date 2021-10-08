@@ -3,11 +3,12 @@
     <v-container class="mx-0 px-0">
       <h1 class="font-weight-regular">Compras</h1>
 
-      <Lista3
+      <ListaCompras
         :items="items"
         :mobile-headers="mobileHeaders"
         :desktop-headers="desktopHeaders"
         sort-by="data"
+        show-select
         :telefone="false"
         path="/compras"
       />

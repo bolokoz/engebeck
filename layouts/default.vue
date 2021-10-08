@@ -88,7 +88,7 @@
       </v-list-group>
 
       <!-- SubGroup -->
-      <v-list-group :value="false" prepend-icon="mdi-domain">
+      <v-list-group :value="false" prepend-icon="mdi-home-group">
         <template #activator>
           <v-list-item-content>
             <v-list-item-title>Obras</v-list-item-title>
@@ -195,23 +195,18 @@ export default Vue.extend({
         ['Gerenciar Etapas ', 'mdi-view-list', '/obras/etapas'],
       ],
       relatorios: [
-        ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
+        // ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
         // ['Por obra ', 'mdi-account-multiple-outline', '/relatorios/obra'],
         // [
         //   'Por conta pagadora',
         //   'mdi-account-multiple-outline',
         //   '/relatorios/conta',
         // ],
-        [
-          'Ressarcimento Obra',
-          'mdi-account-multiple-outline',
-          '/relatorios/ressarcimento',
-        ],
-        [
-          'Administração Obra',
-          'mdi-account-multiple-outline',
-          '/relatorios/administracao',
-        ],
+        ['Ressarcimento', 'mdi-cash-refund', '/relatorios/ressarcimento'],
+        ['Administração', 'mdi-file-percent', '/relatorios/administracao'],
+        ['Fluxo caixa', 'mdi-file-percent', '/relatorios/administracao'],
+        ['Cronograma', 'mdi-chart-gantt', '/relatorios/cronograma'],
+        ['Gasto obra', 'mdi-office-building-cog', '/relatorios/obra'],
       ],
 
       items: [
