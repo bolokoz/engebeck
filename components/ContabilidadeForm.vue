@@ -47,7 +47,7 @@
         <v-text-field
           v-model="localForm.obs"
           outlined
-          label="Observações"
+          label="Descrição/Observações"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -113,7 +113,7 @@
     <v-container>
       <v-checkbox
         v-model="localForm.completo"
-        label="Compra completa"
+        label="Pagamento ompleto"
       ></v-checkbox>
       <v-row>
         <v-col>

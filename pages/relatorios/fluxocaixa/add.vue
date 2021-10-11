@@ -1,27 +1,44 @@
 <template>
   <div>
     <Titulo
-      titulo="Adicionar movimentação financeira"
-      texto_link="Voltar para contabilidade"
-      link="/contabilidade"
+      titulo="Adicionar Relatório de Administração"
+      texto_link="Voltar para Relatórios"
+      link="/relatorios"
     />
 
-    <contabilidade-form
+    <administracaoForm
+      :obras="obras"
       :contas="contas"
-      :contabilidades="contabilidades"
       :compras="compras"
       :is-edit="false"
     />
   </div>
 </template>
+
 <script>
-import ContabilidadeForm from '~/components/ContabilidadeForm.vue'
 export default {
-  components: { ContabilidadeForm },
   middleware: 'securePage',
   transition: 'fade',
 
   async asyncData({ app }) {
+    const obras = []
+    await app.$fire.firestore
+      .collection('obras')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          obras.push({ id: doc.id, ...doc.data() })
+        })
+      })
+    const fornecedores = []
+    await app.$fire.firestore
+      .collection('fornecedores')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          fornecedores.push({ id: doc.id, ...doc.data() })
+        })
+      })
     const contas = []
     await app.$fire.firestore
       .collection('contas')
@@ -40,26 +57,29 @@ export default {
           compras.push({ id: doc.id, ...doc.data() })
         })
       })
-    const contabilidades = []
+    const ressarcimentos = []
     await app.$fire.firestore
-      .collection('contabilidade')
+      .collection('relatorios')
       .get()
       .then((snap) => {
         snap.forEach((doc) => {
-          contabilidades.push({ id: doc.id, ...doc.data() })
+          if (doc.data().tipo === 'administracao') {
+            ressarcimentos.push({ id: doc.id, ...doc.data() })
+          }
         })
       })
-    return { contas, contabilidades, compras }
-  },
 
+    return { obras, contas, compras, ressarcimentos }
+  },
   data() {
     return {
+      items: [],
       loading: false,
     }
   },
-
   computed: {},
 
+  mounted() {},
   methods: {},
 }
 </script>
