@@ -498,7 +498,7 @@ export default {
       text += `Requerinte: ${this.authUser.displayName} %0a`
       text += `Data: ${new Date().toLocaleDateString('pt-BR')} %0a%0a`
       text += `*Link para confirmar pagamento* %0a`
-      text += `https://www.engebeck.com.br/compras/${this.$route.params.id} %0a`
+      text += `https://engebeck.com.br/compras/${this.$route.params.id} %0a`
 
       window.open(`whatsapp://send?text=${text}`)
     },

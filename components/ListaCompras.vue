@@ -5,6 +5,44 @@
         <v-col cols="12">
           <div>
             <v-card>
+              <v-sheet tile height="54" class="d-flex">
+                <v-select
+                  v-model="fornecedorFilter"
+                  dense
+                  outlined
+                  :items="comprasFornecedores"
+                  hide-details
+                  clearable
+                  class="ma-2"
+                  label="Fornecedor"
+                ></v-select>
+                <v-select
+                  v-model="obraFilter"
+                  dense
+                  :items="comprasObras"
+                  outlined
+                  clearable
+                  hide-details
+                  label="Obra"
+                  class="ma-2"
+                ></v-select>
+                <v-select
+                  v-model="monthFilter"
+                  dense
+                  outlined
+                  clearable
+                  hide-details
+                  :items="comprasMeses"
+                  label="Mês"
+                  class="ma-2"
+                ></v-select>
+                <v-checkbox
+                  v-model="completoFilter"
+                  label="Completo?"
+                  indeterminate
+                ></v-checkbox>
+                <v-spacer></v-spacer>
+              </v-sheet>
               <v-card-title>
                 <v-btn color="primary" @click.stop="addItem"> Adicionar </v-btn>
                 <v-spacer></v-spacer>
@@ -19,7 +57,7 @@
               <v-data-table
                 v-model="selected"
                 :headers="desktopHeaders"
-                :items="items"
+                :items="filtered"
                 :search="search"
                 sort-by="createdAt"
                 sort-desc
@@ -145,10 +183,76 @@ export default {
     return {
       search: '',
       selected: [],
+      obraFilter: null,
+      fornecedorFilter: null,
+      monthFilter: null,
+      completoFilter: null,
     }
+  },
+  computed: {
+    filtered() {
+      let fornecedorFiltered = this.items
+      if (this.fornecedorFilter != null) {
+        fornecedorFiltered = this.items.filter(
+          (d) => d.fornecedor.nome === this.fornecedorFilter
+        )
+      }
+      let obraFiltered = fornecedorFiltered
+      if (this.obraFilter != null) {
+        obraFiltered = fornecedorFiltered.filter(
+          (d) => d.obra.nome === this.obraFilter
+        )
+      }
+      let monthFiltered = obraFiltered
+      if (this.monthFilter != null) {
+        monthFiltered = obraFiltered.filter(
+          (d) => this.getMonthYear(d.createdAt.seconds) === this.monthFilter
+        )
+      }
+      let completoFiltered = monthFiltered
+      if (this.completoFilter != null) {
+        completoFiltered = monthFiltered.filter(
+          (d) => d.completo === this.completoFilter
+        )
+      }
+
+      return completoFiltered
+    },
+    comprasObras() {
+      const obras = new Set()
+
+      this.items.forEach((compra) => {
+        obras.add(compra.obra.nome)
+      })
+
+      return Array.from(obras)
+    },
+    comprasFornecedores() {
+      const fornecedores = new Set()
+
+      this.items.forEach((compra) => {
+        fornecedores.add(compra.fornecedor.nome)
+      })
+
+      return Array.from(fornecedores)
+    },
+    comprasMeses() {
+      const meses = new Set()
+
+      this.items.forEach((compra) => {
+        meses.add(this.getMonthYear(compra.createdAt.seconds))
+      })
+
+      return Array.from(meses)
+    },
   },
 
   methods: {
+    getMonthYear(seconds) {
+      const month = new Date(seconds * 1000).getMonth() + 1
+      const year = new Date(seconds * 1000).getFullYear()
+      return month + '/' + year
+    },
     editItem(item) {
       this.$router.push({
         path: `${this.path}/${item.id}`,
