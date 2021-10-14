@@ -192,7 +192,7 @@ export default Vue.extend({
       ],
       obras: [
         ['Gerenciar Obras', 'mdi-home-city', '/obras'],
-        ['Gerenciar Etapas ', 'mdi-view-list', '/obras/etapas'],
+        ['Gerenciar Etapas ', 'mdi-view-list', '/etapas'],
       ],
       relatorios: [
         // ['Geral ', 'mdi-account-multiple-outline', '/relatorios'],
@@ -205,7 +205,7 @@ export default Vue.extend({
         ['Ressarcimento', 'mdi-cash-refund', '/relatorios/ressarcimento'],
         ['Administração', 'mdi-file-percent', '/relatorios/administracao'],
         ['Fluxo caixa', 'mdi-file-percent', '/relatorios/administracao'],
-        ['Cronograma', 'mdi-chart-gantt', '/relatorios/cronograma'],
+        ['Cronograma', 'mdi-chart-gantt', '/cronogramas/obras'],
         ['Gasto obra', 'mdi-office-building-cog', '/relatorios/obra'],
       ],
 

@@ -33,7 +33,7 @@
                   clearable
                   hide-details
                   :items="comprasMeses"
-                  label="Mês"
+                  label="Mês criado"
                   class="ma-2"
                 ></v-select>
                 <v-checkbox
