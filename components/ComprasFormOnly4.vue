@@ -2,6 +2,22 @@
   <v-form ref="form">
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row>
+      <v-col>
+        <div v-if="pagamentosFornecedor.length > 0" class="my-2">
+          <h3 class="info--text">Últimos pagamentos para deste fornecedor</h3>
+          <h5
+            v-for="(pagamento, i) in pagamentosFornecedor"
+            :key="i"
+            class="info--text"
+          >
+            #{{ i + 1 }}: {{ pagamento.date }} - R$ {{ pagamento.valor }} -
+            {{ localForm.obra.nome }} - {{ pagamento.descricao }} -
+            {{ pagamento.obs }}
+          </h5>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" md="6" lg="4">
         <v-autocomplete
           v-model="localForm.fornecedor"
@@ -10,8 +26,28 @@
           outlined
           :search-input.sync="search"
           :items="fornecedores"
-          label="Fornecedor"
+          :filter="customFilter"
+          label="Procurar Fornecedor ou CNPJ"
+          hint="Procure Nome ou CNPJ"
         >
+          <template #item="data">
+            <v-list-item-content>
+              <v-list-item-title v-html="data.item.nome"></v-list-item-title>
+              <v-list-item-subtitle>
+                CNPJ:
+                {{
+                  String(data.item.cnpj).replace(
+                    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+                    '$1.$2.$3/$4-$5'
+                  )
+                }}</v-list-item-subtitle
+              >
+              <v-list-item-subtitle>
+                Cidade:
+                {{ String(data.item.cidade) }}</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </template>
           <template #no-data>
             <v-list-item>
               <v-btn @click="adicionarFornecedor()">Criar {{ search }} </v-btn>
@@ -83,25 +119,52 @@
         <v-autocomplete
           v-model="localForm.etapa"
           outlined
-          item-text="nome"
+          item-text="name"
           return-object
           :items="etapas"
           label="Etapa"
-        ></v-autocomplete>
+        >
+          <template #item="{ item }">
+            <v-list-item-avatar color="primary">
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
       </v-col>
 
       <v-col cols="12" md="6" lg="4">
-        <v-combobox
+        <v-autocomplete
           v-model="localForm.subetapa"
           outlined
+          chips
           multiple
+          item-text="name"
           :items="localForm.etapa.subetapas"
           label="Sub Etapa"
-        ></v-combobox>
+        >
+          <template #item="{ item }">
+            <v-list-item-avatar color="primary">
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
       </v-col>
     </v-row>
     <!-- Fim -->
 
+    <v-divider></v-divider>
+
+    <h3 class="my-3 font-weight-bold">Pagamentos</h3>
     <div class="my-2">
       <v-menu
         v-model="menu"
@@ -110,7 +173,7 @@
         offset-x
       >
         <template #activator="{ on, attrs }">
-          <v-btn color="indigo" dark v-bind="attrs" v-on="on">
+          <v-btn color="indigo" dark v-bind="attrs" outlined x-small v-on="on">
             Pedir pagamento
           </v-btn>
         </template>
@@ -169,23 +232,6 @@
         </v-card>
       </v-menu>
     </div>
-
-    <div v-if="pagamentosFornecedor.length > 0" class="my-2">
-      <h3 class="info--text">Últimos pagamentos para deste fornecedor</h3>
-      <h5
-        v-for="(pagamento, i) in pagamentosFornecedor"
-        :key="i"
-        class="info--text"
-      >
-        #{{ i + 1 }}: {{ pagamento.date }} - R$ {{ pagamento.valor }} -
-        {{ localForm.obra.nome }} - {{ pagamento.descricao }} -
-        {{ pagamento.obs }}
-      </h5>
-    </div>
-
-    <v-divider></v-divider>
-
-    <h3 class="my-3 font-weight-bold">Pagamentos</h3>
     <div v-if="saldoPago == 0 && localForm.valorTotal != 0 && totalPago != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
@@ -204,6 +250,7 @@
       @addPagamento="addPagamento"
       @removerPagamento="removerPagamento"
     />
+
     <v-divider></v-divider>
 
     <h3 class="my-3 font-weight-bold">Notas</h3>
@@ -215,7 +262,7 @@
         offset-x
       >
         <template #activator="{ on, attrs }">
-          <v-btn color="indigo" dark v-bind="attrs" v-on="on">
+          <v-btn color="indigo" dark v-bind="attrs" outlined x-small v-on="on">
             Pedir nota / entrega
           </v-btn>
         </template>
@@ -364,6 +411,12 @@ export default {
   },
 
   computed: {
+    ultimasCompras() {
+      const compras = this.compras.filter(
+        (compra) => compra.fornecedor === this.localForm.fornecedor
+      )
+      return compras
+    },
     totalPago() {
       let totalPago = 0
       // for (let index = 0; index < this.localForm.pagamentos.length; index++) {
@@ -380,21 +433,20 @@ export default {
       this.localForm.notas.map((d) => (totalNota += d.valor))
       return totalNota
     },
-    subetapas() {
-      let list = []
-      const filter = this.local.etapa.nome
-      list = this.etapas.filter((d) => d.nome === filter)
-      return list[0]?.subetapas
-    },
     saldoPago() {
       return this.localForm.valorTotal - this.totalPago
     },
     saldoNota() {
       return this.totalPago - this.totalNota
     },
+    sortedFornecedores() {
+      // eslint-disable-next-line vue/no-mutating-props
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.fornecedores.sort((a, b) => a.nome.localeCompare(b.nome))
+    },
     pagamentosFornecedor() {
       const pagamentos = []
-      if (this.localForm.fornecedor.id) {
+      if (this.localForm.fornecedor?.id) {
         this.compras.forEach((compra) => {
           if (compra.fornecedor.id === this.localForm.fornecedor.id) {
             compra?.pagamentos.forEach((pagamento) => {
@@ -442,6 +494,13 @@ export default {
   },
 
   methods: {
+    customFilter(item, queryText) {
+      const name = String(item?.nome).toLowerCase()
+      const cnpj = String(item?.cnpj).toLowerCase()
+      const searchText = queryText.toLowerCase()
+
+      return name.includes(searchText) || cnpj.includes(searchText)
+    },
     addPagamento() {
       this.localForm.pagamentos.push({
         date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -543,13 +602,14 @@ export default {
       const fornecedoresRef = this.$fire.firestore.collection('fornecedores')
       await fornecedoresRef
         .add(novo)
-        .then(
+        .then((docref) => {
+          this.localForm.fornecedor = { ...novo, id: docref.id }
           this.$notifier.showMessage({
             content: 'Criado, complementar depois`',
             color: 'success',
             top: false,
           })
-        )
+        })
         .catch((error) =>
           this.$notifier.showMessage({
             content: error,
@@ -559,7 +619,7 @@ export default {
         )
         .finally(() => {
           this.loading = false
-          this.localForm.fornecedor = { ...novo }
+          this.$router.app.refresh()
         })
     },
 
@@ -568,9 +628,6 @@ export default {
 
       // deleta arquivos para não adicioná-los no db
       this.deleteFiles()
-
-      // work around for combobox not returning object correctly
-      this.localForm.etapa = this.localForm.etapa.nome
 
       // adicionar metadados
       const item = {
