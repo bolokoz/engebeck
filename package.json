@@ -22,7 +22,7 @@
     "@nuxtjs/pwa": "^3.0.2",
     "chart.js": "^2.9.4",
     "core-js": "^3.18.1",
-    "excellentexport": "^3.7.1",
+    "excellentexport": "^3.7.3",
     "firebase": "^8.10.0",
     "firebaseui": "^4.8.1",
     "gantt-schedule-timeline-calendar": "^3.8.4",

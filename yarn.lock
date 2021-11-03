@@ -4966,9 +4966,9 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-excellentexport@^3.7.1:
-  version "3.7.1"
-  resolved "https://registry.npmjs.org/excellentexport/-/excellentexport-3.7.1.tgz"
+excellentexport@^3.7.3:
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/excellentexport/-/excellentexport-3.7.3.tgz#abbc8ed0707c2228d85d9a71c926b08fe0495448"
 
 exec-sh@^0.3.2:
   version "0.3.6"
