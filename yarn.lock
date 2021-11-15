@@ -5434,9 +5434,9 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
 
-gantt-schedule-timeline-calendar@^3.8.4:
-  version "3.8.4"
-  resolved "https://registry.npmjs.org/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.8.4.tgz"
+gantt-schedule-timeline-calendar@^3.14.39:
+  version "3.14.39"
+  resolved "https://registry.yarnpkg.com/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.14.39.tgz#6386b619c3413e52c320ea2743480545b017c014"
   dependencies:
     "@neuronet.io/vido" "^3.2.7"
     csstype "^3.0.5"
