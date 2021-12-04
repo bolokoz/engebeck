@@ -254,19 +254,19 @@ export default {
         this.compras.forEach((compra, d) => {
           compra.pagamentos.forEach((pagamento, i) => {
             const item = {}
-            item.compraId = compra.id
+            item.compraId = compra?.id
             item.descricao = compra.descricao
             item.obs = pagamento?.obs || ''
-            item.obra = compra.obra.nome
-            item.obraId = compra.obra.id
+            item.obra = compra.obra?.nome
+            item.obraId = compra.obra?.id
             item.descricao = compra.descricao
-            item.fornecedor = compra.fornecedor.nome
+            item.fornecedor = compra.fornecedor?.nome
             item.cnpj = compra.fornecedor?.cnpj || ''
             item.valor = pagamento.valor
             item.key = d + '_' + i
             item.date = DateTime.fromISO(pagamento.date)
-            item.pagador = pagamento.conta.nome
-            item.pagadorId = pagamento.conta.id
+            item.pagador = pagamento.conta?.nome
+            item.pagadorId = pagamento.conta?.id
             item.metodo = pagamento.metodo
             pagamentos.push(item)
           })
@@ -356,7 +356,9 @@ export default {
           assinante1: this.localForm.devedor.representante,
           assinante2: this.localForm.recebedor.representante,
           invTotalLabel: 'SubTotal:',
-          invTotal: this.valorSemTaxa.toString(),
+          invTotal: this.valorSemTaxa.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          }),
           invCurrency: 'R$',
           row1: {
             col1: 'taxa:',

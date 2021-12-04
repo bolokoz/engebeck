@@ -305,7 +305,9 @@ export default {
     async adicionar() {
       this.loading = true
       // adicionar metadados
-      this.adicionarCasoNovoCombobox(this.localForm.tipo, 'fornecedores')
+      if (this.localForm.tipo !== '') {
+        this.adicionarCasoNovoCombobox(this.localForm.tipo, 'fornecedores')
+      }
       const item = {
         createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
         createdBy: this.authUser,

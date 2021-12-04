@@ -20,20 +20,23 @@
 
               <v-col cols="12" sm="6" md="6" lg="6">
                 <v-autocomplete
+                  v-model="pagamento.conta"
+                  outlined
+                  required
+                  return-object
+                  item-text="nome"
+                  :items="contas"
+                  :rules="[rules.required]"
+                  label="Selecionar conta pagadora"
+                ></v-autocomplete>
+
+                <v-autocomplete
                   v-model="pagamento.metodo"
                   :items="metodo"
                   outlined
                   label="Método pagamento"
                 ></v-autocomplete>
 
-                <v-autocomplete
-                  v-model="pagamento.conta"
-                  outlined
-                  return-object
-                  item-text="nome"
-                  :items="contas"
-                  label="Selecionar conta pagadora"
-                ></v-autocomplete>
                 <v-text-field
                   v-model.number="pagamento.obs"
                   outlined

@@ -69,11 +69,7 @@
           loading-text="Carregando dados..."
         >
           <template #item.date="{ item }">
-            {{
-              new Date(item.date.seconds * 1000)
-                .toLocaleString('pt-BR')
-                .split(' ')[0]
-            }}
+            {{ new Date(item.date).toLocaleString('pt-BR').split(' ')[0] }}
           </template>
           <template #item.valor="{ item }"> R$ {{ item.valor }} </template>
           <template #item.pagador="{ item }">
@@ -251,21 +247,23 @@ export default {
       const pagamentos = []
       if (!this.isEdit) {
         this.compras.forEach((compra, d) => {
-          compra.pagamentos.forEach((pagamento, i) => {
+          console.log('compra', compra)
+          compra.pagamentos?.forEach((pagamento, i) => {
+            console.log('pagamento ', pagamento)
             const item = {}
-            item.compraId = compra.id
+            item.compraId = compra?.id || 'compra sem id'
             item.descricao = compra.descricao
             item.obs = pagamento?.obs || ''
             item.obra = compra.obra.nome
-            item.obraId = compra.obra.id
+            item.obraId = compra.obra?.id || 'obra sem id'
             item.descricao = compra.descricao
-            item.fornecedor = compra.fornecedor.nome
+            item.fornecedor = compra.fornecedor?.nome
             item.cnpj = compra.fornecedor?.cnpj || ''
             item.valor = pagamento.valor
             item.key = d + '_' + i
             item.date = DateTime.fromISO(pagamento.date)
-            item.pagador = pagamento.conta.nome
-            item.pagadorId = pagamento.conta.id
+            item.pagador = pagamento.conta?.nome
+            item.pagadorId = pagamento.conta?.id || 'conta sem id'
             item.metodo = pagamento.metodo
             pagamentos.push(item)
           })

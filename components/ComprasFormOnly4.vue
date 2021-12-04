@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="form" v-model="valid" lazy-validation>
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row>
       <v-col>
@@ -23,6 +23,7 @@
           v-model="localForm.fornecedor"
           item-text="nome"
           return-object
+          required
           outlined
           :search-input.sync="search"
           :items="fornecedores"
@@ -60,6 +61,7 @@
         <v-text-field
           ref="descricao"
           v-model="localForm.descricao"
+          :rules="[rules.required]"
           label="Descrição da compra"
           hint="Resumo do que está sendo comprado"
           outlined
@@ -72,6 +74,7 @@
           v-model="localForm.tipo"
           :items="tipos"
           outlined
+          required
           label="Tipo da compra"
         ></v-autocomplete>
       </v-col>
@@ -80,6 +83,7 @@
         <v-text-field
           v-model.number="localForm.valorTotal"
           prefix="R$"
+          required
           outlined
           hint="USAR PONTO PARA CENTAVOS"
           :rules="[rules.required, rules.decimmalDot]"
@@ -105,6 +109,7 @@
           outlined
           item-text="nome"
           return-object
+          required
           :items="obras"
           label="Obra"
         >
@@ -358,6 +363,7 @@ export default {
         descricao: '',
         tipo: '',
         obs: '',
+        valid: true,
         fornecedor: {},
         dataCompra: '',
         obra: {},
