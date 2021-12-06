@@ -4204,10 +4204,6 @@ csstype@^2.6.10:
   version "2.6.18"
   resolved "https://registry.npmjs.org/csstype/-/csstype-2.6.18.tgz"
 
-csstype@^3.0.5:
-  version "3.0.9"
-  resolved "https://registry.npmjs.org/csstype/-/csstype-3.0.9.tgz"
-
 cuint@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npmjs.org/cuint/-/cuint-0.2.2.tgz"
@@ -5434,12 +5430,11 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
 
-gantt-schedule-timeline-calendar@^3.8.4:
-  version "3.8.4"
-  resolved "https://registry.npmjs.org/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.8.4.tgz"
+gantt-schedule-timeline-calendar@^3.14.49:
+  version "3.14.49"
+  resolved "https://registry.yarnpkg.com/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.14.49.tgz#964c82e97024daa8f71b62f75f708dcb17eb3bc2"
   dependencies:
     "@neuronet.io/vido" "^3.2.7"
-    csstype "^3.0.5"
     dayjs "^1.9.7"
     deep-state-observer "^3.22.9"
 
