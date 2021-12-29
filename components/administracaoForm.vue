@@ -65,6 +65,8 @@
           sort-by="date"
           :show-select="!isEdit"
           sort-desc
+          disable-pagination
+          hide-default-footer
           no-results-text="Nada encontrado"
           no-data-text="Banco de dados vazio"
           loading-text="Carregando dados..."

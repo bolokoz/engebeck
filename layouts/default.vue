@@ -178,7 +178,9 @@ export default Vue.extend({
       ],
       compras: [
         ['Compras gerais', 'mdi-card-outline', '/compras'],
+        ['Add compra simples', 'mdi-cash-fast', '/compras/addSimples'],
         ['Fornecedores', 'mdi-store', '/fornecedores'],
+        ['Compras incompletas', 'mdi-format-list-checks', '/compras/pendentes'],
         // [
         //   'Compras recorrentes',
         //   'mdi-account-multiple-outline',

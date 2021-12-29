@@ -59,6 +59,8 @@
         <v-data-table
           v-model="localForm.selected"
           :headers="desktopHeaders"
+          disable-pagination
+          hide-default-footer
           :items="items"
           item-key="key"
           sort-by="date"

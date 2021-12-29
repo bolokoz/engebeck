@@ -184,10 +184,6 @@
     <v-divider class="my-3"></v-divider>
 
     <v-container>
-      <v-checkbox
-        v-model="localForm.completo"
-        label="Compra completa"
-      ></v-checkbox>
       <v-row>
         <v-col>
           <BotoesForm
@@ -330,7 +326,7 @@ export default {
             dbURL: null,
           },
         ],
-        completo: false,
+        completo: true,
       },
       fav: true,
       menu: false,
@@ -380,7 +376,7 @@ export default {
       this.loading = true
 
       // deleta arquivos para não adicioná-los no db
-      this.deleteFiles()
+      // this.deleteFiles()
 
       // apenas para compras simples
       this.localForm.pagamentos[0].date = this.localForm.date
