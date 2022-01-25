@@ -400,7 +400,7 @@ export default {
           return pattern.test(value) || 'USAR PONTO PARA CENTAVOS'
         },
       },
-      tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
+      tipos: ['Material', 'Serviço', 'Ambos', 'Insumo', 'Outros'],
       localForm: {
         descricao: '',
         tipo: '',

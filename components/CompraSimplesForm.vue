@@ -284,7 +284,7 @@ export default {
           return pattern.test(value) || 'USAR PONTO PARA CENTAVOS'
         },
       },
-      tipos: ['Material', 'Serviço', 'Ambos', 'Outros'],
+      tipos: ['Material', 'Serviço', 'Ambos', 'Insumo', 'Outros'],
       metodos: ['PIX', 'TED', 'DOC', 'BOLETO', 'DINHEIRO', 'CARTAO'],
       localForm: {
         descricao: '',
