@@ -50,16 +50,6 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="4" md="6" lg="2">
-        <v-autocomplete
-          v-model="localForm.tipo"
-          :items="tipos"
-          outlined
-          required
-          label="Tipo da compra"
-        ></v-autocomplete>
-      </v-col>
-
       <v-col cols="12" md="6" lg="2">
         <v-text-field
           v-model.number="localForm.valorTotal"
@@ -134,7 +124,17 @@
         >
         </v-autocomplete>
       </v-col>
-      <v-col cols="12" md="6" lg="4">
+      <v-col cols="12" sm="4" md="6" lg="2">
+        <v-autocomplete
+          v-model="localForm.tipo"
+          :items="tipos"
+          outlined
+          required
+          label="Tipo da compra"
+        ></v-autocomplete>
+      </v-col>
+
+      <!-- <v-col cols="12" md="6" lg="4">
         <v-autocomplete
           v-model="localForm.etapa"
           outlined
@@ -177,7 +177,7 @@
             </v-list-item-content>
           </template>
         </v-autocomplete>
-      </v-col>
+      </v-col> -->
     </v-row>
     <!-- Fim -->
 

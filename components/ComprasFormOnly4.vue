@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="form.valid" lazy-validation>
     <h3 class="my-3 font-weight-bold">Dados da compra</h3>
     <v-row>
       <v-col>
@@ -69,16 +69,6 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="4" md="6" lg="2">
-        <v-autocomplete
-          v-model="localForm.tipo"
-          :items="tipos"
-          outlined
-          required
-          label="Tipo da compra"
-        ></v-autocomplete>
-      </v-col>
-
       <v-col cols="12" md="6" lg="2">
         <v-text-field
           v-model.number="localForm.valorTotal"
@@ -120,6 +110,17 @@
           </template>
         </v-autocomplete>
       </v-col>
+
+      <!-- <v-col cols="12" sm="4" md="6" lg="2">
+        <v-autocomplete
+          v-model="localForm.tipo"
+          :items="tipos"
+          outlined
+          required
+          label="Tipo da compra"
+        ></v-autocomplete>
+      </v-col> -->
+      <!--       
       <v-col cols="12" md="6" lg="4">
         <v-autocomplete
           v-model="localForm.etapa"
@@ -163,7 +164,16 @@
             </v-list-item-content>
           </template>
         </v-autocomplete>
-      </v-col>
+      </v-col> -->
+
+      <TiposGastos
+        :tipos-gastos="localForm.tiposGastos"
+        :etapas="etapas"
+        :tipos="tipos"
+        :valor="localForm.valorTotal"
+        @addTipoGasto="addTipoGasto"
+        @removerTipoGasto="removerTipoGasto"
+      />
     </v-row>
     <!-- Fim -->
 
@@ -374,6 +384,7 @@ export default {
         metodo: '',
         pagamentos: [],
         notas: [],
+        tiposGastos: [],
         completo: false,
       }),
     },
@@ -404,6 +415,7 @@ export default {
         metodo: '',
         pagamentos: [],
         notas: [],
+        tiposGastos: [],
         completo: false,
       },
       fav: true,
@@ -495,7 +507,6 @@ export default {
   mounted() {
     if (this.isEdit) {
       this.localForm = this.form
-      this.local.etapa = this.form.etapa
     }
   },
 
@@ -536,12 +547,23 @@ export default {
         dbURL: null,
       })
     },
+    addTipoGasto() {
+      this.localForm.tiposGastos.push({
+        etapa: '',
+        subetapa: '',
+        valor: '',
+        tipo: '',
+      })
+    },
     removerPagamento(i) {
       console.log(i)
       this.localForm.pagamentos.splice(i, 1)
     },
     removerNota(i) {
       this.localForm.notas.splice(i, 1)
+    },
+    removerTipoGasto(i) {
+      this.localForm.tiposGastos.splice(i, 1)
     },
 
     deleteFiles() {

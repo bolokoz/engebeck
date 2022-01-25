@@ -95,89 +95,15 @@ export default {
           compras.push({ id: doc.id, ...doc.data() })
         })
       })
-
-    const etapas = [
-      {
-        nome: 'PROJETOS',
-        subetapas: [
-          'ARQUITETÔNICO',
-          'ESTRUTURAL',
-          'EXECUTIVO',
-          'HIDROSSANITÁRIO',
-          'ELÉTRICO',
-          'TELEFONIA, TV, INTERNET',
-          'LUMINOTÉCNICO',
-          'PAISAGÍSTICO',
-          'DECORATIVO',
-          'VIABILIDADE',
-        ],
-      },
-      {
-        nome: 'SERVIÇOS PRELIMINARES',
-        subetapas: [
-          'SONDAGEM',
-          'TERRAPLANAGEM',
-          'DEPÓSITO',
-          'TAPUME',
-          'INSTALAÇÃO ÁGUA',
-          'INSTALAÇÃO DE ENERGIA',
-          'DEMOLIÇÕES',
-        ],
-      },
-      {
-        nome: 'ESRTRUTURA',
-        subetapas: ['FUNDAÇÕES', 'PILARES', 'VIGAS', 'LAJES', 'ESCADAS'],
-      },
-      {
-        nome: 'PAREDES',
-        subetapas: [
-          'PAREDES',
-          'DRYWALL',
-          'VERGAS E CONTRAVERGAS',
-          'TORRE CAIXA DAGUA',
-        ],
-      },
-      {
-        nome: 'HIDROSSANITÁRIO',
-        subetapas: ['ÁGUA QUENTE', 'ÁGUA FRIA', 'ÁGUA PLUVIAL', 'ESGOTO'],
-      },
-      {
-        nome: 'ELÉTRICO',
-        subetapas: ['CONDUÍTES', 'CAIXAS', 'FIAÇÃO', 'ATERRAMENTO'],
-      },
-      {
-        nome: 'COMPLEMENTARES',
-        subetapas: ['TELEFONIA', 'TV', 'SEGURANÇA', 'GÁS', 'AR CONDICIONADO'],
-      },
-      {
-        nome: 'COBERTURAS',
-        subetapas: ['TELHADO', 'IMPERMEABILIZAÇÃO', 'REGULARIZAÇÃO'],
-      },
-      {
-        nome: 'ACABAMENTOS',
-        subetapas: [
-          'FORROS',
-          'JANELAS',
-          'PORTAS',
-          'PISOS',
-          'SOLEIRAS',
-          'PEITORIS',
-          'RODAPÉS',
-          'REVESTIMENTOS',
-          'LOUÇAS E METAIS',
-          'PINTURAS',
-        ],
-      },
-      {
-        nome: 'PAISAGISMO',
-      },
-      {
-        nome: 'DECORAÇÃO',
-      },
-      {
-        nome: 'ENTREGA',
-      },
-    ]
+    const etapas = []
+    await app.$fire.firestore
+      .collection('etapas')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          Object.values(doc.data()).forEach((d) => etapas.push(d))
+        })
+      })
 
     return { id, compra, compras, obras, fornecedores, etapas, contas }
   },
