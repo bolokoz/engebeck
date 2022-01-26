@@ -8,7 +8,7 @@
           <v-select
             v-model="obraId"
             dense
-            :items="items"
+            :items="obras"
             outlined
             item-text="nome"
             item-value="id"
@@ -21,18 +21,46 @@
           <v-spacer></v-spacer>
           <v-btn color="primary" @click.stop="procurar"> Procurar </v-btn>
         </v-sheet>
+
+        <div class="container">
+          <bar-chart v-if="loaded" :chart-data="chartData" :options="options" />
+        </div>
         <v-sheet>
           <v-card-text v-show="compras.length > 0">
             <v-expansion-panels popout>
               <v-expansion-panel v-for="(etapa, i) in etapas" :key="i">
                 <v-expansion-panel-header>
-                  {{ etapa }}
+                  {{ etapa.name }}
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
+                  <v-list>
+                    <v-list-group
+                      v-for="item in etapa.subetapas"
+                      :key="item.name"
+                      v-model="item.active"
+                      :prepend-icon="item.icon"
+                      no-action
+                    >
+                      <template #activator>
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="item.name"
+                          ></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+
+                      <v-list-item
+                        v-for="child in item.items"
+                        :key="child.title"
+                      >
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="child.title"
+                          ></v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list-group>
+                  </v-list>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -47,9 +75,10 @@
 export default {
   data() {
     return {
-      items: [],
+      obras: [],
       compras: [],
       loading: false,
+      loaded: false,
       obraId: '',
       categorias: null,
       desktopHeaders: [
@@ -77,6 +106,84 @@ export default {
     etapas() {
       return [...new Set(this.compras.map((compra) => compra.etapa))]
     },
+
+    chartData() {
+      return {
+        labels: this.sumByMonth.map((d) => d.x),
+        datasets: [
+          {
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            // borderColor: 'rgb(54, 162, 235)',
+            // borderWidth: 1,
+            data: this.sumByMonth.map((d) => d.y),
+          },
+        ],
+      }
+    },
+
+    monthsAvailable() {
+      return [
+        ...new Set(this.pagamentos.map((d) => d.date.slice(0, -3)).sort()),
+      ]
+    },
+
+    sumByMonth() {
+      const result = []
+      this.monthsAvailable.forEach((month) => {
+        // result[month] = this.pagamentos.filter((pagamamento) =>
+        //   pagamento.date.includes(month)
+        // )
+        result.push({
+          x: month,
+          y: this.pagamentos
+            .filter((d) => d.date.includes(month)) // gets only from each month
+            .reduce((a, b) => +a + +b.value, 0) // sums all
+            .toFixed(2), // 2 digits decimal
+        })
+      })
+      return result
+    },
+
+    pagamentos() {
+      const array = []
+      // gets every buy
+      this.compras.forEach((compra) => {
+        // gets every payment from buy
+        compra?.pagamentos.forEach((pagamento) => {
+          array.push({
+            date: pagamento.date,
+            value: pagamento.valor,
+            method: pagamento?.metodo,
+            payer: pagamento?.conta,
+            payer_id: pagamento?.conta.id,
+            description: compra?.descricao,
+          })
+        })
+      })
+      return array
+    },
+
+    results() {
+      return this.pagamentos.map((d) => ({ x: d.date, y: d.value }))
+    },
+
+    options() {
+      return {
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              stacked: true,
+            },
+          ],
+        },
+      }
+    },
+
     // subEtapas() {
     //   const subetapas = new Map()
     //   subetapas.set()
@@ -95,9 +202,9 @@ export default {
         .collection('obras')
         .get()
         .then((snap) => {
-          this.items = []
+          this.obras = []
           snap.forEach((doc) => {
-            this.items.push({ id: doc.id, ...doc.data() })
+            this.obras.push({ id: doc.id, ...doc.data() })
           })
         })
         .catch(() => {
@@ -134,6 +241,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.categorias = ''
+          this.loaded = true
         })
     },
   },

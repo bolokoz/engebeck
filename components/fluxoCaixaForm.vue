@@ -26,7 +26,7 @@
         </div>
         <div class="bar-chart">
           <div class="bar-chart">
-            <BarChart :chartdata="chartData" :options="chartOptions" />
+            <!-- <BarChart :chartdata="chartData" :options="chartOptions" /> -->
           </div>
         </div>
       </v-col>
