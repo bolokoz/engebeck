@@ -25,7 +25,15 @@
         <div class="container">
           <bar-chart v-if="loaded" :chart-data="chartData" :options="options" />
         </div>
-        <v-sheet>
+
+        <!-- <div class="container">
+          <pie-chart
+            v-if="selected.length > 0"
+            :chart-data="pieChartData"
+            :options="pieOptions"
+          />
+        </div> -->
+        <!-- <v-sheet>
           <v-card-text v-show="compras.length > 0">
             <v-expansion-panels popout>
               <v-expansion-panel v-for="(etapa, i) in etapas" :key="i">
@@ -65,7 +73,7 @@
               </v-expansion-panel>
             </v-expansion-panels>
           </v-card-text>
-        </v-sheet>
+        </v-sheet> -->
       </v-card>
     </v-container>
   </div>
@@ -81,6 +89,7 @@ export default {
       loaded: false,
       obraId: '',
       categorias: null,
+      selected: [],
       desktopHeaders: [
         { text: 'Descrição', value: 'descricao' },
         { text: 'Fornecedor', value: 'fornecedor.nome' },
@@ -106,6 +115,16 @@ export default {
     etapas() {
       return [...new Set(this.compras.map((compra) => compra.etapa))]
     },
+    pieChartData() {
+      return {
+        labels: this.filterBySelected.map((d) => d?.description),
+        datasets: [
+          {
+            data: this.filterBySelected.map((d) => d.value),
+          },
+        ],
+      }
+    },
 
     chartData() {
       return {
@@ -115,6 +134,7 @@ export default {
             backgroundColor: 'rgba(54, 162, 235, 0.5)',
             // borderColor: 'rgb(54, 162, 235)',
             // borderWidth: 1,
+            label: this.obras.find((el) => el.id === this.obraId).nome,
             data: this.sumByMonth.map((d) => d.y),
           },
         ],
@@ -125,6 +145,24 @@ export default {
       return [
         ...new Set(this.pagamentos.map((d) => d.date.slice(0, -3)).sort()),
       ]
+    },
+
+    eachMonth() {
+      const result = []
+      this.monthsAvailable.forEach((month) => {
+        this.pagamentos
+          .filter((d) => d.date.includes(month))
+          .forEach((pag) => {
+            result.push({
+              backgroundColor: 'rgba(54, 162, 235, 0.5)',
+              // borderColor: 'rgb(54, 162, 235)',
+              // borderWidth: 1,
+              label: pag.description,
+              data: pag.value,
+            })
+          })
+      })
+      return result
     },
 
     sumByMonth() {
@@ -169,6 +207,21 @@ export default {
 
     options() {
       return {
+        // onClick(e, item) {
+        //   console.log(item[0]._index)
+        //   this.filterByMonth(item[0]._index)
+        // },
+        title: {
+          text:
+            'Total ' +
+            Number(this.totalGeral).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            }),
+          fontSize: 20,
+          fontColor: '#fff',
+          display: true,
+        },
         scales: {
           xAxes: [
             {
@@ -183,19 +236,28 @@ export default {
         },
       }
     },
+    pieOptions() {
+      return {}
+    },
 
     // subEtapas() {
     //   const subetapas = new Map()
     //   subetapas.set()
     // },
     totalGeral() {
-      return ''
+      return this.pagamentos.reduce((a, b) => +a + +b.value, 0).toFixed(2)
     },
   },
   mounted() {
     this.read()
   },
   methods: {
+    filterByMonth(index) {
+      const monthSelected = this.monthsAvailable[index]
+      this.selected = this.pagamentos.filter((d) =>
+        d.date.includes(monthSelected)
+      )
+    },
     read() {
       this.loading = true
       this.$fire.firestore
