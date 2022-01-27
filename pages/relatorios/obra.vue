@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
 export default {
   data() {
     return {
@@ -129,6 +130,7 @@ export default {
     chartData() {
       return {
         labels: this.sumByMonth.map((d) => d.x),
+
         datasets: [
           {
             backgroundColor: 'rgba(54, 162, 235, 0.5)',
@@ -172,7 +174,7 @@ export default {
         //   pagamento.date.includes(month)
         // )
         result.push({
-          x: month,
+          x: DateTime.fromISO(month).setLocale('pt-BR').toFormat('LLLL yyyy'),
           y: this.pagamentos
             .filter((d) => d.date.includes(month)) // gets only from each month
             .reduce((a, b) => +a + +b.value, 0) // sums all
@@ -222,6 +224,26 @@ export default {
           fontColor: '#fff',
           display: true,
         },
+        tooltips: {
+          callbacks: {
+            label(tooltipItem, data) {
+              let label = data.datasets[tooltipItem.datasetIndex].label || ''
+
+              if (label) {
+                // console.log(label)
+                // label = DateTime.fromISO(label)
+                //   .setLocale('pt-BR')
+                //   .toFormat('LLL yyyy')
+                label += ': '
+              }
+              label += Number(tooltipItem.yLabel).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })
+              return label
+            },
+          },
+        },
         scales: {
           xAxes: [
             {
@@ -231,6 +253,15 @@ export default {
           yAxes: [
             {
               stacked: true,
+              ticks: {
+                // Include a dollar sign in the ticks
+                callback(value) {
+                  return value.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })
+                },
+              },
             },
           ],
         },
