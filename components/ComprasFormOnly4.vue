@@ -170,7 +170,7 @@
         :tipos-gastos="localForm.tiposGastos"
         :etapas="etapas"
         :tipos="tipos"
-        :valor="localForm.valorTotal"
+        :valor="+localForm.valorTotal"
         @addTipoGasto="addTipoGasto"
         @removerTipoGasto="removerTipoGasto"
       />
@@ -262,6 +262,7 @@
       :pagamentos="localForm.pagamentos"
       :fornecedor="localForm.fornecedor"
       :contas="contas"
+      :valor="+localForm.valorTotal"
       @addPagamento="addPagamento"
       @removerPagamento="removerPagamento"
     />

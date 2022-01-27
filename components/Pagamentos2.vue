@@ -42,15 +42,23 @@
                   outlined
                   label="Observações"
                 ></v-text-field>
-
-                <v-text-field
-                  v-model.number="pagamento.valor"
-                  prefix="R$"
-                  hint="USAR PONTO PARA CENTAVOS"
-                  :rules="[rules.required, rules.decimmalDot]"
-                  outlined
-                  label="Valor total"
-                ></v-text-field>
+                <v-row>
+                  <v-col cols="8">
+                    <v-text-field
+                      v-model.number="pagamento.valor"
+                      prefix="R$"
+                      hint="USAR PONTO PARA CENTAVOS"
+                      :rules="[rules.required, rules.decimmalDot]"
+                      outlined
+                      label="Valor total"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn outlined small @click="pagamento.valor = restante">
+                      preencher
+                    </v-btn>
+                  </v-col>
+                </v-row>
 
                 <v-spacer></v-spacer>
 
@@ -162,6 +170,10 @@
 import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
+    valor: {
+      type: Number,
+      default: 0,
+    },
     pagamentos: {
       type: Array,
       default: () => [],
@@ -195,6 +207,16 @@ export default {
     // localPagamentos() {
     //   return this.pagamentos
     // },
+    totalPagamentos() {
+      let sum = 0
+      this.pagamentos.forEach((d) => {
+        sum += d.valor
+      })
+      return sum
+    },
+    restante() {
+      return this.valor - this.totalPagamentos
+    },
   },
 
   mounted() {
