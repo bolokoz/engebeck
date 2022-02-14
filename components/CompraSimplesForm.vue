@@ -126,17 +126,7 @@
       </v-col>
       <v-col cols="12" sm="4" md="6" lg="2">
         <v-autocomplete
-          v-model="localForm.tipo"
-          :items="tipos"
-          outlined
-          required
-          label="Tipo da compra"
-        ></v-autocomplete>
-      </v-col>
-
-      <!-- <v-col cols="12" md="6" lg="4">
-        <v-autocomplete
-          v-model="localForm.etapa"
+          v-model="localForm.tiposGastos[0].etapa"
           outlined
           item-text="name"
           return-object
@@ -158,12 +148,11 @@
 
       <v-col cols="12" md="6" lg="4">
         <v-autocomplete
-          v-model="localForm.subetapa"
+          v-model="localForm.tiposGastos[0].subetapa"
           outlined
           chips
-          multiple
           item-text="name"
-          :items="localForm.etapa.subetapas"
+          :items="localForm.tiposGastos[0].etapa.subetapas"
           label="Sub Etapa"
         >
           <template #item="{ item }">
@@ -177,7 +166,7 @@
             </v-list-item-content>
           </template>
         </v-autocomplete>
-      </v-col> -->
+      </v-col>
     </v-row>
     <!-- Fim -->
 
@@ -209,6 +198,11 @@ export default {
       default: '',
       type: String,
     },
+
+    etapas: {
+      default: () => [],
+      type: Array,
+    },
     fornecedores: {
       type: Array,
       default: () => [],
@@ -218,10 +212,6 @@ export default {
       default: () => [],
     },
     contas: {
-      type: Array,
-      default: () => [],
-    },
-    etapas: {
       type: Array,
       default: () => [],
     },
@@ -326,6 +316,14 @@ export default {
             dbURL: null,
           },
         ],
+        tiposGastos: [
+          {
+            etapa: '',
+            subetapa: '',
+            valor: '',
+            tipo: '',
+          },
+        ],
         completo: true,
       },
       fav: true,
@@ -383,6 +381,7 @@ export default {
       this.localForm.notas[0].date = this.localForm.date
       this.localForm.pagamentos[0].valor = this.localForm.valorTotal
       this.localForm.notas[0].valor = this.localForm.valorTotal
+      this.localForm.tiposGastos[0].valor = this.localForm.valorTotal
 
       // adicionar metadados
       const item = {
