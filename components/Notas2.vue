@@ -34,12 +34,21 @@
                     outlined
                     label="Observações"
                   ></v-text-field>
-                  <v-text-field
-                    v-model.number="nota.valor"
-                    prefix="R$"
-                    outlined
-                    label="Valor total"
-                  ></v-text-field>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        v-model.number="nota.valor"
+                        prefix="R$"
+                        outlined
+                        label="Valor total"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-btn outlined small @click="nota.valor = restante">
+                        preencher
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                   <v-spacer></v-spacer>
                   <v-row v-if="nota.uuid == null" class="flex-nowrap">
                     <v-col cols="12">
@@ -155,6 +164,10 @@ export default {
       default: false,
       type: Boolean,
     },
+    valor: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -163,7 +176,18 @@ export default {
     }
   },
 
-  computed: {},
+  computed: {
+    restante() {
+      return this.valor - this.totalPagamentos
+    },
+    totalPagamentos() {
+      let sum = 0
+      this.notas.forEach((d) => {
+        sum += d.valor
+      })
+      return sum
+    },
+  },
 
   mounted() {},
   methods: {

@@ -310,6 +310,7 @@
 
     <Notas2
       :notas="localForm.notas"
+      :valor="+localForm.valorTotal"
       @addNota="addNota"
       @removerNota="removerNota"
     />
