@@ -1,37 +1,5 @@
 <template>
   <div>
-    <v-card class="mx-auto" max-width="500">
-      <v-sheet class="pa-4 primary">
-        <v-text-field
-          v-model="search"
-          label="Procurar etapas"
-          dark
-          flat
-          solo-inverted
-          hide-details
-          clearable
-          :loading="loading"
-          clear-icon="mdi-close-circle-outline"
-        ></v-text-field>
-      </v-sheet>
-      <v-card-text>
-        <v-treeview
-          :items="items"
-          :search="search"
-          :filter="filter"
-          :open.sync="open"
-          hoverable
-          activatable
-          open-on-click
-          item-children="subetapas"
-          @input="alert(i)"
-        >
-          <template #prepend="{ item }">
-            <v-icon v-text="item.icon"></v-icon>
-          </template>
-        </v-treeview>
-      </v-card-text>
-    </v-card>
     <h3 class="ma-3">Acrescentar ou remover SUBETAPAS</h3>
     <v-card v-for="(etapa, i) in items" :key="i" class="mx-5 my-6 px-2">
       <v-card-title>

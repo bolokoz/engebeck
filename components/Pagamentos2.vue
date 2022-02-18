@@ -4,7 +4,8 @@
       <v-expansion-panels inset>
         <v-expansion-panel v-for="(pagamento, i) in pagamentos" :key="i">
           <v-expansion-panel-header class="font-weight-bold"
-            >Pagamento {{ i + 1 }}</v-expansion-panel-header
+            >Pagamento {{ i + 1 }}: R$ {{ pagamento.valor }} -
+            {{ pagamento.date }}</v-expansion-panel-header
           >
           <v-expansion-panel-content class="">
             <v-row class="my-2">

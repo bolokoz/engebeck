@@ -5,7 +5,9 @@
         <v-expansion-panels inset>
           <v-expansion-panel v-for="(nota, i) in notas" :key="i">
             <v-expansion-panel-header class="font-weight-bold"
-              >Nota {{ i + 1 }}</v-expansion-panel-header
+              >Nota {{ i + 1 }}: {{ nota.numero }} - R${{
+                nota.valor
+              }}</v-expansion-panel-header
             >
             <v-expansion-panel-content class="">
               <v-row class="my-2">
