@@ -324,13 +324,12 @@
       ></v-checkbox>
       <v-row>
         <v-col>
-          <BotoesForm
-            :is-edit="isEdit"
-            :loading="loading"
-            @adicionar="adicionar"
-            @alterar="alterar"
-            @deletar="deletar"
-          />
+          <v-btn dark color="green light" outlined @click="restaurar">{{
+            loading ? 'enviando' : 'Restaurar'
+          }}</v-btn>
+          <v-btn dark color="red light" outlined @click="deletar">{{
+            loading ? 'enviando' : 'Apagar da lixeira'
+          }}</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -338,7 +337,7 @@
 </template>
 
 <script>
-const db = 'compras'
+const db = 'comprasLixeira'
 export default {
   props: {
     isEdit: {
@@ -572,88 +571,8 @@ export default {
       this.localForm.notas.map((d) => (d.file = null))
       this.localForm.pagamentos.map((d) => (d.file = null))
     },
-    whatsappPay() {
-      this.menu = false
-      let text = `*REQUISIÇÃO DE PAGAMENTO* %0a %0a`
-      text += `*Valor*: R$ ${this.pedirValor} %0a`
-      text += `*Obs*: ${this.pedirObs} %0a`
-      text += `*Obra*: ${this.localForm.obra.nome}%0a`
-      text += `*Fornecedor*: ${this.localForm.fornecedor.nome}%0a`
-      text += `CNPJ: ${this.localForm.fornecedor.cnpj}%0a`
-      text += `Banco: ${this.localForm.fornecedor.nomeBanco}%0a`
-      text += `Agencia: ${this.localForm.fornecedor.agencia}%0a`
-      text += `Conta: ${this.localForm.fornecedor.conta} %0a`
-      text += `PIX: ${this.localForm.fornecedor.pix} %0a %0a`
-      text += `Requerinte: ${this.authUser.displayName} %0a`
-      text += `Data: ${new Date().toLocaleDateString('pt-BR')} %0a%0a`
-      text += `*Link para confirmar pagamento* %0a`
-      text += `https://engebeck.com.br/compras/${this.$route.params.id} %0a`
 
-      window.open(`whatsapp://send?text=${text}`)
-    },
-    whatsappNF() {
-      this.menu2 = false
-      let text = `*DADOS PARA FATURAMENTO* %0a`
-      text += `*Nome*: ${this.nota.proprietario} %0a`
-      text += `*CNPJ*: ${this.nota.cnpj} %0a`
-      text += `*Endereco empresa*: ${this.nota.endereco}%0a`
-      text += `*Telefone*: ${this.nota.telefone}%0a`
-      text += `*Email*: ${this.nota.email}%0a %0a`
-      text += `*DADOS PARA ENTREGA* %0a`
-      text += `*Obra*: ${this.localForm.obra.nome}%0a %0a`
-      text += `*Endereço obra*: ${this.localForm.obra.endereco}%0a %0a`
-
-      window.open(`whatsapp://send?text=${text}`)
-    },
-
-    async adicionarFornecedor() {
-      const newName = this.search
-      const novo = {
-        nome: newName,
-        tipo: '',
-        vendedor: '',
-        cnpj: '',
-        email: '',
-        telefone: '',
-        cidade: '',
-        obs: '',
-        forma: '',
-        nomeBanco: '',
-        banco: '',
-        agencia: '',
-        conta: '',
-        pix: '',
-        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        createdBy: this.authUser,
-        visible: true,
-      }
-
-      this.loading = true
-      const fornecedoresRef = this.$fire.firestore.collection('fornecedores')
-      await fornecedoresRef
-        .add(novo)
-        .then((docref) => {
-          this.localForm.fornecedor = { ...novo, id: docref.id }
-          this.$notifier.showMessage({
-            content: 'Criado, complementar depois`',
-            color: 'success',
-            top: false,
-          })
-        })
-        .catch((error) =>
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        )
-        .finally(() => {
-          this.loading = false
-          this.$router.app.refresh()
-        })
-    },
-
-    async adicionar() {
+    async restaurar() {
       this.loading = true
 
       // deleta arquivos locais para não adicioná-los no db
@@ -662,121 +581,28 @@ export default {
 
       // adicionar metadados
       const item = {
-        createdAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        createdBy: this.authUser,
+        restoredAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        restoredBy: this.authUser,
         visible: true,
-        saldoNota: this.saldoNota,
-        saldoPago: this.saldoPago,
-        ...this.localForm,
-      }
-      // adicionar no db
-      await this.$fire.firestore
-        .collection(db)
-        .add(item)
-        .then((docRef) => {
-          console.log('Documento written ID: ', docRef.id)
-
-          this.$notifier.showMessage({
-            content: 'Compra adicionada',
-            color: 'success',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$router.push({
-            path: '/compras',
-          })
-        })
-    },
-    async alterar() {
-      this.loading = true
-
-      // deleta arquivos locais para não adicioná-los no db
-      // eles já foram adicionados ao storage
-      this.deleteFiles()
-
-      // work around for combobox not returning object correctly
-      this.localForm.etapa = this.local.etapa
-
-      const modificacao = {
-        modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        modifiedBy: this.authUser,
-        saldoNota: this.saldoNota,
-        saldoPago: this.saldoPago,
-        ...this.localForm,
-      }
-      console.log(modificacao)
-      //   console.log('modify', this.id, modificacao)
-      await this.$fire.firestore
-        .collection(db)
-        .doc(this.id)
-        .update(modificacao)
-        .then(() => {
-          this.$notifier.showMessage({
-            content: 'Item modificado ',
-            color: 'info',
-            top: false,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          this.$notifier.showMessage({
-            content: error,
-            color: 'error',
-            top: false,
-          })
-        })
-        .finally(() => {
-          this.loading = false
-          this.$router.push({
-            path: '/compras',
-          })
-        })
-    },
-    async deletar() {
-      this.loading = true
-
-      // adiciona compra na lixeira
-
-      // deleta arquivos locais para não adicioná-los no db
-      // eles já foram adicionados ao storage
-      this.deleteFiles()
-
-      // adicionar metadados
-      const item = {
-        deletedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-        deletedBy: this.authUser,
-        visible: true,
-        saldoNota: this.saldoNota,
-        saldoPago: this.saldoPago,
         ...this.localForm,
       }
 
       const batch = this.$fire.firestore.batch()
-      const deletedCompraRef = this.$fire.firestore
+      const restoredCompraRef = this.$fire.firestore
         .collection('compras')
         .doc(this.id)
-      const newCompraLixeiraRef = this.$fire.firestore
+      const deletedLixeiraRef = this.$fire.firestore
         .collection('comprasLixeira')
-        .doc()
+        .doc(this.id)
 
-      batch.set(newCompraLixeiraRef, item)
-      batch.delete(deletedCompraRef)
+      batch.set(restoredCompraRef, item)
+      batch.delete(deletedLixeiraRef)
 
       await batch
         .commit()
         .then(() => {
           this.$notifier.showMessage({
-            content: 'Item enviado para lixeira',
+            content: 'Item restaurado da lixeira',
             color: 'warning',
             top: false,
           })
@@ -791,7 +617,74 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$router.push('/compras')
+          this.$router.push('/compras/lixeira')
+        })
+    },
+    async alterar() {
+      // this.loading = true
+      // // deleta arquivos locais para não adicioná-los no db
+      // // eles já foram adicionados ao storage
+      // this.deleteFiles()
+      // // work around for combobox not returning object correctly
+      // this.localForm.etapa = this.local.etapa
+      // const modificacao = {
+      //   modifiedAt: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+      //   modifiedBy: this.authUser,
+      //   saldoNota: this.saldoNota,
+      //   saldoPago: this.saldoPago,
+      //   ...this.localForm,
+      // }
+      // console.log(modificacao)
+      // //   console.log('modify', this.id, modificacao)
+      // await this.$fire.firestore
+      //   .collection(db)
+      //   .doc(this.id)
+      //   .update(modificacao)
+      //   .then(() => {
+      //     this.$notifier.showMessage({
+      //       content: 'Item modificado ',
+      //       color: 'info',
+      //       top: false,
+      //     })
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //     this.$notifier.showMessage({
+      //       content: error,
+      //       color: 'error',
+      //       top: false,
+      //     })
+      //   })
+      //   .finally(() => {
+      //     this.loading = false
+      //     this.$router.push({
+      //       path: '/compras',
+      //     })
+      //   })
+    },
+    async deletar() {
+      this.loading = true
+      await this.$fire.firestore
+        .collection('comprasLixeira')
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$notifier.showMessage({
+            content: 'Item apagado da lixeira',
+            color: 'warning',
+            top: false,
+          })
+        })
+        .catch((error) => {
+          this.$notifier.showMessage({
+            content: error,
+            color: 'error',
+            top: false,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+          this.$router.push('/compras/lixeira')
         })
     },
   },
