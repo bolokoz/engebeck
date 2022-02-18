@@ -2,16 +2,16 @@
   <v-container class="">
     <v-row justify="center">
       <v-expansion-panels inset>
-        <v-expansion-panel v-for="(pagamento, i) in pagamentos" :key="i">
+        <v-expansion-panel v-for="(receita, i) in receitas" :key="i">
           <v-expansion-panel-header class="font-weight-bold"
-            >Pagamento {{ i + 1 }}: R$ {{ pagamento.valor }} -
-            {{ pagamento.date }}</v-expansion-panel-header
+            >Receita {{ i + 1 }}: R$ {{ receita.valor }} -
+            {{ receita.date }}</v-expansion-panel-header
           >
           <v-expansion-panel-content class="">
             <v-row class="my-2">
               <v-col cols="12" sm="6" md="6" lg="6">
                 <v-date-picker
-                  v-model="pagamento.date"
+                  v-model="receita.date"
                   outlined
                   full-width
                   color="primary"
@@ -21,32 +21,47 @@
 
               <v-col cols="12" sm="6" md="6" lg="6">
                 <v-autocomplete
-                  v-model="pagamento.conta"
+                  v-model="receita.conta"
                   outlined
                   required
                   return-object
                   item-text="nome"
                   :items="contas"
                   :rules="[rules.required]"
-                  label="Selecionar conta pagadora"
+                  label="Selecionar conta que está recebendo"
+                ></v-autocomplete>
+                <v-autocomplete
+                  v-model="receita.cliente"
+                  outlined
+                  required
+                  return-object
+                  item-text="nome"
+                  :items="fornecedor"
+                  :rules="[rules.required]"
+                  label="Selecionar cliente pagador"
                 ></v-autocomplete>
 
                 <v-autocomplete
-                  v-model="pagamento.metodo"
+                  v-model="receita.metodo"
                   :items="metodo"
                   outlined
-                  label="Método pagamento"
+                  label="Método receita"
                 ></v-autocomplete>
 
                 <v-text-field
-                  v-model="pagamento.obs"
+                  v-model="receita.obs"
                   outlined
                   label="Observações"
+                ></v-text-field>
+                <v-text-field
+                  v-model.number="receita.fatura"
+                  outlined
+                  label="Número da fatura"
                 ></v-text-field>
                 <v-row>
                   <v-col cols="8">
                     <v-text-field
-                      v-model.number="pagamento.valor"
+                      v-model.number="receita.valor"
                       prefix="R$"
                       hint="USAR PONTO PARA CENTAVOS"
                       :rules="[rules.required, rules.decimmalDot]"
@@ -55,7 +70,7 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
-                    <v-btn outlined small @click="pagamento.valor = restante">
+                    <v-btn outlined small @click="receita.valor = restante">
                       preencher
                     </v-btn>
                   </v-col>
@@ -63,13 +78,13 @@
 
                 <v-spacer></v-spacer>
 
-                <v-row v-if="pagamento.uuid == null" class="flex-nowrap">
+                <v-row v-if="receita.uuid == null" class="flex-nowrap">
                   <v-col cols="12">
                     <v-file-input
-                      v-model="pagamento.file"
+                      v-model="receita.file"
                       outlined
                       label="Selecionar arquivo"
-                      @change="fileSelected($event, pagamento, i)"
+                      @change="fileSelected($event, receita, i)"
                     ></v-file-input>
                   </v-col>
                 </v-row>
@@ -78,17 +93,17 @@
             <v-row>
               <v-col cols="12" sm="6">
                 <v-img
-                  v-if="pagamento.localURL"
-                  :src="pagamento.localURL"
+                  v-if="receita.localURL"
+                  :src="receita.localURL"
                   contain
                   max-height="400"
                   :gradient="
-                    pagamento.dbURL == null
+                    receita.dbURL == null
                       ? 'to top right, rgba(0,0,0,.33), rgba(0,0,0,.7)'
                       : ''
                   "
                 >
-                  <div v-if="pagamento.dbURL == null" class="mt-12">
+                  <div v-if="receita.dbURL == null" class="mt-12">
                     <h3>
                       Apenas visualização. Para gravar, aperte o botão UPLOAD
                     </h3>
@@ -96,13 +111,13 @@
                 </v-img>
               </v-col>
               <v-col cols="12" sm="6">
-                <div v-if="pagamento.dbURL == null">
+                <div v-if="receita.dbURL == null">
                   <v-btn
-                    v-if="pagamento.localURL != null"
+                    v-if="receita.localURL != null"
                     :loading="loading"
                     :disabled="loading"
                     color="primary"
-                    @click="upload(pagamento)"
+                    @click="upload(receita)"
                     >Upload
                     <v-icon right dark> mdi-cloud-upload </v-icon></v-btn
                   >
@@ -111,7 +126,7 @@
                   <v-btn
                     color="primary"
                     class="my-2"
-                    :href="pagamento.dbURL"
+                    :href="receita.dbURL"
                     target="_blank"
                     >Abrir arquivo
                     <v-icon right dark>mdi-arrow-top-right</v-icon></v-btn
@@ -119,8 +134,8 @@
 
                   <v-col cols="12" sm="6">
                     <v-img
-                      v-if="pagamento.file == null"
-                      :src="pagamento.dbURL"
+                      v-if="receita.file == null"
+                      :src="receita.dbURL"
                       contain
                       max-height="400"
                     >
@@ -138,17 +153,14 @@
                       </template>
                     </v-img>
                   </v-col>
-                  <v-btn color="error" @click="deleteFileByURL(pagamento)"
+                  <v-btn color="error" @click="deleteFileByURL(receita)"
                     >Deletar</v-btn
                   >
                 </div>
               </v-col>
               <v-col cols="12">
-                <v-btn
-                  color="red"
-                  outlined
-                  @click="$emit('removerPagamento', i)"
-                  ><v-icon>mdi-delete</v-icon> Remover pagamento</v-btn
+                <v-btn color="red" outlined @click="$emit('removerReceita', i)"
+                  ><v-icon>mdi-delete</v-icon> Remover receita</v-btn
                 >
               </v-col>
             </v-row>
@@ -158,8 +170,8 @@
 
       <v-row class="my-3" justify="center">
         <v-col>
-          <v-btn color="blue lighten-3" outlined @click="$emit('addPagamento')"
-            >Adicionar pagamento</v-btn
+          <v-btn color="blue lighten-3" outlined @click="$emit('addReceita')"
+            >Adicionar receita</v-btn
           >
         </v-col>
       </v-row>
@@ -175,7 +187,7 @@ export default {
       type: Number,
       default: 0,
     },
-    pagamentos: {
+    receitas: {
       type: Array,
       default: () => [],
     },
@@ -205,23 +217,23 @@ export default {
   },
 
   computed: {
-    // localPagamentos() {
-    //   return this.pagamentos
+    // localreceitas() {
+    //   return this.receitas
     // },
-    totalPagamentos() {
+    totalreceitas() {
       let sum = 0
-      this.pagamentos.forEach((d) => {
+      this.receitas.forEach((d) => {
         sum += d.valor
       })
       return sum
     },
     restante() {
-      return this.valor - this.totalPagamentos
+      return this.valor - this.totalreceitas
     },
   },
 
   mounted() {
-    // this.local = this.pagamentos
+    // this.local = this.receitas
   },
   methods: {
     fileSelected(file, item) {

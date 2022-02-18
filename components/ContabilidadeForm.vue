@@ -37,7 +37,7 @@
           v-model.number="localForm.valorTotal"
           prefix="R$"
           outlined
-          hint="USAR PONTO PARA CENTAVOS. NEGATIVO DESPESA, POSITIVO RECEITA"
+          hint="USAR PONTO PARA CENTAVOS."
           :rules="[rules.required, rules.decimmalDot]"
           label="Valor total final"
         ></v-text-field>
@@ -69,7 +69,7 @@
 
     <v-divider></v-divider>
 
-    <h3 class="my-3 font-weight-bold">Pagamentos</h3>
+    <h3 class="my-3 font-weight-bold">Despesa</h3>
     <div v-if="saldoPago == 0 && localForm.valorTotal != 0 && totalPago != 0">
       <span class="green--text">
         <v-icon color="green">mdi-check</v-icon>
@@ -85,8 +85,31 @@
       :pagamentos="localForm.pagamentos"
       :fornecedor="localForm.fornecedor"
       :contas="contas"
+      :valor="localForm.valorTotal"
       @addPagamento="addPagamento"
       @removerPagamento="removerPagamento"
+    />
+    <v-divider></v-divider>
+
+    <h3 class="my-3 font-weight-bold">Receitas</h3>
+    <div v-if="saldoPago == 0 && localForm.valorTotal != 0 && totalPago != 0">
+      <span class="green--text">
+        <v-icon color="green">mdi-check</v-icon>
+        Valor do produto = Valor pago</span
+      >
+    </div>
+    <div v-else>
+      <h5 class="primary--text">Total recebido: R$ {{ totalPago }}</h5>
+      <h5 class="warning--text">Saldo a receber: R$ {{ saldoPago }}</h5>
+    </div>
+
+    <Receitas
+      :receitas="localForm.receitas"
+      :fornecedor="localForm.fornecedor"
+      :contas="contas"
+      :valor="localForm.valorTotal"
+      @addReceita="addReceita"
+      @removeReceita="removerReceita"
     />
     <v-divider></v-divider>
 
@@ -164,6 +187,7 @@ export default {
         conta: {},
         pagamentos: [],
         notas: [],
+        receitas: [],
         completo: false,
       }),
     },
@@ -188,6 +212,7 @@ export default {
         completo: false,
         pagamentos: [],
         notas: [],
+        receitas: [],
       },
       loading: false,
     }
@@ -202,6 +227,11 @@ export default {
       this.localForm.pagamentos.map((d) => (totalPago += d.valor))
       return totalPago
     },
+    totalReceita() {
+      let totalReceita = 0
+      this.localForm.receitas.map((d) => (totalReceita += d.valor))
+      return totalReceita
+    },
     totalNota() {
       let totalNota = 0
       // for (let index = 0; index < this.localForm.notas.length; index++) {
@@ -212,6 +242,9 @@ export default {
     },
     saldoPago() {
       return this.localForm.valorTotal - this.totalPago
+    },
+    saldoPago() {
+      return this.localForm.valorTotal - this.totalReceita
     },
     saldoNota() {
       return this.totalPago - this.totalNota
@@ -258,8 +291,25 @@ export default {
           .toISOString()
           .substr(0, 10),
         valor: 0,
-        conta: null,
+        conta: this.localForm.conta,
         metodo: '',
+        obs: '',
+        path: '',
+        uuid: null,
+        localURL: null,
+        dbURL: null,
+      })
+    },
+    addReceita() {
+      this.localForm.receitas.push({
+        date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+          .toISOString()
+          .substr(0, 10),
+        valor: 0,
+        cliente: {},
+        conta: this.localForm.conta,
+        metodo: '',
+        fatura: 0,
         obs: '',
         path: '',
         uuid: null,
@@ -282,8 +332,10 @@ export default {
       })
     },
     removerPagamento(i) {
-      console.log(i)
       this.localForm.pagamentos.splice(i, 1)
+    },
+    removerReceita(i) {
+      this.localForm.receitas.splice(i, 1)
     },
     removerNota(i) {
       this.localForm.notas.splice(i, 1)
