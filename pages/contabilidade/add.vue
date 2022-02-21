@@ -8,6 +8,7 @@
 
     <contabilidade-form
       :contas="contas"
+      :fornecedores="fornecedores"
       :contabilidades="contabilidades"
       :compras="compras"
       :is-edit="false"
@@ -49,7 +50,16 @@ export default {
           contabilidades.push({ id: doc.id, ...doc.data() })
         })
       })
-    return { contas, contabilidades, compras }
+    const fornecedores = []
+    await app.$fire.firestore
+      .collection('fornecedores')
+      .get()
+      .then((snap) => {
+        snap.forEach((doc) => {
+          fornecedores.push({ id: doc.id, ...doc.data() })
+        })
+      })
+    return { contas, contabilidades, compras, fornecedores }
   },
 
   data() {

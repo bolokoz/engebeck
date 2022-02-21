@@ -105,11 +105,11 @@
 
     <Receitas
       :receitas="localForm.receitas"
-      :fornecedor="localForm.fornecedor"
       :contas="contas"
+      :fornecedores="fornecedores"
       :valor="localForm.valorTotal"
       @addReceita="addReceita"
-      @removeReceita="removerReceita"
+      @removerReceita="removerReceita"
     />
     <v-divider></v-divider>
 
@@ -127,6 +127,7 @@
 
     <Notas2
       :notas="localForm.notas"
+      :valor="localForm.valorTotal"
       @addNota="addNota"
       @removerNota="removerNota"
     />
@@ -165,6 +166,10 @@ export default {
       default: '',
       type: String,
     },
+    fornecedores: {
+      type: Array,
+      default: () => [],
+    },
     compras: {
       type: Array,
       default: () => [],
@@ -199,7 +204,7 @@ export default {
       rules: {
         required: (value) => !!value || 'Obrigatório',
         decimmalDot: (value) => {
-          const pattern = /^\$?[-]\d+(\.\d{2})?$/
+          const pattern = /^\d+(\.\d{2})?$/
           return pattern.test(value) || 'USAR PONTO PARA CENTAVOS'
         },
       },

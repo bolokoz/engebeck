@@ -36,7 +36,7 @@
                   required
                   return-object
                   item-text="nome"
-                  :items="fornecedor"
+                  :items="fornecedores"
                   :rules="[rules.required]"
                   label="Selecionar cliente pagador"
                 ></v-autocomplete>
@@ -195,7 +195,7 @@ export default {
       default: () => [],
       type: Array,
     },
-    fornecedor: {
+    fornecedores: {
       default: () => ({}),
       type: Object,
     },
