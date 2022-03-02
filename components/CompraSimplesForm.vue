@@ -415,9 +415,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.$router.push({
-            path: '/compras',
-          })
+          this.$nuxt.refresh()
         })
     },
   },
