@@ -2,7 +2,7 @@
   <v-theme-provider dark>
     <v-container>
       <v-row justify="center">
-        <v-expansion-panels inset>
+        <v-expansion-panels inset v-model="panel">
           <v-expansion-panel v-for="(tipo, i) in tiposGastos" :key="i">
             <v-expansion-panel-header class="font-weight-bold"
               >Tipo de gasto {{ i + 1 }}</v-expansion-panel-header
@@ -138,6 +138,7 @@ export default {
     return {
       menu: false,
       loading: false,
+      panel: 0
     }
   },
 

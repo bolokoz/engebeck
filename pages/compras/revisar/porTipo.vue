@@ -67,7 +67,12 @@ export default {
       i: 0,
       showMore: false,
       lastCursor: {},
-      tiposGastos: [],
+      tiposGastos: [{
+        etapa: '',
+        subetapa: '',
+        valor: '',
+        tipo: '',
+      }],
     }
   },
   mounted() {
@@ -82,6 +87,7 @@ export default {
     },
     compra(){
       return this.comprasSemTipo[this.i]
+      
     }
   },
   methods: {
@@ -89,7 +95,7 @@ export default {
       this.loading = true
       this.$fire.firestore
         .collection(db)
-        .limit(10)
+        // .limit(10)
         .get()
         .then((snap) => {
           this.lastCursor = snap.docs[snap.docs.length-1]
