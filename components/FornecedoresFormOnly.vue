@@ -338,7 +338,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.$router.push({
-            path: `/financeiro/${db}`,
+            path: `/${db}`,
           })
         })
     },
@@ -374,7 +374,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.$router.push({
-            path: `/financeiro/${db}`,
+            path: `/${db}`,
           })
         })
     },
@@ -401,7 +401,7 @@ export default {
         .finally(() => {
           this.loading = false
           this.$router.push({
-            path: `/financeiro/${db}`,
+            path: `/${db}`,
           })
         })
     },
