@@ -14,6 +14,7 @@
           </v-col>
           <v-col cols="4">
             <v-text-field
+            :prepend-icon="etapa.icon"
               v-model="etapa.icon"
               :label="`mdi-icon ${i + 1}`"
               dense
@@ -26,19 +27,23 @@
         <v-row class="mx-4">
           <v-col cols="12" sm="8">
             <v-text-field
+            
               v-model="subetapa.name"
               :label="`Subetapa ${k + 1}`"
               dense
             />
           </v-col>
           <v-col cols="8" sm="3">
+                          
             <v-text-field
+            :prepend-icon="subetapa.icon"
               v-model="subetapa.icon"
               :label="`mdi-icon ${k + 1}`"
               dense
             />
           </v-col>
           <v-col cols="4" sm="1">
+
             <v-btn text icon color="red" @click="removeSubetapa(etapa, k)">
               <v-icon>mdi-delete</v-icon></v-btn
             ></v-col

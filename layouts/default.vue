@@ -182,6 +182,7 @@ export default Vue.extend({
         ['Fornecedores', 'mdi-store', '/fornecedores'],
         ['Compras incompletas', 'mdi-format-list-checks', '/compras/pendentes'],
         ['Listar Pagamentos', 'mdi-list', '/compras/pagamentos'],
+      ['Iterar compras sem tipo', 'mdi-iterate', '/compras/revisar/portipo']
         // [
         //   'Pedidos/Orçamentos',
         //   'mdi-account-multiple-outline',
