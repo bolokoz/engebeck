@@ -20,17 +20,21 @@ Em desenvolvimento:
 - Calendário com pagamentos, cobranças, lembretes 
 - Área do cliente (mande link para cliente acompanhar os gastos e relatórios apenas de dados restritos)
 
+Planejando para o futuro:
+- Cadastro de fornecedor por CNPJ e buscar dados (api) completos na receita  
+- Obter chave de acesso de NFe pelo celular (js library) e buscar dados (api) na receita para cadastrar compra por item
+- Vue2 -> Vue3 (refatorar, modular, componentizar melhor) 
 
 Usando:
 
 - Auth, DB NoSQL e 'hosting' na Firestore 
 - 'serverless' Static pages
-- Nuxt/Vue/Vuetify
+- Nuxt2/Vue2/Vuetify
 
 Made using Spaceship Template
 
-- 🤘 Vue
-- ☄ Nuxt
+- 🤘 Vue2
+- ☄ Nuxt2
 - 📱 PWA
 - 👤 Firebase Auth (and server side verification)
 - 🔥 [Nuxt-Fire](https://github.com/lupas/nuxt-fire) : all Firebase tools in Nuxt
