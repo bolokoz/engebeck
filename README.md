@@ -1,14 +1,30 @@
 # EngeBECK
 
+Acesse aqui [EngeBeck](https://engebeck.com.br)
+
 Web App para administração de obras
 
-Acesse aqui [EngeBeck](engebeck.com.br)
+- Use celular ou desktop, qualquer browser
+- Crie obras, cadastre administradores e contas de pagamentos
+- Registre compras simples ou complexas (diversos pagamentos, notas fracionadas)
+- Vários campos de preenchimento opcionais (observações, use leitor de código de barras para guardar chave de acesso de nfe) 
+- Adicione fornecedores com todos os dados, conta bancária
+- Tire foto pelo celular ou faça upload de recibos ou orçamentos
+- Categorize os gastos por etapa de obra
+- Relatórios (em HTML ou PDF) de administração, ressarcimentos (personalize obra, período, porcentagem)
+- Controle contabilidade da empresa com receitas e despesas, gere relatórios mensais
+- Gráficos de gastos por mês
 
-em desenvolvimento sempre
+Em desenvolvimento:
+- Diário de obra (previsão do tempo)
+- Calendário com pagamentos, cobranças, lembretes 
+- Área do cliente (mande link para cliente acompanhar os gastos e relatórios apenas de dados restritos)
 
-- Auth 
-- 'serverless' Static hosting  
-- NOSQL 
+
+Usando:
+
+- Auth, DB NoSQL e 'hosting' na Firestore 
+- 'serverless' Static pages
 - Nuxt/Vue/Vuetify
 
 Made using Spaceship Template
