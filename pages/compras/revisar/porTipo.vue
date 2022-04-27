@@ -1,9 +1,9 @@
 <template>
   <div>
-    {{i + 1}} de {{comprasSemTipo.length + 1}}
+    {{ i + 1 }} de {{ comprasSemTipo.length + 1 }}
     <comprasIterator
-    :key="i"
-    v-if="!showMore"
+      :key="i"
+      v-if="!showMore"
       :compra="compra"
       :loading="loading"
       :etapas="etapas"
@@ -13,18 +13,13 @@
     />
     <div v-else>
       <v-card>
-        <v-card-title>
-          Show 10 more
-        </v-card-title>
+        <v-card-title> Show 10 more </v-card-title>
         <v-card-actions>
-          <v-btn @click="loadMore">
-            Load 10 more
-          </v-btn>
+          <v-btn @click="loadMore"> Load 10 more </v-btn>
         </v-card-actions>
       </v-card>
     </div>
 
-    
     <v-speed-dial
       v-model="fab"
       right
@@ -49,10 +44,8 @@
         <v-icon>mdi-arrow-right</v-icon>
       </v-btn>
     </v-speed-dial>
-
   </div>
 </template>
-
 
 <script>
 const db = 'compras'
@@ -67,12 +60,14 @@ export default {
       i: 0,
       showMore: false,
       lastCursor: {},
-      tiposGastos: [{
-        etapa: '',
-        subetapa: '',
-        valor: '',
-        tipo: '',
-      }],
+      tiposGastos: [
+        {
+          etapa: '',
+          subetapa: '',
+          valor: '',
+          tipo: '',
+        },
+      ],
     }
   },
   mounted() {
@@ -82,13 +77,12 @@ export default {
     comprasSemTipo() {
       return this.compras.filter((x) => !x.hasOwnProperty('tiposGastos'))
     },
-            authUser() {
+    authUser() {
       return this.$store.state.auth.authUser
     },
-    compra(){
+    compra() {
       return this.comprasSemTipo[this.i]
-      
-    }
+    },
   },
   methods: {
     read() {
@@ -98,7 +92,7 @@ export default {
         // .limit(10)
         .get()
         .then((snap) => {
-          this.lastCursor = snap.docs[snap.docs.length-1]
+          this.lastCursor = snap.docs[snap.docs.length - 1]
           this.compras = []
           snap.forEach((doc) => {
             this.compras.push({ id: doc.id, ...doc.data() })
@@ -125,10 +119,11 @@ export default {
           })
         })
     },
-    loadMore(){
+    loadMore() {
       this.loading = true
       this.$fire.firestore
-        .collection(db).startAfter(this.lastCursor)
+        .collection(db)
+        .startAfter(this.lastCursor)
         .limit(10)
         .get()
         .then((snap) => {
@@ -150,13 +145,13 @@ export default {
         })
     },
     next() {
-      if(this.i < this.comprasSemTipo.length - 1){
-      this.i++
+      if (this.i < this.comprasSemTipo.length - 1) {
+        this.i++
       } else {
         this.showMore = true
       }
     },
-        addTipoGasto() {
+    addTipoGasto() {
       this.tiposGastos.push({
         etapa: '',
         subetapa: '',
@@ -202,7 +197,14 @@ export default {
         })
         .finally(() => {
           this.progressBar = false
-          this.tiposGastos = []
+          this.tiposGastos = [
+            {
+              etapa: '',
+              subetapa: '',
+              valor: '',
+              tipo: '',
+            },
+          ]
           this.next()
         })
     },
@@ -212,10 +214,10 @@ export default {
 
 <style scoped>
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {

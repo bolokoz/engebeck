@@ -278,6 +278,8 @@ export default {
             data: pagamento.date,
             descricao: compra.descricao,
             pagamento: pagamento.valor,
+            fonecedor: compra.fornecedor.nome,
+            pagador: pagamento.conta.nome,
             obra: compra.obra.nome,
             etapa: compra.etapa.nome,
             subetapa: compra.subetapa,
