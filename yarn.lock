@@ -1651,13 +1651,12 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@neuronet.io/vido@^3.2.7":
-  version "3.2.9"
-  resolved "https://registry.npmjs.org/@neuronet.io/vido/-/vido-3.2.9.tgz"
-  integrity sha512-IxVd4SS2RvhVTSoWbpxLqepPQn+BRKcfg+XToUxd0j0betwziTVZlla+UYJ77qJikoMQLdf2vBhq5oVTRbQv0Q==
+"@neuronet.io/vido@^4.1.12":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@neuronet.io/vido/-/vido-4.2.0.tgz#f8309f15a1646e41a4fd01dc050caf34dbadcfb5"
+  integrity sha512-Su8Lpk1nOpyJ/lGlKpcj4sa4ymo4uMMzN+1boG05BFyKPOerOAqKnCaruFSOSbKAucBUWFtB6xqVhwgGTC8RQg==
   dependencies:
-    csstype "^2.6.10"
-    lit-html-optimised "^1.3.0"
+    lit-html "^2.0.1"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -2581,6 +2580,11 @@
   dependencies:
     "@types/webpack" "^4"
     terser "^4.6.13"
+
+"@types/trusted-types@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
+  integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
 "@types/uglify-js@*":
   version "3.13.1"
@@ -4817,16 +4821,6 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^2.6.10:
-  version "2.6.18"
-  resolved "https://registry.npmjs.org/csstype/-/csstype-2.6.18.tgz"
-  integrity sha512-RSU6Hyeg14am3Ah4VZEmeX8H7kLwEEirXe6aU2IPfKNvhXwTflK5HQRDNI0ypQXoqmm+QPyG2IaPuQE5zMwSIQ==
-
-csstype@^3.0.5:
-  version "3.0.9"
-  resolved "https://registry.npmjs.org/csstype/-/csstype-3.0.9.tgz"
-  integrity sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==
-
 cuint@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npmjs.org/cuint/-/cuint-0.2.2.tgz"
@@ -4851,10 +4845,10 @@ date-and-time@^2.0.0:
   resolved "https://registry.npmjs.org/date-and-time/-/date-and-time-2.0.1.tgz"
   integrity sha512-O7Xe5dLaqvY/aF/MFWArsAM1J4j7w1CSZlPCX9uHgmb+6SbkPd8Q4YOvfvH/cZGvFlJFfHOZKxQtmMUOoZhc/w==
 
-dayjs@^1.9.7:
-  version "1.10.7"
-  resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.10.7.tgz"
-  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
+dayjs@^1.10.7:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.3.tgz#4754eb694a624057b9ad2224b67b15d552589258"
+  integrity sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A==
 
 de-indent@^1.0.2:
   version "1.0.2"
@@ -4917,10 +4911,10 @@ deep-is@^0.1.3, deep-is@~0.1.3:
   resolved "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
 
-deep-state-observer@^3.22.9:
-  version "3.26.8"
-  resolved "https://registry.npmjs.org/deep-state-observer/-/deep-state-observer-3.26.8.tgz"
-  integrity sha512-owslTi+cQPfGstgVcDiFdIEZYvop53FuPZzNzM+xIhyy65MvuEoyEVisMIoBvkNArXUAI2+errOHZKltu6+00w==
+deep-state-observer@^5.5.9:
+  version "5.5.9"
+  resolved "https://registry.yarnpkg.com/deep-state-observer/-/deep-state-observer-5.5.9.tgz#35e7df472caa3d306c0640e06242bf8853e62b4c"
+  integrity sha512-PAE6Cas8j+LS6LNuVNyGPYHJomPKKsdlYyzNfviPS7Cqx5JlQ19K7IF53a2XBzYWg+3hzu+HWnLjg+dnQ9jXvA==
 
 deepmerge@^4.2.2:
   version "4.2.2"
@@ -6241,15 +6235,14 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-gantt-schedule-timeline-calendar@^3.8.4:
-  version "3.8.4"
-  resolved "https://registry.npmjs.org/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.8.4.tgz"
-  integrity sha512-z1Aelhud6IZjdys0edvWk+366OPnugAtVXM7iOQOqC/62UXe1Avef1OlUuy9BEN+7JSIcGfimEKRnqZPb0YFjQ==
+gantt-schedule-timeline-calendar@^3.16.6:
+  version "3.16.6"
+  resolved "https://registry.yarnpkg.com/gantt-schedule-timeline-calendar/-/gantt-schedule-timeline-calendar-3.16.6.tgz#a7843bababe2c6b6d4de815196cfd656e9fc44ac"
+  integrity sha512-/nwZfA993SVr+DLYgZv48A7olugPqqedhvF+jSOLSsbLY7k4t5FhXt3VjBAImgPObqnuIdWOUZI+tfB9ntUWWg==
   dependencies:
-    "@neuronet.io/vido" "^3.2.7"
-    csstype "^3.0.5"
-    dayjs "^1.9.7"
-    deep-state-observer "^3.22.9"
+    "@neuronet.io/vido" "^4.1.12"
+    dayjs "^1.10.7"
+    deep-state-observer "^5.5.9"
 
 gaxios@^4.0.0:
   version "4.3.2"
@@ -8146,10 +8139,12 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lit-html-optimised@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/lit-html-optimised/-/lit-html-optimised-1.3.0.tgz"
-  integrity sha512-wP6JWmnk5VvjliLP1dGKYe9Ip0zKfJHnvjgkVQluxi+zqNZ+LQPEsRMsRaYjhYIefVvZx9mMbFoIx2/KSMRoUQ==
+lit-html@^2.0.1:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-2.2.5.tgz#e2b4fbdb3b57e38a3bce23c8473d72ba0e652ed8"
+  integrity sha512-e56Y9V+RNA+SGYsWP2DGb/wad5Ccd3xUZYjmcmbeZcnc0wP4zFQRXeXn7W3bbfBekmHDK2dOnuYNYkg0bQjh/w==
+  dependencies:
+    "@types/trusted-types" "^2.0.2"
 
 load-json-file@^4.0.0:
   version "4.0.0"
