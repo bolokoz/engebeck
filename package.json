@@ -21,7 +21,7 @@
     "@nuxtjs/firebase": "^8.2.0",
     "@nuxtjs/pwa": "^3.0.2",
     "firebase": "^9.6.7",
-    "chart.js": "^2.9.4",
+    "chart.js": "^4.1.2",
     "core-js": "^3.23.3",
     "excellentexport": "^3.7.1",
     "firebaseui": "6.0.0",
