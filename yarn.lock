@@ -6806,10 +6806,10 @@ html2canvas@^1.0.0-rc.5:
     css-line-break "2.0.1"
     text-segmentation "^1.0.2"
 
-html5-qrcode@^2.0.12:
-  version "2.0.12"
-  resolved "https://registry.npmjs.org/html5-qrcode/-/html5-qrcode-2.0.12.tgz"
-  integrity sha512-9pfGODZRZ2uhNiZJHGxKp7G31ORJ/N8kQmnib93/HucetbShBimARYjE3Mvgh+rDs2nTetUC5twUYuZ8kvZOvQ==
+html5-qrcode@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/html5-qrcode/-/html5-qrcode-2.3.6.tgz#95f572fd79b84cbce0e509da80eda43a394cec3c"
+  integrity sha512-yuCJUFzm04xGPM2a40XYPptpioV6K5uJA3Ogy0Xi/a7tAYrcD7T4ZCsbg0T1H2qX/143SZfDG1EINnNFh5rH0A==
 
 htmlparser2@^6.1.0:
   version "6.1.0"
